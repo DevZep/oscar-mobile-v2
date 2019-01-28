@@ -1,9 +1,9 @@
-import axios            from "axios"
-import { Alert, AsyncStorage }        from "react-native"
-import CryptoJS         from 'crypto-js'
-import { AUTH_TYPES }   from "../types"
-import endpoint         from "../../constants/endpoint"
-import i18n             from '../../i18n'
+import axios                        from "axios"
+import { Alert, AsyncStorage }      from "react-native"
+import CryptoJS                     from 'crypto-js'
+import { AUTH_TYPES }               from "../types"
+import endpoint                     from "../../constants/endpoint"
+import i18n                         from '../../i18n'
 import {
   pushScreen,
   startScreen,

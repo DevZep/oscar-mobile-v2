@@ -1,6 +1,6 @@
-import axios from "axios"
-import {PROVINCE_TYPES} from "../types"
-import endpoint from "../../constants/endpoint"
+import axios                from "axios"
+import { PROVINCE_TYPES }   from "../types"
+import endpoint             from "../../constants/endpoint"
 
 requestProvinces = () => ({
   type: PROVINCE_TYPES.PROVINCES_REQUESTING

@@ -12,7 +12,7 @@ export default (villagesReducer = (state = initialState, action) => {
     case VILLAGE_TYPES.VILLAGES_REQUESTING:
       return state.set("error", "").set("loading", true);
 
-    case VILLAGE_TYPES.VILLAGES_SUCCEED:
+    case VILLAGE_TYPES.VILLAGES_SUCCESS:
       return state.set("data", action.data).set("loading", false);
 
     case VILLAGE_TYPES.VILLAGES_FAILED:

@@ -12,7 +12,7 @@ export default (communesReducer = (state = initialState, action) => {
     case COMMUNE_TYPES.COMMUNES_REQUESTING:
       return state.set("error", "").set("loading", true);
 
-    case COMMUNE_TYPES.COMMUNES_SUCCEED:
+    case COMMUNE_TYPES.COMMUNES_SUCCESS:
       return state.set("data", action.data).set("loading", false);
 
     case COMMUNE_TYPES.COMMUNES_FAILED:

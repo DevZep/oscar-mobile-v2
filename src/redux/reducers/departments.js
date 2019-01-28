@@ -12,7 +12,7 @@ export default (departmentsReducer = (state = initialState, action) => {
     case DEPARTMENT_TYPES.DEPARTMENTS_REQUESTING:
       return state.set("error", "").set("loading", true);
 
-    case DEPARTMENT_TYPES.DEPARTMENTS_SUCCEED:
+    case DEPARTMENT_TYPES.DEPARTMENTS_SUCCESS:
       return state.set("data", action.data).set("loading", false);
 
     case DEPARTMENT_TYPES.DEPARTMENTS_FAILED:

@@ -1,13 +1,13 @@
-import axios from "axios"
-import {DEPARTMENT_TYPES} from "../types"
-import endpoint from "../../constants/endpoint"
+import axios                from "axios"
+import { DEPARTMENT_TYPES } from "../types"
+import endpoint             from "../../constants/endpoint"
 
 requestDepartments = () => ({
   type: DEPARTMENT_TYPES.DEPARTMENTS_REQUESTING
 })
 
 requestDepartmentsSucceed = data => ({
-  type: DEPARTMENT_TYPES.DEPARTMENTS_SUCCEED,
+  type: DEPARTMENT_TYPES.DEPARTMENTS_SUCCESS,
   data: data
 })
 

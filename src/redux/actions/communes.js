@@ -1,13 +1,13 @@
-import axios from "axios"
-import {COMMUNE_TYPES} from "../types"
-import endpoint from "../../constants/endpoint"
+import axios              from "axios"
+import { COMMUNE_TYPES }  from "../types"
+import endpoint           from "../../constants/endpoint"
 
 requestCommunes = () => ({
   type: COMMUNE_TYPES.COMMUNES_REQUESTING
 })
 
 requestCommunesSucceed = data => ({
-  type: COMMUNE_TYPES.COMMUNES_SUCCEED,
+  type: COMMUNE_TYPES.COMMUNES_SUCCESS,
   data: data
 })
 
