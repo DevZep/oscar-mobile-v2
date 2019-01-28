@@ -5,6 +5,7 @@ import { LANGUAGE_TYPES }   from '../../redux/types'
 import Database             from '../../config/Database'
 import RNRestart            from 'react-native-restart'
 import i18n                 from '../../i18n'
+import FastImage            from 'react-native-fast-image'
 
 import {
   StyleSheet,
@@ -59,7 +60,7 @@ class LanguageScreen extends Component {
           <Text style={[ styles.languageTitle, isActive ? styles.activeText : {} ]}>
             { language.title }
           </Text>
-          <Image source={ language.flag } style={ styles.flag }/>
+          <FastImage source={ language.flag } style={ styles.flag }/>
         </View>
       </TouchableOpacity>
     )
