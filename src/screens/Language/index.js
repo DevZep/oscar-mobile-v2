@@ -16,20 +16,23 @@ import {
 
 class LanguageScreen extends Component {
   updateLanguage(language) {
-    this.props.setLanguage(language)
-
-    const languageSetting = Database.objects('Setting').filtered('key = $0', 'language')[0]
-    Database.write(() => { languageSetting.value = language })
-
     Alert.alert(
-      i18n.t('language.alert_title'),
+      '',
       i18n.t('language.restart_now'),
       [
-        { text: i18n.t('language.yes'), onPress: () => RNRestart.Restart() },
+        { text: i18n.t('language.yes'), onPress: () => this.setLanguage(language) },
         { text: i18n.t('language.no'), style: 'cancel' }
       ],
       { cancelable: false }
     )
+  }
+
+  setLanguage = (language) => {
+    this.props.setLanguage(language)
+
+    const languageSetting = Database.objects('Setting').filtered('key = $0', 'language')[0]
+    Database.write(() => { languageSetting.value = language })
+    RNRestart.Restart()
   }
 
   getLanguageObject = {

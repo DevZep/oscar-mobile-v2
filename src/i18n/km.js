@@ -2,8 +2,7 @@ export default {
   choose_ngo:"ជ្រើសរើសអង្គការរបស់អ្នក",
   language: {
     languages: 'ភាសា',
-    alert_title: 'ប្ដូរ​ភាសា',
-    restart_now: 'តើអ្នកចង់ចាប់ផ្តើមកម្មវិធីឡើងវិញឥឡូវនេះទេ?',
+    restart_now: 'កម្មវិធីនឹងបើកម្ដងទៀត',
     yes: 'បាទ/ចាស',
     no: 'ទេ'
   },

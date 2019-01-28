@@ -2,8 +2,7 @@ export default {
   choose_ngo:"Choose your NGO",
   language: {
     languages: 'Languages',
-    alert_title: 'Change Language',
-    restart_now: 'Do you want to restart app now?',
+    restart_now: 'The App will be restarted',
     yes: 'Yes',
     no: 'No'
   },
