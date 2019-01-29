@@ -13,6 +13,7 @@ import { pushScreen }         from '../../navigation/config'
 import { fetchProvinces }     from '../../redux/actions/provinces'
 import { fetchDepartments }   from '../../redux/actions/departments'
 import { fetchUser }          from '../../redux/actions/users'
+import { logoutUser }          from '../../redux/actions/auth'
 import { profileStyle }       from './styles';
 import i18n                   from '../../i18n'
 const color = '#18a689'
@@ -35,7 +36,7 @@ class User extends Component {
   }
 
   render() {
-    const {provinces, departments, user } = this.props
+    const {provinces, departments, user, loading } = this.props
     const department = user.department_id ? _.find(departments, { 'id': user.department_id }).name : ''
     const province   = user.province_id ? _.find(provinces, { 'id': user.province_id }).name : ''
 
@@ -54,15 +55,15 @@ class User extends Component {
           <Field name={i18n.t('user.department')} value={department}  />
           <Field name={i18n.t('user.mobile')} value={user.mobile}  />
           <Field name={i18n.t('user.email')} value={user.email}  />
-          <Field name={i18n.t('user.date_of_birth')} value={user.date_of_birth}  />
+          <Field name={i18n.t('user.dob')} value={user.date_of_birth}  />
           <Field name={i18n.t('user.start_date')} value={user.start_date}  />
           <Field name={i18n.t('user.province')} value={province}  />
           <Button
             style={profileStyle.logoutButton}
             textStyle={profileStyle.buttonTitle}
-            onPress={() => {}}
-            isLoading={false}
-            isDisabled={false}>
+            onPress={() => this.props.logoutUser()}
+            isLoading={loading}
+            isDisabled={loading}>
             {i18n.t('user.log_out')}
           </Button>
         </ScrollView>
@@ -73,13 +74,15 @@ class User extends Component {
 
 const mapState = (state) => ({
   user: state.auth.data,
+  loading: state.auth.loading,
   departments: state.departments.data.departments,
   provinces: state.provinces.data.provinces
 })
 
 const mapDispatch = {
   fetchProvinces,
-  fetchDepartments
+  fetchDepartments,
+  logoutUser
 }
 
 export default connect(mapState, mapDispatch)(User)

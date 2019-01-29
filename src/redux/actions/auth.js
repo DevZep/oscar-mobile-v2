@@ -1,7 +1,7 @@
 import axios                        from "axios"
 import { Alert, AsyncStorage }      from "react-native"
 import CryptoJS                     from 'crypto-js'
-import { AUTH_TYPES }               from "../types"
+import { AUTH_TYPES, LOGOUT_TYPES } from '../types'
 import endpoint                     from "../../constants/endpoint"
 import i18n                         from '../../i18n'
 import {
@@ -39,6 +39,24 @@ requestUpdateUserFailed = err => ({
   type: AUTH_TYPES.UPDATE_USER_FAILED,
   err: err
 })
+
+requestLogout = () => {
+  return { type: LOGOUT_TYPES.LOGOUT_REQUESTING }
+}
+
+requestLogoutSuccess = (data) => {
+  return {
+    type: LOGOUT_TYPES.LOGOUT_SUCCESS,
+    data: data.data,
+  }
+}
+
+requestLogoutFailed = (error) => {
+  return {
+    type: LOGOUT_TYPES.LOGOUT_FAILED,
+    error: error
+  }
+}
 
 formatHeaders = (headers) => ({
   "access-token": headers["access-token"],
@@ -151,12 +169,27 @@ export function verifyUser(goToPin) {
         dispatch(setDefaultHeader(response.headers))
         goToPin(CryptoJS.SHA3(pin_code))
       })
-      .catch((err) => {
+      .catch((error) => {
         startNgoScreen()
         dispatch(clearAppData())
+        dispatch(requestLoginFailed(error.response.data.errors.full_messages[0]))
         Alert.alert("Session", 'User session has been expired.')
-        dispatch(requestLoginFailed(err.response.data.errors.full_messages[0]))
       })
+  }
+}
+
+export function logoutUser( acc, navigator) {
+  return (dispatch, getState) => {
+    dispatch(requestLogout())
+    axios.delete(endpoint.logoutPath)
+    .then((response) => {
+      dispatch(requestLogoutSuccess(response))
+      startNgoScreen()
+      dispatch(clearAppData())
+    })
+    .catch((error) => {
+      dispatch(requestLogoutFailed(error))
+    })
   }
 }
 

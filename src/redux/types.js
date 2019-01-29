@@ -20,6 +20,12 @@ export const AUTH_TYPES = createConstants(
   'UPDATE_USER_SUCCESS',
   'UPDATE_USER_FAILED'
 )
+export const LOGOUT_TYPES = createConstants(
+  'LOGOUT_REQUESTING',
+  'LOGOUT_SUCCESS',
+  'LOGOUT_FAILED',
+  'LOGOUT_RESET_STATE'
+)
 
 export const PROVINCE_TYPES = createConstants(
   'PROVINCES_REQUESTING',
