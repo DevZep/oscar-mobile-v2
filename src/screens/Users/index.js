@@ -37,17 +37,17 @@ class User extends Component {
 
   render() {
     const {provinces, departments, user, loading } = this.props
-    const department = user.department_id ? _.find(departments, { 'id': user.department_id }).name : ''
-    const province   = user.province_id ? _.find(provinces, { 'id': user.province_id }).name : ''
+    const department = departments && user.department_id ? _.find(departments, { 'id': user.department_id }).name : ''
+    const province   = provinces && user.province_id ? _.find(provinces, { 'id': user.province_id }).name : ''
 
     return (
       <View style={profileStyle.container}>
+        <View style={profileStyle.aboutFamily}>
+          <Text style={profileStyle.aboutFamilyText}>{i18n.t('user.about_user')}</Text>
+        </View>
         <ScrollView
           contentContainerStyle={profileStyle.contentsContainer}
           showsVerticalScrollIndicator={false}>
-          <View style={profileStyle.aboutFamily}>
-            <Text style={profileStyle.aboutFamilyText}>About User</Text>
-          </View>
           <Field name={i18n.t('user.first_name')} value={user.first_name}  />
           <Field name={i18n.t('user.last_name')} value={user.last_name}  />
           <Field name={i18n.t('user.gender')} value={_.capitalize(user.gender)}  />
@@ -58,15 +58,15 @@ class User extends Component {
           <Field name={i18n.t('user.dob')} value={user.date_of_birth}  />
           <Field name={i18n.t('user.start_date')} value={user.start_date}  />
           <Field name={i18n.t('user.province')} value={province}  />
-          <Button
-            style={profileStyle.logoutButton}
-            textStyle={profileStyle.buttonTitle}
-            onPress={() => this.props.logoutUser()}
-            isLoading={loading}
-            isDisabled={loading}>
-            {i18n.t('user.log_out')}
-          </Button>
         </ScrollView>
+        <Button
+          style={profileStyle.logoutButton}
+          textStyle={profileStyle.buttonTitle}
+          onPress={() => this.props.logoutUser()}
+          isLoading={loading}
+          isDisabled={loading}>
+          {i18n.t('user.log_out')}
+        </Button>
       </View>
     )
   }
