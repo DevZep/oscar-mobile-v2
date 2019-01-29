@@ -235,5 +235,6 @@ export default {
     staff_report: 'Send me staff performance report',
     calendar: 'Calendar Integration',
     edit_title: 'Edit Profile',
+    gender: 'ലിംഗഭേദം',
   }
 }
