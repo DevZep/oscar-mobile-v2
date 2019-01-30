@@ -16,7 +16,7 @@ requestUsersFailed = error => ({
   error
 })
 
-updateUsers = user => ({
+export const updateUser = user => ({
   type: USER_TYPES.UPDATE_USER,
   user
 })
@@ -28,7 +28,7 @@ export function fetchUser() {
     axios
       .get(endpoint.usersPath + '/' + userId)
       .then(response => {
-        dispatch(updateUsers(response.data.user))
+        dispatch(updateUser(response.data.user))
       })
       .catch(error => {
         dispatch(requestUsersFailed(error))

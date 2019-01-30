@@ -193,7 +193,7 @@ export default {
     save: 'រក្សាទុក',
     upload: 'ឯកសារភ្ជាប់',
     add_task: 'បន្ថែមកាតព្វកិច្ចថ្មី',
-    cancel: 'ទុកជាមឃ',
+    cancel: 'ទុកជាមោឃៈ',
     clients: 'អតិថិជន',
     tasks: 'កាតព្វកិច្ច',
     families: 'គ្រួសារ',
