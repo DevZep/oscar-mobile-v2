@@ -1,14 +1,14 @@
 import { Navigation } from 'react-native-navigation'
 import { MAIN_COLOR } from '../constants/colors'
-import i18n           from '../i18n'
-import appIcon        from '../utils/Icon'
+import i18n from '../i18n'
+import appIcon from '../utils/Icon'
 
 export const startScreen = (screen, props = {}) => {
   Navigation.setRoot({
     root: {
       component: {
         name: screen,
-        passProps: props,
+        passProps: props
       }
     }
   })
@@ -43,20 +43,22 @@ export const startNgoScreen = () => {
   Navigation.setRoot({
     root: {
       stack: {
-        children: [{
-          component: {
-            name: 'oscar.ngos',
-            options: {
-              topBar: {
-                title: {
-                  fontFamily: '.SFUIDisplay-Bold',
-                  fontSize: 25,
-                  text: i18n.t('choose_ngo')
+        children: [
+          {
+            component: {
+              name: 'oscar.ngos',
+              options: {
+                topBar: {
+                  title: {
+                    fontFamily: '.SFUIDisplay-Bold',
+                    fontSize: 25,
+                    text: i18n.t('choose_ngo')
+                  }
                 }
               }
             }
           }
-        }]
+        ]
       }
     }
   })
@@ -88,22 +90,23 @@ export const startTabScreen = async () => {
   Navigation.setRoot({
     root: {
       bottomTabs: {
-        id: "BottomTabsId",
         children: [
           {
             stack: {
-              children: [{
-                component: {
-                  name: 'oscar.clients',
-                  options: {
-                    topBar: {
-                      title: {
-                        text: i18n.t('client.title'),
+              children: [
+                {
+                  component: {
+                    name: 'oscar.clients',
+                    options: {
+                      topBar: {
+                        title: {
+                          text: i18n.t('client.title')
+                        }
                       }
                     }
                   }
                 }
-              }],
+              ],
               options: {
                 bottomTab: {
                   text: i18n.t('client.title'),
@@ -117,18 +120,20 @@ export const startTabScreen = async () => {
           },
           {
             stack: {
-              children: [{
-                component: {
-                  name: 'oscar.tasks',
-                  options: {
-                    topBar: {
-                      title: {
-                        text: i18n.t('task.title')
+              children: [
+                {
+                  component: {
+                    name: 'oscar.tasks',
+                    options: {
+                      topBar: {
+                        title: {
+                          text: i18n.t('task.title')
+                        }
                       }
                     }
                   }
                 }
-              }],
+              ],
               options: {
                 bottomTab: {
                   text: i18n.t('task.title'),
@@ -142,18 +147,20 @@ export const startTabScreen = async () => {
           },
           {
             stack: {
-              children: [{
-                component: {
-                  name: 'oscar.families',
-                  options: {
-                    topBar: {
-                      title: {
-                        text: i18n.t('family.title')
+              children: [
+                {
+                  component: {
+                    name: 'oscar.families',
+                    options: {
+                      topBar: {
+                        title: {
+                          text: i18n.t('family.title')
+                        }
                       }
                     }
                   }
                 }
-              }],
+              ],
               options: {
                 bottomTab: {
                   text: i18n.t('family.title'),
@@ -167,29 +174,36 @@ export const startTabScreen = async () => {
           },
           {
             stack: {
-              children: [{
-                component: {
-                  name: 'oscar.users',
-                  options: {
-                    topBar: {
-                      title: {
-                        text: i18n.t('user.about_user')
-                      },
-                      rightButtons: [
-                        {
-                          id: 'TRANSLATION',
-                          icon: icons.translation,
-                          color: '#fff'
-                        }
-                      ]
-                    },
+              children: [
+                {
+                  component: {
+                    id: 'USERS_TAB_BAR_BUTTON',
+                    name: 'oscar.users',
+                    options: {
+                      topBar: {
+                        title: {
+                          text: i18n.t('user.about_user')
+                        },
+                        rightButtons: [
+                          {
+                            id: 'EDIT_USER',
+                            icon: icons.edit,
+                            color: '#fff'
+                          },
+                          {
+                            id: 'TRANSLATION',
+                            icon: icons.translation,
+                            color: '#fff'
+                          }
+                        ]
+                      }
+                    }
                   }
                 }
-              }],
+              ],
               options: {
                 bottomTab: {
                   text: i18n.t('user.title'),
-                  testID: 'USERS_TAB_BAR_BUTTON',
                   icon: icons.accountBox,
                   selectedIconColor: MAIN_COLOR,
                   selectedTextColor: MAIN_COLOR
@@ -199,21 +213,23 @@ export const startTabScreen = async () => {
           },
           {
             stack: {
-              children: [{
-                component: {
-                  name: 'oscar.webView',
-                  options: {
-                    topBar: {
-                      title: {
-                        text: 'Oscar'
+              children: [
+                {
+                  component: {
+                    name: 'oscar.webView',
+                    options: {
+                      topBar: {
+                        title: {
+                          text: 'Oscar'
+                        }
                       }
                     }
                   }
                 }
-              }],
+              ],
               options: {
                 bottomTab: {
-                  text: "Oscar",
+                  text: 'Oscar',
                   testID: 'WEB_TAB_BAR_BUTTON',
                   icon: icons.web,
                   selectedIconColor: MAIN_COLOR,

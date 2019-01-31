@@ -1,9 +1,9 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native'
 
 export const editStyle = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#eee',
+    backgroundColor: '#eee'
   },
   container: {
     flex: 1,
@@ -34,7 +34,7 @@ export const editStyle = StyleSheet.create({
   },
   picker: {
     height: 45,
-    backgroundColor: '#eee',
+    backgroundColor: '#eee'
   },
   inputContainer: {
     paddingLeft: 10,
@@ -46,7 +46,7 @@ export const editStyle = StyleSheet.create({
     marginTop: 10
   },
   input: {
-    height: 40,
+    height: 40
   },
   sms: {
     color: '#dedede'
@@ -59,7 +59,7 @@ export const editStyle = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 5
   }
-});
+})
 
 export const profileStyle = StyleSheet.create({
   container: {
@@ -85,12 +85,12 @@ export const profileStyle = StyleSheet.create({
     color: 'white'
   },
   logoutButton: {
-  	backgroundColor: '#d73a49',
-  	borderWidth: 0,
-  	borderRadius: 0
+    backgroundColor: '#d73a49',
+    borderWidth: 0,
+    borderRadius: 0
   },
   buttonTitle: {
-  	fontSize: 18,
-  	color: '#fff'
+    fontSize: 18,
+    color: '#fff'
   }
-});
+})

@@ -1,6 +1,6 @@
-import axios          from "axios"
-import { USER_TYPES } from "../types"
-import endpoint       from "../../constants/endpoint"
+import axios from 'axios'
+import { USER_TYPES } from '../types'
+import endpoint from '../../constants/endpoint'
 
 requestUsers = () => ({
   type: USER_TYPES.USERS_REQUESTING
@@ -36,9 +36,8 @@ export function fetchUser() {
   }
 }
 
-
 export function fetchUsers() {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch(requestUsers())
     axios
       .get(endpoint.usersPath + '/' + userId)
