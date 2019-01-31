@@ -12,6 +12,13 @@ import { startNgoScreen, startScreen }  from '../../navigation/config'
 import { setDefaultHeader, verifyUser } from '../../redux/actions/auth'
 
 class SplashScreen extends Component {
+   static options(passProps) {
+    return {
+      statusBar: {
+        style: 'dark'
+      }
+    }
+  }
   componentDidMount() {
     this.props.checkConnection()
     this.setLanguage()
