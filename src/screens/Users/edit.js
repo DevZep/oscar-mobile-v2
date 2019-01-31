@@ -1,18 +1,29 @@
 import React, { Component } from 'react'
-import { View, Text, KeyboardAvoidingView, ScrollView, TextInput, Alert, Platform } from 'react-native'
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  ScrollView,
+  TextInput,
+  Alert,
+  Platform,
+  ActivityIndicator,
+  Modal,
+  StyleSheet
+} from 'react-native'
 import { CheckBox } from 'react-native-elements'
 import { Navigation } from 'react-native-navigation'
-import { connect } from 'react-redux'
-import { updateUser } from '../../redux/actions/auth'
-import { editStyle } from './styles'
-import i18n from '../../i18n'
 import DatePicker from 'react-native-datepicker'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'
-import _ from 'lodash'
+import { connect } from 'react-redux'
+import { updateUser } from '../../redux/actions/auth'
 import { MAIN_COLOR } from '../../constants/colors'
+import { editStyle } from './styles'
+import i18n from '../../i18n'
+import _ from 'lodash'
 
 class UserEdit extends Component {
-  state = { user: null }
+  state = { user: this.props.user }
 
   constructor(props) {
     super(props)
@@ -23,10 +34,6 @@ class UserEdit extends Component {
     if (buttonId === 'SAVE_USER') {
       this.props.updateUser(this.state.user)
     }
-  }
-
-  componentWillMount() {
-    this.setState({ user: this.props.user })
   }
 
   setUpdateUser(key, value) {
@@ -44,6 +51,7 @@ class UserEdit extends Component {
   render() {
     const { departments, provinces } = this.props
     const { user } = this.state
+
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <ScrollView style={editStyle.mainContainer}>
@@ -308,11 +316,34 @@ class UserEdit extends Component {
   }
 }
 
+const mapState = state => ({
+  loading: state.auth.loading
+})
+
 const mapDispatch = {
   updateUser
 }
 
 export default connect(
-  null,
+  mapState,
   mapDispatch
 )(UserEdit)
+
+const styles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    backgroundColor: '#00000040'
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#FFFFFF',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  }
+})

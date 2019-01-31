@@ -33,12 +33,6 @@ export default (userReducer = (state = initialState, action) => {
     case AUTH_TYPES.UPDATE_USER_REQUESTING:
       return state.set('error', '').set('loading', true)
 
-    case AUTH_TYPES.UPDATE_USER_SUCCESS:
-      return state
-        .set('error', '')
-        .set('loading', false)
-        .set('data', action.data)
-
     case AUTH_TYPES.UPDATE_USER_FAILED:
       return state.set('error', action.err).set('loading', false)
 

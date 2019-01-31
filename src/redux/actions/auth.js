@@ -26,33 +26,24 @@ requestUpdateUser = () => ({
   type: AUTH_TYPES.UPDATE_USER_REQUESTING
 })
 
-requestUpdateUserSuccess = ({ data }) => ({
-  type: AUTH_TYPES.UPDATE_USER_SUCCESS,
-  data: data.data
-})
-
 requestUpdateUserFailed = err => ({
   type: AUTH_TYPES.UPDATE_USER_FAILED,
   err: err
 })
 
-requestLogout = () => {
-  return { type: LOGOUT_TYPES.LOGOUT_REQUESTING }
-}
+requestLogout = () => ({
+  type: LOGOUT_TYPES.LOGOUT_REQUESTING
+})
 
-requestLogoutSuccess = data => {
-  return {
-    type: LOGOUT_TYPES.LOGOUT_SUCCESS,
-    data: data.data
-  }
-}
+requestLogoutSuccess = data => ({
+  type: LOGOUT_TYPES.LOGOUT_SUCCESS,
+  data: data.data
+})
 
-requestLogoutFailed = error => {
-  return {
-    type: LOGOUT_TYPES.LOGOUT_FAILED,
-    error: error
-  }
-}
+requestLogoutFailed = error => ({
+  type: LOGOUT_TYPES.LOGOUT_FAILED,
+  error: error
+})
 
 formatHeaders = headers => ({
   'access-token': headers['access-token'],
@@ -130,7 +121,7 @@ export function updateUser(userParam) {
     return axios
       .put(endpoint.baseURL(org) + endpoint.updateTokenPath, userParam, config)
       .then(response => {
-        dispatch(requestUpdateUserSuccess(response))
+        dispatch(requestLoginSuccess(response))
         Alert.alert(
           'User',
           'You has been successfully updated user.',

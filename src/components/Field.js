@@ -1,4 +1,18 @@
-import { StyleSheet } from "react-native";
+import React, { Component } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+
+export default class Field extends Component {
+  render() {
+    const { name, value } = this.props
+
+    return (
+      <View style={styles.fieldContainer}>
+        <Text style={styles.field}>{name}</Text>
+        <Text style={styles.fieldData}>{value}</Text>
+      </View>
+    )
+  }
+}
 
 const styles = StyleSheet.create({
   fieldContainer: {
@@ -12,10 +26,10 @@ const styles = StyleSheet.create({
   field: {
     fontWeight: 'bold',
     fontSize: 11,
-    color: '#009999',
+    color: '#009999'
   },
   fieldData: {
-    fontSize: 18,
+    fontSize: 18
   },
   multipleFiledContainer: {
     flexDirection: 'row',
@@ -29,6 +43,4 @@ const styles = StyleSheet.create({
     height: 35,
     marginRight: 12
   }
-});
-
-export default styles;
+})
