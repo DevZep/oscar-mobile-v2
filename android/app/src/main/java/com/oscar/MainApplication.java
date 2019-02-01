@@ -10,6 +10,7 @@ import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.facebook.react.modules.storage.ReactDatabaseSupplier;
 import com.facebook.soloader.SoLoader;
 
 import com.reactnativenavigation.NavigationApplication;
@@ -40,8 +41,8 @@ public class MainApplication extends NavigationApplication {
     }
 
     protected List<ReactPackage> getPackages() {
-        // Add additional packages you require here
-        // No need to add RnnPackage and MainReactPackage
+        long size = 500 * 1024L * 1024L; // 500 MB
+        ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
         return Arrays.<ReactPackage>asList(
             new RNI18nPackage(),
             new VectorIconsPackage(),

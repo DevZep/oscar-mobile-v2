@@ -1,6 +1,6 @@
 import React, { Component }             from 'react'
 import CryptoJS                         from 'crypto-js'
-import { View, Image, AsyncStorage }    from 'react-native'
+import { View, Image, Platform }        from 'react-native'
 import { connect }                      from 'react-redux'
 import Database                         from '../../config/Database'
 import logo                             from '../../assets/oscar-logo.png'
@@ -15,7 +15,7 @@ class SplashScreen extends Component {
    static options(passProps) {
     return {
       statusBar: {
-        style: 'dark'
+        style: Platform.OS === 'ios' ? 'dark' : 'light'
       }
     }
   }
