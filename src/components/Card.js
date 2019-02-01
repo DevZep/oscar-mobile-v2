@@ -3,7 +3,7 @@ import { View, ScrollView, StyleSheet, Text } from 'react-native'
 import { MAIN_COLOR } from '../constants/colors'
 
 const Card = (props) => (
-  <View style={styles.container}>
+  <View style={[styles.container, props.style]}>
     <View style={[styles.header, { backgroundColor: props.color || MAIN_COLOR }]}>
       <Text style={styles.headerTitle}>
         { props.title }

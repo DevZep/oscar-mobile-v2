@@ -4,11 +4,11 @@ import { Navigation } from 'react-native-navigation'
 import DatePicker from 'react-native-datepicker'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import { updateUser } from '../../../redux/actions/auth'
 import { MAIN_COLOR } from '../../../constants/colors'
 import styles from './styles'
 import i18n from '../../../i18n'
-import _ from 'lodash'
 import {
   View,
   Text,
@@ -44,8 +44,8 @@ class UserEdit extends Component {
     }))
   }
 
-  listItems(optionss) {
-    return _.map(optionss, options => ({ name: options.name, id: options.id }))
+  listItems(options) {
+    return _.map(options, option => ({ name: option.name, id: option.id }))
   }
 
   render() {

@@ -23,7 +23,7 @@ export default class OscarFlatList extends Component {
   }
 
   renderItem = ({ item }) => (
-    <TouchableWithoutFeedback key={item.id} onPress={ () => null }>
+    <TouchableWithoutFeedback key={item.id} onPress={ () => this.props.onPress && this.props.onPress(item) }>
       <View style={ styles.wrapper }>
         { this.renderIcon() }
         <View style={ styles.titleWrapper }>

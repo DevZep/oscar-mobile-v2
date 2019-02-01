@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, Text, ScrollView } from 'react-native'
 import Button from 'apsl-react-native-button'
 import { Navigation } from 'react-native-navigation'
 import _ from 'lodash'
 import Field from '../../components/Field'
-import { connect } from 'react-redux'
+import Card from '../../components/Card'
 import { pushScreen } from '../../navigation/config'
 import { fetchProvinces } from '../../redux/actions/provinces'
 import { fetchDepartments } from '../../redux/actions/departments'
 import { fetchUser } from '../../redux/actions/users'
 import { logoutUser } from '../../redux/actions/auth'
-import { styles } from './styles'
 import i18n from '../../i18n'
 import appIcon from '../../utils/Icon'
-const color = '#18a689'
+import { styles } from './styles'
 
 class User extends Component {
   constructor(props) {
@@ -68,24 +68,59 @@ class User extends Component {
 
   render() {
     const { provinces, departments, user, loading } = this.props
-    const department = departments && user.department_id ? _.find(departments, { id: user.department_id }).name : ''
-    const province = provinces && user.province_id ? _.find(provinces, { id: user.province_id }).name : ''
+    const { first_name,last_name, gender,
+            job_title, department_id, mobile,
+            email, date_of_birth, start_date, 
+            province_id
+          } = user
+    const department = _.find(departments, { id: user.department_id })
+    const province   = _.find(provinces, { id: province_id })
+
     return (
       <View style={styles.container}>
-        <View style={styles.aboutFamily}>
-          <Text style={styles.aboutFamilyText}>{i18n.t('user.about_user')}</Text>
-        </View>
-        <ScrollView contentContainerStyle={styles.contentsContainer} showsVerticalScrollIndicator={false}>
-          <Field name={i18n.t('user.first_name')} value={user.first_name} />
-          <Field name={i18n.t('user.last_name')} value={user.last_name} />
-          <Field name={i18n.t('user.gender')} value={_.capitalize(user.gender)} />
-          <Field name={i18n.t('user.job_title')} value={user.job_title} />
-          <Field name={i18n.t('user.department')} value={department} />
-          <Field name={i18n.t('user.mobile')} value={user.mobile} />
-          <Field name={i18n.t('user.email')} value={user.email} />
-          <Field name={i18n.t('user.dob')} value={user.date_of_birth} />
-          <Field name={i18n.t('user.start_date')} value={user.start_date} />
-          <Field name={i18n.t('user.province')} value={province} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Card title={ i18n.t('user.about_user') }>
+            <Field
+              name={i18n.t('user.first_name')}
+              value={first_name}
+            />
+            <Field
+              name={i18n.t('user.last_name')}
+              value={last_name}
+            />
+            <Field
+              name={i18n.t('user.gender')}
+              value={_.capitalize(user.gender)}
+            />
+            <Field
+              name={i18n.t('user.job_title')}
+              value={job_title}
+            />
+            <Field
+              name={i18n.t('user.department')}
+              value={department && department.name}
+            />
+            <Field
+              name={i18n.t('user.mobile')}
+              value={mobile}
+            />
+            <Field
+              name={i18n.t('user.email')}
+              value={email}
+            />
+            <Field
+              name={i18n.t('user.dob')}
+              value={date_of_birth}
+            />
+            <Field
+              name={i18n.t('user.start_date')}
+              value={start_date}
+            />
+            <Field
+              name={i18n.t('user.province')}
+              value={province && province.name}
+            />
+          </Card>
         </ScrollView>
         <Button
           style={styles.logoutButton}
@@ -114,7 +149,4 @@ const mapDispatch = {
   logoutUser
 }
 
-export default connect(
-  mapState,
-  mapDispatch
-)(User)
+export default connect(mapState, mapDispatch)(User)

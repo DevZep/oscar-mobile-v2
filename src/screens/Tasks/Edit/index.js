@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import Button               from 'apsl-react-native-button'
 import Icon                 from 'react-native-vector-icons/MaterialIcons'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select'
+import DatePicker           from 'react-native-datepicker'
+import { Navigation }       from 'react-native-navigation'
 import styles               from './styles'
+import i18n                 from '../../../i18n'
+import { MAIN_COLOR }       from '../../../constants/colors'
 
 import {
   View,
@@ -18,7 +23,7 @@ export default class Task extends Component {
     completion_date: this.props.task.completion_date,
   }
 
-  editTask = () => {
+  updateTask = () => {
     const { task } = this.props
     const { name, domain_id, completion_date } = this.state
 
@@ -31,103 +36,87 @@ export default class Task extends Component {
   }
 
   render() {
-    return (
-      <View />
-      // <View style={styles.container}>
-      //   <View style={styles.modalContainer}>
-      //     <View style={styles.modalTitleWrapper}>
-      //       <Text style={styles.modalTitle}>{languages.task.edit_title}</Text>
-      //     </View>
-      //     <View style={styles.modalContentWrapper}>
-      //       {userClients != undefined
-      //         ? <View style={styles.inputWrapper}>
-      //             <Text style={styles.label}>{languages.task.client}</Text>
-      //             <Picker
-      //               mode="dropdown"
-      //               selectedValue={this.state.userClient_id}
-      //               onValueChange={userClient_id => this.setState({ userClient_id })}>
-      //               {userClients.map((userClient, index) => {
-      //                 const username =
-      //                   _.isEmpty(userClient.given_name) && _.isEmpty(userClient.family_name)
-      //                     ? 'N/A'
-      //                     : `${userClient.given_name} ${userClient.family_name}`
-      //                 return <Picker.Item key={index} label={username} value={userClient.id} />
-      //               })}
-      //             </Picker>
-      //           </View>
-      //         : null}
+    const { domains } = this.props
 
-      //       <View style={styles.inputWrapper}>
-      //         <Text style={styles.label}>{languages.task.domain}</Text>
-      //         <Picker
-      //           mode="dropdown"
-      //           selectedValue={this.state.domain_id}
-      //           onValueChange={domain_id => this.setState({ domain_id })}>
-      //           {domains.map((domain, index) => {
-      //             return (
-      //               <Picker.Item
-      //                 key={index}
-      //                 label={`${domain.name} ${domain.identity}`}
-      //                 value={domain.id}
-      //               />
-      //             )
-      //           })}
-      //         </Picker>
-      //       </View>
-      //       <View style={styles.inputWrapper}>
-      //         <Text style={styles.label}>* {languages.task.task_detail}</Text>
-      //         <TextInput
-      //           autoCapitalize="sentences"
-      //           ref="name"
-      //           placeholder={languages.task.task_detail}
-      //           underlineColorAndroid="#c7cdd3"
-      //           value={this.state.name}
-      //           onChangeText={name => this.setState({ name })}
-      //         />
-      //       </View>
-      //       <View style={styles.inputWrapper}>
-      //         <Text style={styles.label}>* {languages.task.complete_date}</Text>
-      //         <DatePicker
-      //           disabled={!this.props.internetReducer.get('isHasInternet')}
-      //           style={styles.datePicker}
-      //           date={this.state.completion_date}
-      //           mode="date"
-      //           placeholder={languages.client.select_date}
-      //           placeholderText="#ccc"
-      //           showIcon={true}
-      //           format="YYYY-MM-DD"
-      //           minDate="2000-01-01"
-      //           confirmBtnText="Confirm"
-      //           cancelBtnText="Cancel"
-      //           onDateChange={completion_date =>
-      //             this.setState({ completion_date: completion_date })}
-      //           customStyles={{
-      //             dateInput: styles.datePickerBorder
-      //           }}
-      //           iconComponent={
-      //             <View style={styles.datePickerIcon}>
-      //               <Icon name="date-range" size={30} />
-      //             </View>
-      //           }
-      //         />
-      //       </View>
-      //     </View>
-      //     <View style={styles.actionButtonWrapper}>
-      //       <Button
-      //         textStyle={styles.submitButtonText}
-      //         style={styles.submitButton}
-      //         onPress={() => this._editTask()}>
-      //         {languages.button.save}
-      //       </Button>
-      //       <Button
-      //         textStyle={styles.cancelButtonText}
-      //         style={styles.cancelButton}
-      //         onPress={() => this._dimissModal()}>
-      //         {languages.button.cancel}
-      //       </Button>
-      //     </View>
-      //   </View>
-      // </View>
+    return (
+      <View style={styles.container}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalTitleWrapper}>
+            <Text style={styles.modalTitle}>{i18n.t('task.edit_title')}</Text>
+          </View>
+          <View style={styles.modalContentWrapper}>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>{i18n.t('task.domain')}</Text>
+              <SectionedMultiSelect
+                items={ domains.map(domain => ({ id: domain.id, name: `${domain.name} ${domain.identity}` })) }
+                uniqueKey='id'
+                selectText='Please choose domain'
+                single={true}
+                hideSearch={true}
+                styles={{
+                  container: { backgroundColor: 'transparent' },
+                  item: { padding: 10},
+                }}
+                onSelectedItemsChange={ domainIds => this.setState({ domain_id: domainIds[0] }) }
+                selectedItems={[this.state.domain_id]}
+                modalWithSafeAreaView
+                hideConfirm
+              />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>* {i18n.t('task.task_detail')}</Text>
+              <TextInput
+                autoCapitalize="sentences"
+                ref="name"
+                placeholder={i18n.t('task.task_detail')}
+                underlineColorAndroid="#c7cdd3"
+                value={this.state.name}
+                onChangeText={name => this.setState({ name })}
+                style={{ height: 40 }}
+              />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>* {i18n.t('task.complete_date')}</Text>
+              <DatePicker
+                style={styles.datePicker}
+                date={this.state.completion_date}
+                mode="date"
+                placeholder={i18n.t('client.select_date')}
+                placeholderText="#ccc"
+                showIcon={true}
+                format="YYYY-MM-DD"
+                minDate="2000-01-01"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                onDateChange={completion_date =>
+                  this.setState({ completion_date: completion_date })}
+                customStyles={{
+                  dateInput: styles.datePickerBorder
+                }}
+                iconComponent={
+                  <View style={styles.datePickerIcon}>
+                    <Icon name="date-range" size={30} />
+                  </View>
+                }
+              />
+            </View>
+          </View>
+          <View style={styles.actionButtonWrapper}>
+            <Button
+              textStyle={styles.submitButtonText}
+              style={styles.submitButton}
+              onPress={() => this.updateTask()}>
+              {i18n.t('button.save')}
+            </Button>
+            <Button
+              textStyle={styles.cancelButtonText}
+              style={styles.cancelButton}
+              onPress={ () => Navigation.dismissAllModals() }>
+              {i18n.t('button.cancel')}
+            </Button>
+          </View>
+        </View>
+      </View>
     )
   }
 }

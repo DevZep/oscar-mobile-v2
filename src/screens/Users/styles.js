@@ -7,22 +7,6 @@ export const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 0
   },
-  contentsContainer: {
-    backgroundColor: '#fff'
-  },
-  aboutFamily: {
-    borderRadius: 15,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    backgroundColor: '#009999',
-    alignItems: 'flex-start',
-    padding: 20
-  },
-  aboutFamilyText: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: 'white'
-  },
   logoutButton: {
     backgroundColor: '#d73a49',
     borderWidth: 0,

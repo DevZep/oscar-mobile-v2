@@ -1,14 +1,22 @@
-import React, { Component } from 'react'
-import { connect }          from 'react-redux'
-import { View, Text, TouchableWithoutFeedback, ScrollView, Alert }       from 'react-native'
-import moment               from 'moment'
-import { sortBy }           from 'lodash'
-import Icon                 from 'react-native-vector-icons/MaterialIcons'
-import i18n                 from '../../../i18n'
-import { deleteTask }       from '../../../redux/actions/tasks'
-import { updateUser }       from "../../../redux/actions/users"
-import Card                 from '../../../components/Card'
-import styles               from './styles'
+import React, { Component }       from 'react'
+import { connect }                from 'react-redux'
+import moment                     from 'moment'
+import { sortBy }                 from 'lodash'
+import Icon                       from 'react-native-vector-icons/MaterialIcons'
+import { Navigation }             from 'react-native-navigation'
+import i18n                       from '../../../i18n'
+import { deleteTask, updateTask } from '../../../redux/actions/tasks'
+import { updateUser }             from "../../../redux/actions/users"
+import Card                       from '../../../components/Card'
+import styles                     from './styles'
+
+import {
+  View,
+  Text,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Alert
+} from 'react-native'
 
 class TaskDetail extends Component {
   static options(passProps) {
@@ -33,17 +41,28 @@ class TaskDetail extends Component {
       [
         { text: i18n.t('button.cancel'), style: 'cancel' },
         { text: i18n.t('button.save'), onPress: () =>
-          this.props.deleteTask(task, client.id, this.props.type, this.onDeleteSuccess)
+          this.props.deleteTask(task, client.id, this.props.type, this.onUpdateSuccess)
         }
       ]
     )
   }
 
-  onUpdateTask = (params) => {
-
+  onUpdateTask = (task, client) => {
+    Navigation.showModal({
+      component: {
+        name: 'oscar.editTask',
+        passProps: {
+          task,
+          client,
+          domains: this.props.domains,
+          onUpdateTask: (params) =>
+           this.props.updateTask(params, task, client.id, this.props.type, this.onUpdateSuccess)
+        },
+      }
+    })
   }
 
-  onDeleteSuccess = (client, user) => {
+  onUpdateSuccess = (client, user) => {
     if (client) this.setState({ client })
     if (user)   this.setState({ user })
   }
@@ -83,7 +102,7 @@ class TaskDetail extends Component {
         <View style={styles.iconContainer}>
           <View style={[styles.action, styles.iconEdit]}>
             <TouchableWithoutFeedback
-              onPress={() => null}>
+              onPress={() => this.onUpdateTask(task, client)}>
               <Icon color='#1c84c6' name="edit" size={20} />
             </TouchableWithoutFeedback>
           </View>
@@ -119,6 +138,7 @@ class TaskDetail extends Component {
 }
 
 const mapDispatch = {
+  updateTask,
   deleteTask,
   updateUser
 }
