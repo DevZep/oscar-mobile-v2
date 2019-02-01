@@ -1,18 +1,18 @@
-import React, { Component }             from 'react'
-import CryptoJS                         from 'crypto-js'
-import { View, Image, Platform }        from 'react-native'
-import { connect }                      from 'react-redux'
-import Database                         from '../../config/Database'
-import logo                             from '../../assets/oscar-logo.png'
-import styles                           from './styles'
-import i18n                             from '../../i18n'
-import { LANGUAGE_TYPES }               from '../../redux/types'
-import { checkConnection }              from '../../redux/actions/internet'
-import { startNgoScreen, startScreen }  from '../../navigation/config'
+import React, { Component } from 'react'
+import CryptoJS from 'crypto-js'
+import { View, Image, Platform } from 'react-native'
+import { connect } from 'react-redux'
+import Database from '../../config/Database'
+import logo from '../../assets/oscar-logo.png'
+import styles from './styles'
+import i18n from '../../i18n'
+import { LANGUAGE_TYPES } from '../../redux/types'
+import { checkConnection } from '../../redux/actions/internet'
+import { startNgoScreen, startScreen } from '../../navigation/config'
 import { setDefaultHeader, verifyUser } from '../../redux/actions/auth'
 
 class SplashScreen extends Component {
-   static options(passProps) {
+  static options(passProps) {
     return {
       statusBar: {
         style: Platform.OS === 'ios' ? 'dark' : 'light'
@@ -22,7 +22,7 @@ class SplashScreen extends Component {
   componentDidMount() {
     this.props.checkConnection()
     this.setLanguage()
-    setTimeout(() => this.authenticateUser(), 1500);
+    setTimeout(() => this.authenticateUser(), 1500)
   }
 
   setLanguage = () => {
@@ -32,16 +32,12 @@ class SplashScreen extends Component {
     }
   }
 
-
-  goToPinScreen = (pinCode) => {
-    startScreen(
-      'oscar.pin',
-      {
-        pinTitle: pinCode ? i18n.t('auth.enter_pin') : i18n.t('auth.set_pin'),
-        pinMode:  pinCode ? 'compare' : 'set',
-        pinCode:  pinCode
-      }
-    )
+  goToPinScreen = pinCode => {
+    startScreen('oscar.pin', {
+      pinTitle: pinCode ? i18n.t('auth.enter_pin') : i18n.t('auth.set_pin'),
+      pinMode: pinCode ? 'compare' : 'set',
+      pinCode: pinCode
+    })
   }
 
   authenticateUser = () => {
@@ -49,9 +45,9 @@ class SplashScreen extends Component {
     if (user == null) {
       startNgoScreen()
     } else {
-      if(hasInternet) {
+      if (hasInternet) {
         verifyUser(this.goToPinScreen)
-      }else{
+      } else {
         const pinCode = CryptoJS.SHA3(user.pin_code)
         this.goToPinScreen(pinCode)
       }
@@ -60,29 +56,30 @@ class SplashScreen extends Component {
 
   render() {
     return (
-      <View style={ styles.container }>
-        <Image
-          style={ styles.logo }
-          source={ logo }
-        />
+      <View style={styles.container}>
+        <Image style={styles.logo} source={logo} />
       </View>
     )
   }
 }
 
-const mapState = (state) => ({
+const mapState = state => ({
   user: state.auth.data,
   hasInternet: state.internet.hasInternet
 })
 
-const mapDispatch = (dispatch) => ({
+const mapDispatch = dispatch => ({
   checkConnection: () => dispatch(checkConnection()),
-  setLanguage: (language) => dispatch({
-    type: LANGUAGE_TYPES.SET_LANGUAGE,
-    language
-  }),
-  verifyUser: (action) => dispatch(verifyUser(action)),
+  setLanguage: language =>
+    dispatch({
+      type: LANGUAGE_TYPES.SET_LANGUAGE,
+      language
+    }),
+  verifyUser: action => dispatch(verifyUser(action)),
   setDefaultHeader: () => dispatch(setDefaultHeader())
 })
 
-export default connect(mapState, mapDispatch)(SplashScreen)
+export default connect(
+  mapState,
+  mapDispatch
+)(SplashScreen)

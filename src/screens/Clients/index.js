@@ -1,10 +1,10 @@
-import React, { Component }       from 'react'
-import { connect }                from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { ScrollView, View, Text } from 'react-native'
-import { fetchClients }           from '../../redux/actions/clients'
-import FlatList                   from '../../components/FlatList'
-import i18n                       from '../../i18n'
-import styles                     from './styles'
+import { fetchClients } from '../../redux/actions/clients'
+import FlatList from '../../components/FlatList'
+import i18n from '../../i18n'
+import styles from './styles'
 
 class Clients extends Component {
   componentDidMount() {
@@ -16,17 +16,15 @@ class Clients extends Component {
     return fullName || '(No Name)'
   }
 
-  subItems = (client) => {
-    const taskCount       = client.tasks.overdue.length
-                            + client.tasks.today.length
-                            + client.tasks.upcoming.length
+  subItems = client => {
+    const taskCount = client.tasks.overdue.length + client.tasks.today.length + client.tasks.upcoming.length
     const assessmentCount = client.assessments.length
-    const caseNoteCount   = client.case_notes.length
+    const caseNoteCount = client.case_notes.length
 
     return [
-      `${ taskCount } ${ i18n.t('client.tasks') }`,
-      `${ assessmentCount } ${ i18n.t('client.assessments') }`,
-      `${ caseNoteCount } ${ i18n.t('client.case_notes') }`,
+      `${taskCount} ${i18n.t('client.tasks')}`,
+      `${assessmentCount} ${i18n.t('client.assessments')}`,
+      `${caseNoteCount} ${i18n.t('client.case_notes')}`
     ]
   }
 
@@ -39,18 +37,13 @@ class Clients extends Component {
       )
     return (
       <ScrollView style={styles.container}>
-        <FlatList
-          data={this.props.clients}
-          title={ this.clientName }
-          subItems={ this.subItems }
-          isClientList
-        />
+        <FlatList data={this.props.clients} title={this.clientName} subItems={this.subItems} isClientList />
       </ScrollView>
     )
   }
 }
 
-const mapState = (state) => ({
+const mapState = state => ({
   clients: state.clients.data,
   loading: state.clients.loading
 })
@@ -59,4 +52,7 @@ const mapDispatch = {
   fetchClients
 }
 
-export default connect(mapState, mapDispatch)(Clients)
+export default connect(
+  mapState,
+  mapDispatch
+)(Clients)
