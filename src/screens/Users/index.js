@@ -10,7 +10,7 @@ import { fetchProvinces } from '../../redux/actions/provinces'
 import { fetchDepartments } from '../../redux/actions/departments'
 import { fetchUser } from '../../redux/actions/users'
 import { logoutUser } from '../../redux/actions/auth'
-import { profileStyle } from './styles'
+import { styles } from './styles'
 import i18n from '../../i18n'
 import appIcon from '../../utils/Icon'
 const color = '#18a689'
@@ -71,11 +71,11 @@ class User extends Component {
     const department = departments && user.department_id ? _.find(departments, { id: user.department_id }).name : ''
     const province = provinces && user.province_id ? _.find(provinces, { id: user.province_id }).name : ''
     return (
-      <View style={profileStyle.container}>
-        <View style={profileStyle.aboutFamily}>
-          <Text style={profileStyle.aboutFamilyText}>{i18n.t('user.about_user')}</Text>
+      <View style={styles.container}>
+        <View style={styles.aboutFamily}>
+          <Text style={styles.aboutFamilyText}>{i18n.t('user.about_user')}</Text>
         </View>
-        <ScrollView contentContainerStyle={profileStyle.contentsContainer} showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={styles.contentsContainer} showsVerticalScrollIndicator={false}>
           <Field name={i18n.t('user.first_name')} value={user.first_name} />
           <Field name={i18n.t('user.last_name')} value={user.last_name} />
           <Field name={i18n.t('user.gender')} value={_.capitalize(user.gender)} />
@@ -88,8 +88,8 @@ class User extends Component {
           <Field name={i18n.t('user.province')} value={province} />
         </ScrollView>
         <Button
-          style={profileStyle.logoutButton}
-          textStyle={profileStyle.buttonTitle}
+          style={styles.logoutButton}
+          textStyle={styles.buttonTitle}
           onPress={() => this.props.logoutUser()}
           isLoading={loading}
           isDisabled={loading}

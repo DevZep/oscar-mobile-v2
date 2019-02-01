@@ -1,4 +1,14 @@
 import React, { Component } from 'react'
+import { CheckBox } from 'react-native-elements'
+import { Navigation } from 'react-native-navigation'
+import DatePicker from 'react-native-datepicker'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select'
+import { connect } from 'react-redux'
+import { updateUser } from '../../../redux/actions/auth'
+import { MAIN_COLOR } from '../../../constants/colors'
+import styles from './styles'
+import i18n from '../../../i18n'
+import _ from 'lodash'
 import {
   View,
   Text,
@@ -11,16 +21,6 @@ import {
   Modal,
   StyleSheet
 } from 'react-native'
-import { CheckBox } from 'react-native-elements'
-import { Navigation } from 'react-native-navigation'
-import DatePicker from 'react-native-datepicker'
-import SectionedMultiSelect from 'react-native-sectioned-multi-select'
-import { connect } from 'react-redux'
-import { updateUser } from '../../redux/actions/auth'
-import { MAIN_COLOR } from '../../constants/colors'
-import { editStyle } from './styles'
-import i18n from '../../i18n'
-import _ from 'lodash'
 
 class UserEdit extends Component {
   state = { user: this.props.user }
@@ -51,37 +51,59 @@ class UserEdit extends Component {
   render() {
     const { departments, provinces } = this.props
     const { user } = this.state
-
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <ScrollView style={editStyle.mainContainer}>
-          <KeyboardAvoidingView style={editStyle.container}>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.first_name')}</Text>
+        <ScrollView style={styles.mainContainer}>
+          <KeyboardAvoidingView style={styles.container}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.first_name')}</Text>
               <TextInput
                 autoCapitalize="sentences"
-                style={editStyle.input}
+                style={styles.input}
                 value={user.first_name}
                 placeholder={i18n.t('user.first_name')}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('first_name', text)}
               />
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.last_name')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.last_name')}</Text>
               <TextInput
                 autoCapitalize="sentences"
-                style={editStyle.input}
+                style={styles.input}
                 value={user.last_name}
                 placeholder={i18n.t('user.last_name')}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('last_name', text.value)}
               />
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.dob')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.gender')}</Text>
+              <View style={styles.row}>
+                <CheckBox
+                  title="Male"
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#009999"
+                  containerStyle={styles.checkbox}
+                  checked={user.gender == 'male' ? true : false}
+                  onPress={() => this.setUpdateUser('gender', 'male')}
+                />
+                <CheckBox
+                  title="Female"
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#009999"
+                  containerStyle={styles.checkbox}
+                  checked={user.gender == 'female' ? true : false}
+                  onPress={() => this.setUpdateUser('gender', 'female')}
+                />
+              </View>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.dob')}</Text>
               <DatePicker
-                style={editStyle.datePicker}
+                style={styles.datePicker}
                 date={user.date_of_birth}
                 mode="date"
                 placeholder={i18n.t('client.select_date')}
@@ -94,23 +116,23 @@ class UserEdit extends Component {
                 cancelBtnText="Cancel"
                 onDateChange={date => this.setUpdateUser('date_of_birth', date)}
                 customStyles={{
-                  dateInput: editStyle.datePickerBorder
+                  dateInput: styles.datePickerBorder
                 }}
               />
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.job_title')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.job_title')}</Text>
               <TextInput
                 autoCapitalize="sentences"
-                style={editStyle.input}
+                style={styles.input}
                 value={user.job_title}
                 placeholder={i18n.t('user.job_title')}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('job_title', text)}
               />
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.department')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.department')}</Text>
               {departments != undefined && (
                 <SectionedMultiSelect
                   items={this.listItems(departments)}
@@ -130,10 +152,10 @@ class UserEdit extends Component {
                 />
               )}
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.start_date')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.start_date')}</Text>
               <DatePicker
-                style={editStyle.datePicker}
+                style={styles.datePicker}
                 date={user.start_date}
                 mode="date"
                 placeholder={i18n.t('client.select_date')}
@@ -145,12 +167,12 @@ class UserEdit extends Component {
                 cancelBtnText="Cancel"
                 onDateChange={date => this.setUpdateUser('start_date', date)}
                 customStyles={{
-                  dateInput: editStyle.datePickerBorder
+                  dateInput: styles.datePickerBorder
                 }}
               />
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.province')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.province')}</Text>
               {provinces != undefined && (
                 <SectionedMultiSelect
                   items={this.listItems(provinces)}
@@ -170,85 +192,85 @@ class UserEdit extends Component {
                 />
               )}
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.mobile')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.mobile')}</Text>
               <TextInput
                 autoCapitalize="sentences"
-                style={editStyle.input}
+                style={styles.input}
                 value={user.mobile}
                 placeholder="EX: 010555666"
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('mobile', text)}
               />
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>* {i18n.t('user.email')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>* {i18n.t('user.email')}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 ref={input => {
                   this.email = input
                 }}
-                style={editStyle.input}
+                style={styles.input}
                 value={user.email}
                 placeholder="someone@example.com"
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('email', text)}
               />
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>* {i18n.t('user.current_password')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>* {i18n.t('user.current_password')}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 ref={input => {
                   this.current_password = input
                 }}
-                style={editStyle.input}
+                style={styles.input}
                 secureTextEntry={true}
                 value={user.current_password}
                 placeholder={i18n.t('user.current_password')}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('current_password', text)}
               />
-              <Text style={editStyle.sms}>{i18n.t('user.current_password_label')}</Text>
+              <Text style={styles.sms}>{i18n.t('user.current_password_label')}</Text>
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.password')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.password')}</Text>
               <TextInput
                 autoCapitalize="sentences"
-                style={editStyle.input}
+                style={styles.input}
                 secureTextEntry={true}
                 value={user.password}
                 placeholder={i18n.t('user.password')}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('password', text)}
               />
-              <Text style={editStyle.sms}>{i18n.t('user.password_label')}</Text>
+              <Text style={styles.sms}>{i18n.t('user.password_label')}</Text>
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.confirm_password')}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.confirm_password')}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 ref={input => {
                   this.password_confirmation = input
                 }}
-                style={editStyle.input}
+                style={styles.input}
                 secureTextEntry={true}
                 value={user.password_confirmation}
                 placeholder={i18n.t('user.confirm_password')}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('password_confirmation', text)}
               />
-              <Text style={editStyle.sms}>{i18n.t('user.confirm_password_label')}</Text>
+              <Text style={styles.sms}>{i18n.t('user.confirm_password_label')}</Text>
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.overdue_summary')}</Text>
-              <View style={editStyle.row}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.overdue_summary')}</Text>
+              <View style={styles.row}>
                 <CheckBox
                   title="Yes"
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#009999"
-                  containerStyle={editStyle.checkbox}
+                  containerStyle={styles.checkbox}
                   checked={user.task_notify == true ? true : false}
                   onPress={() => this.setUpdateUser('task_notify', true)}
                 />
@@ -257,21 +279,21 @@ class UserEdit extends Component {
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#009999"
-                  containerStyle={editStyle.checkbox}
+                  containerStyle={styles.checkbox}
                   checked={user.task_notify == false ? true : false}
                   onPress={() => this.setUpdateUser('task_notify', false)}
                 />
               </View>
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.staff_report')}</Text>
-              <View style={editStyle.row}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.staff_report')}</Text>
+              <View style={styles.row}>
                 <CheckBox
                   title="Yes"
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#009999"
-                  containerStyle={editStyle.checkbox}
+                  containerStyle={styles.checkbox}
                   checked={user.staff_performance_notification == true ? true : false}
                   onPress={() => this.setUpdateUser('staff_performance_notification', true)}
                 />
@@ -280,21 +302,21 @@ class UserEdit extends Component {
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#009999"
-                  containerStyle={editStyle.checkbox}
+                  containerStyle={styles.checkbox}
                   checked={user.staff_performance_notification == false ? true : false}
                   onPress={() => this.setUpdateUser('staff_performance_notification', false)}
                 />
               </View>
             </View>
-            <View style={editStyle.inputContainer}>
-              <Text style={editStyle.label}>{i18n.t('user.calendar')}</Text>
-              <View style={editStyle.row}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('user.calendar')}</Text>
+              <View style={styles.row}>
                 <CheckBox
                   title="Yes"
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#009999"
-                  containerStyle={editStyle.checkbox}
+                  containerStyle={styles.checkbox}
                   checked={user.calendar_integration == true ? true : false}
                   onPress={() => this.setUpdateUser('calendar_integration', true)}
                 />
@@ -303,7 +325,7 @@ class UserEdit extends Component {
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#009999"
-                  containerStyle={editStyle.checkbox}
+                  containerStyle={styles.checkbox}
                   checked={user.calendar_integration == false ? true : false}
                   onPress={() => this.setUpdateUser('calendar_integration', false)}
                 />
@@ -328,22 +350,3 @@ export default connect(
   mapState,
   mapDispatch
 )(UserEdit)
-
-const styles = StyleSheet.create({
-  modalBackground: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    backgroundColor: '#00000040'
-  },
-  activityIndicatorWrapper: {
-    backgroundColor: '#FFFFFF',
-    height: 100,
-    width: 100,
-    borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-around'
-  }
-})

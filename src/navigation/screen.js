@@ -12,7 +12,7 @@ import Clients from '../screens/Clients'
 import Tasks from '../screens/Tasks'
 import Users from '../screens/Users'
 import Families from '../screens/Families'
-import EditUser from '../screens/Users/edit'
+import EditUser from '../screens/Users/Edit'
 
 const store = configureStore()
 
