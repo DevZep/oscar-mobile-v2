@@ -1,5 +1,5 @@
 export default {
-  choose_ngo:"നിങ്ങളുടെ സന്നദ്ധസംഘടന തിരഞ്ഞെടുക്കുക",
+  choose_ngo: 'നിങ്ങളുടെ സന്നദ്ധസംഘടന തിരഞ്ഞെടുക്കുക',
   language: {
     languages: 'ഭാഷകൾ',
     restart_now: 'അപ്ലിക്കേഷൻ പുനരാരംഭിക്കും',
@@ -67,9 +67,9 @@ export default {
       able_state: 'Able အေနအထား',
       has_goverment_care: 'အစိုးရေစာင့္ေရွာက္မႈေအာက္ေရာက္ဖူးသည္။',
       relevant_referral_information: 'သက္ဆိုင္ေသာလႊဲေျပာင္းျခင္းအခ်က္အလက္',
-      case_worker: "အမႈျခင္းရာအတြက္ေဆာင္ရြက္ေပးသူ / ၀န္ထမ္း",
+      case_worker: 'အမႈျခင္းရာအတြက္ေဆာင္ရြက္ေပးသူ / ၀န္ထမ္း',
       agencies_involved: 'ပါ၀င္သည့္ ေအဂ်င္စီမ်ား',
-      accept_reject: "လက္ခံ/ျငင္းပယ္",
+      accept_reject: 'လက္ခံ/ျငင္းပယ္',
       accepted: 'လက္ခံ',
       rejected: 'ျငင္းပယ္',
       discharged: 'Discharged',
@@ -99,7 +99,7 @@ export default {
       title_domain: 'Please enter the value',
       title_task: 'Please add a Task',
       warning_domain: (title, domainName) => `Aassessment ${title} domain ${domainName} is required!`,
-      warning_tasks: (domainName) => `Aassessment domain ${domainName} is required at least a task!`,
+      warning_tasks: domainName => `Aassessment domain ${domainName} is required at least a task!`
     },
     case_note_form: {
       create_title: 'Create Case Note',
@@ -119,10 +119,10 @@ export default {
       validation_title: 'Message',
       validation_meeting_date: 'Please select meeting date!',
       validation_attendee: 'Please input attendee!',
-      validation_type: 'Please select type!',
+      validation_type: 'Please select type!'
     },
     care_form: {
-      title: (title) => `${title} Care`,
+      title: title => `${title} Care`,
       start_date: 'စသည့္ ရက္စြဲ',
       carer_name: 'ေစာင့္ေရွာက္သူ နာမည္မ်ား',
       carer_address: 'ေစာင့္ေရွာက္သူ လိပ္စာ',
@@ -161,12 +161,12 @@ export default {
     manage: 'စီမံသည္',
     member_count: 'မိသားစု၀င္',
     name: 'နာမည္',
-    'no': 'မဟုတ္ပါ',
+    no: 'မဟုတ္ပါ',
     province: 'ခ႐ိုင္',
     significant_family_member_count: 'မိသားစု၀င္မ်ားသည့္ အေရအတြက္',
     total: 'စုစုေပါင္း',
     view: 'ျမင္ကြင္း',
-    'yes': 'ဟုတ္ပါသည္'
+    yes: 'ဟုတ္ပါသည္'
   },
   task: {
     title: 'Tasks',
@@ -184,7 +184,7 @@ export default {
     completion_blank_title: 'Completion Date',
     completion_blank: 'Please select Completion Date.',
     delete_title: 'Warning',
-    delete_detail: 'Are you sure you want to delete this task?',
+    delete_detail: 'Are you sure you want to delete this task?'
   },
   button: {
     ok: 'OK',
@@ -197,7 +197,7 @@ export default {
     clients: 'အမႈသည္',
     tasks: 'လုပ္ငန္းမ်ား',
     families: 'FAMILIES',
-    user: 'USER',
+    user: 'USER'
   },
   pin: {
     enter_pin: 'Enter PIN',
@@ -208,7 +208,7 @@ export default {
     button_ok: 'OK',
     button_delete: 'Delete',
     warning_size: 'PIN number must be 5 digits.',
-    set_pin: 'Set PIN',
+    set_pin: 'Set PIN'
   },
   user: {
     about_user: 'ഉപയോക്താവിനെക്കുറിച്ച്',
@@ -217,14 +217,18 @@ export default {
     last_name: 'Last Name',
     job_title: 'Job Title',
     department: 'Department',
+    select_department: 'Please choose department',
+    confirm: 'Confirm',
+    search: 'Search',
     mobile: 'Mobile',
     email: 'Email',
     dob: 'Date of Birth',
     start_date: 'Start Date',
     province: 'Province',
+    select_province: 'Please choose province',
     log_out: 'Logout',
     warning: 'You can not log out until you have internet connection so their data can sync.',
-    warning_title:  'Warning',
+    warning_title: 'Warning',
     current_password: 'Current Password',
     password: 'Password',
     confirm_password: 'Confirm Password',
@@ -235,5 +239,6 @@ export default {
     staff_report: 'Send me staff performance report',
     calendar: 'Calendar Integration',
     edit_title: 'Edit Profile',
+    gender: 'ലിംഗഭേദം'
   }
 }

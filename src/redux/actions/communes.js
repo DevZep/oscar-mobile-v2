@@ -1,6 +1,6 @@
-import axios              from "axios"
-import { COMMUNE_TYPES }  from "../types"
-import endpoint           from "../../constants/endpoint"
+import axios from 'axios'
+import { COMMUNE_TYPES } from '../types'
+import endpoint from '../../constants/endpoint'
 
 requestCommunes = () => ({
   type: COMMUNE_TYPES.COMMUNES_REQUESTING
@@ -17,7 +17,7 @@ requestCommunesFailed = error => ({
 })
 
 export function fetchCommunes() {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch(requestCommunes())
     axios
       .get(endpoint.communesPath)

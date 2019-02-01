@@ -1,6 +1,6 @@
-import axios          from "axios"
-import { NGO_TYPES }  from "../types"
-import endpoint       from "../../constants/endpoint"
+import axios from 'axios'
+import { NGO_TYPES } from '../types'
+import endpoint from '../../constants/endpoint'
 
 requestNgo = () => ({
   type: NGO_TYPES.NGO_REQUESTING
@@ -17,7 +17,7 @@ requestNgoFailed = error => ({
 })
 
 export function fetchNgos() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestNgo())
     axios
       .get(endpoint.baseURL('start') + endpoint.ngoPath)

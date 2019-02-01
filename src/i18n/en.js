@@ -1,8 +1,8 @@
 export default {
-  choose_ngo:"Choose your NGO",
+  choose_ngo: 'Choose your NGO',
   language: {
     languages: 'Languages',
-    restart_now: 'The App will be restarted',
+    restart_now: 'The app will be restarted',
     yes: 'Yes',
     no: 'No'
   },
@@ -67,9 +67,9 @@ export default {
       able_state: 'Able State',
       has_goverment_care: 'Has the client lived in government care?',
       relevant_referral_information: 'Relevant Referral Information',
-      case_worker: "Case Worker / Staff",
+      case_worker: 'Case Worker / Staff',
       agencies_involved: 'Other Agencies Involved',
-      accept_reject: "Accept / Reject",
+      accept_reject: 'Accept / Reject',
       accepted: 'Accept',
       rejected: 'Reject',
       discharged: 'Discharged',
@@ -99,7 +99,7 @@ export default {
       title_domain: 'Please enter the value',
       title_task: 'Please add a Task',
       warning_domain: (title, domainName) => `Aassessment ${title} domain ${domainName} is required!`,
-      warning_tasks: (domainName) => `Aassessment domain ${domainName} is required at least one task!`,
+      warning_tasks: domainName => `Aassessment domain ${domainName} is required at least one task!`
     },
     case_note_form: {
       create_title: 'Create Case Note',
@@ -119,10 +119,10 @@ export default {
       validation_title: 'Message',
       validation_meeting_date: 'Please select meeting date!',
       validation_attendee: 'Please input attendee!',
-      validation_type: 'Please select type!',
+      validation_type: 'Please select type!'
     },
     care_form: {
-      title: (title) => `${title} Care`,
+      title: title => `${title} Care`,
       start_date: 'Start Date',
       carer_name: 'Carer Name',
       carer_address: 'Carer Address',
@@ -161,12 +161,12 @@ export default {
     manage: 'Manage',
     member_count: 'Family Members',
     name: 'Name',
-    'no': 'No',
+    no: 'No',
     province: 'Province',
     significant_family_member_count: 'Significant Family Member Count',
     total: 'Total',
     view: 'View',
-    'yes': 'Yes'
+    yes: 'Yes'
   },
   task: {
     title: 'Tasks',
@@ -184,7 +184,7 @@ export default {
     completion_blank_title: 'Completion Date',
     completion_blank: 'Please select Completion Date.',
     delete_title: 'Warning',
-    delete_detail: 'Are you sure you want to delete this task?',
+    delete_detail: 'Are you sure you want to delete this task?'
   },
   button: {
     ok: 'OK',
@@ -197,7 +197,7 @@ export default {
     clients: 'CLIENTS',
     tasks: 'TASKS',
     families: 'FAMILIES',
-    user: 'USER',
+    user: 'USER'
   },
   pin: {
     enter_pin: 'Enter PIN',
@@ -208,7 +208,7 @@ export default {
     button_ok: 'OK',
     button_delete: 'Delete',
     warning_size: 'PIN number must be 5 digits.',
-    set_pin: 'Set PIN',
+    set_pin: 'Set PIN'
   },
   user: {
     about_user: 'About User',
@@ -217,14 +217,18 @@ export default {
     last_name: 'Last Name',
     job_title: 'Job Title',
     department: 'Department',
+    select_department: 'Please choose department',
+    confirm: 'Confirm',
+    search: 'Search',
     mobile: 'Mobile',
     email: 'Email',
     dob: 'Date of Birth',
     start_date: 'Start Date',
     province: 'Province',
+    select_province: 'Please choose province',
     log_out: 'Logout',
     warning: 'You can not log out until you have internet connection so their data can sync.',
-    warning_title:  'Warning',
+    warning_title: 'Warning',
     current_password: 'Current Password',
     password: 'Password',
     confirm_password: 'Confirm Password',
@@ -235,5 +239,6 @@ export default {
     staff_report: 'Send me staff performance report',
     calendar: 'Calendar Integration',
     edit_title: 'Edit Profile',
+    gender: 'Gender'
   }
 }

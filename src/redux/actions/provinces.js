@@ -1,6 +1,6 @@
-import axios                from "axios"
-import { PROVINCE_TYPES }   from "../types"
-import endpoint             from "../../constants/endpoint"
+import axios from 'axios'
+import { PROVINCE_TYPES } from '../types'
+import endpoint from '../../constants/endpoint'
 
 requestProvinces = () => ({
   type: PROVINCE_TYPES.PROVINCES_REQUESTING
@@ -17,7 +17,7 @@ requestProvincesFailed = error => ({
 })
 
 export function fetchProvinces() {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch(requestProvinces())
     axios
       .get(endpoint.provincesPath)

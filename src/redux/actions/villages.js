@@ -1,6 +1,6 @@
-import axios                from "axios"
-import { VILLAGE_TYPES }    from "../types"
-import endpoint             from "../../constants/endpoint"
+import axios from 'axios'
+import { VILLAGE_TYPES } from '../types'
+import endpoint from '../../constants/endpoint'
 
 requestVillages = () => ({
   type: VILLAGE_TYPES.VILLAGES_REQUESTING
@@ -17,7 +17,7 @@ requestVillagesFailed = error => ({
 })
 
 export function fetchVillages() {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch(requestVillages())
     axios
       .get(endpoint.villagesPath)

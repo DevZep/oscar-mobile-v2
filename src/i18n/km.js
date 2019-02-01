@@ -1,5 +1,5 @@
 export default {
-  choose_ngo:"ជ្រើសរើសអង្គការរបស់អ្នក",
+  choose_ngo: 'ជ្រើសរើសអង្គការរបស់អ្នក',
   language: {
     languages: 'ភាសា',
     restart_now: 'កម្មវិធីនឹងបើកម្ដងទៀត',
@@ -67,9 +67,9 @@ export default {
       able_state: 'Able State',
       has_goverment_care: 'តើធ្លាប់ស្ថិតក្នុងការថែទំារបស់រាជរដ្ឋាភិបាល?',
       relevant_referral_information: 'ព័ត៌មានសំខាន់ៗដែលពាក់ព័ន្ធនឹងការបញ្ជូនករណី',
-      case_worker: "បុគ្គលិកគ្រប់គ្រងករណី",
+      case_worker: 'បុគ្គលិកគ្រប់គ្រងករណី',
       agencies_involved: 'អង្គភាពដែលពាក់ព័ន្ធ',
-      accept_reject: "ទទួល/បដិសេធ",
+      accept_reject: 'ទទួល/បដិសេធ',
       accepted: 'ទទួល',
       rejected: 'បដិសេធ',
       discharged: 'បានចាកចេញ',
@@ -99,7 +99,7 @@ export default {
       title_task: 'សូមបន្ថែមកិច្ចការ',
       warning_task: '* យ៉ាងហោចណាស់ត្រូវបង្កើតកាតព្វកិច្ចមួយ',
       warning_domain: (title, domainName) => `កាតព្វកិច្ច ${title} កាតព្វកិច្ច ${domainName}!`,
-      warning_tasks: (domainName) => `យ៉ាងហោចណាស់ត្រូវបង្កើតកាតព្វកិច្ចមួយ សំរាប់កត្តា ${domainName}!`,
+      warning_tasks: domainName => `យ៉ាងហោចណាស់ត្រូវបង្កើតកាតព្វកិច្ចមួយ សំរាប់កត្តា ${domainName}!`
     },
     case_note_form: {
       create_title: 'កំណត់ត្រាករណីថ្មី',
@@ -119,10 +119,10 @@ export default {
       validation_title: 'ព័ត៌មាន',
       validation_meeting_date: 'សូមជ្រើសរើសកាលបរិច្ឆេទនៃកិច្ចប្រជុំ!',
       validation_attendee: 'សូមបញ្ចូលអ្នកចូលរួម!',
-      validation_type: 'សូមជ្រើសរើសប្រភេទ!',
+      validation_type: 'សូមជ្រើសរើសប្រភេទ!'
     },
     care_form: {
-      title: (title) => `ករណី ${title}`,
+      title: title => `ករណី ${title}`,
       start_date: 'ងៃចាប់ផ្តើម',
       carer_name: 'មោះអ្នកថែទាំ',
       carer_address: 'អាសយដ្ឋានអ្នកថែទាំ',
@@ -161,12 +161,12 @@ export default {
     manage: 'សកម្មភាព',
     member_count: 'ចំនួនសមាជិកគ្រួសារ',
     name: 'មោះអ្នកថែទាំកុមារ',
-    'no': 'ទេ',
+    no: 'ទេ',
     province: 'ខេត្ត/ក្រុង',
     significant_family_member_count: 'ចំនួនសមាជិកគ្រួសារដែលចូលរួមរកប្រាក់ចំណូល',
     total: 'សរុប',
     view: 'មើល',
-    'yes': 'បាទ/ចាស'
+    yes: 'បាទ/ចាស'
   },
   task: {
     title: 'កាតព្វកិច្ច',
@@ -184,7 +184,7 @@ export default {
     completion_blank_title: 'ថ្ងៃកំណត់',
     completion_blank: 'សូមជ្រើសកាលបរិច្ឆេទបញ្ចប់',
     delete_title: 'ប្រុងប្រយ័ត្ន',
-    delete_detail: 'តើអ្នកប្រាកដថាអ្នកចង់លុបភារកិច្ចនេះទេ?',
+    delete_detail: 'តើអ្នកប្រាកដថាអ្នកចង់លុបភារកិច្ចនេះទេ?'
   },
   button: {
     ok: 'យល់ស្រប',
@@ -197,7 +197,7 @@ export default {
     clients: 'អតិថិជន',
     tasks: 'កាតព្វកិច្ច',
     families: 'គ្រួសារ',
-    user: 'ពត៌មានផ្ទាល់ខ្លួន',
+    user: 'ពត៌មានផ្ទាល់ខ្លួន'
   },
   pin: {
     enter_pin: 'បញ្ចូលលេខសំងាត់',
@@ -208,7 +208,7 @@ export default {
     button_ok: 'យល់ស្រប',
     button_delete: 'លុប',
     warning_size: 'លេខសម្ងាត់ត្រូវតែមាន 5 ខ្ទង់',
-    set_pin: 'កំណត់លេខសំងាត់',
+    set_pin: 'កំណត់លេខសំងាត់'
   },
   user: {
     about_user: 'ពត៌មានផ្ទាល់ខ្លួន',
@@ -217,14 +217,18 @@ export default {
     last_name: 'នាមត្រកូល',
     job_title: 'មុខតំណែង',
     department: 'កម្មវិធី',
+    select_department: 'សូមជ្រើសរើសកម្មវិធី',
+    confirm: 'យល់ព្រម',
+    search: 'ស្វែងរក',
     mobile: 'លេខទូរស័ព្ទ',
     email: 'ឣុីម៉ែល',
     dob: 'ថ្ងៃ ខែ ឆ្នាំ កំណើត',
     start_date: 'កាលបរិច្ឆេទចាប់ផ្តើម',
     province: 'ខេត្ត',
+    select_province: 'សូមជ្រើសរើសខេត្ត',
     log_out: 'ចាកចេញ',
     warning: 'អ្នកមិនអាចចេញបានទេរហូតទាល់តែអ្នកមានអ៊ិនធឺណិត',
-    warning_title:  'ប្រុងប្រយ័ត្ន',
+    warning_title: 'ប្រុងប្រយ័ត្ន',
     current_password: 'លេខកូដសំងាត់បច្ចុប្បន្ន',
     password: 'លេខកូដសំងាត់',
     confirm_password: 'បញ្ជាក់ពាក្យសម្ងាត់ថ្មី',
@@ -235,5 +239,6 @@ export default {
     staff_report: 'ផ្ញើឲ្យខ្ញុំនូវរបាយការណ៍ការងាររបស់បុគ្គលិក',
     calendar: 'ការដាក់បញ្ចូលប្រតិទិន',
     edit_title: 'កែសម្រួលពត៌មានផ្ទាល់ខ្លួន',
+    gender: 'ភេទ'
   }
 }

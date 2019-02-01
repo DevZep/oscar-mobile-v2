@@ -1,11 +1,11 @@
-import React, { Component }             from 'react'
-import { connect }                      from 'react-redux'
-import { View, Text, StyleSheet }       from 'react-native'
-import CryptoJS                         from 'crypto-js'
-import { startScreen, startTabScreen }  from '../../navigation/config'
-import { updatePin }                    from '../../redux/actions/auth'
-import PinCode                          from '../../components/pin'
-import i18n                             from '../../i18n'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import CryptoJS from 'crypto-js'
+import { startScreen, startTabScreen } from '../../navigation/config'
+import { updatePin } from '../../redux/actions/auth'
+import PinCode from '../../components/pin'
+import i18n from '../../i18n'
 
 class Pin extends Component {
   state = {
@@ -15,10 +15,10 @@ class Pin extends Component {
   }
 
   verifyCode = (code, clear, vibration) => {
-    const { pinMode, pinCode  } = this.state
+    const { pinMode, pinCode } = this.state
     if (pinMode == 'set') {
       this.setState({
-        pinCode:  CryptoJS.SHA3(code),
+        pinCode: CryptoJS.SHA3(code),
         pinTitle: i18n.t('auth.confirm_pin'),
         pinMode: 'confirm'
       })
@@ -28,10 +28,8 @@ class Pin extends Component {
       const oldCode = String(pinCode)
 
       if (newCode == oldCode) {
-        if (pinMode == 'compare')
-          setTimeout(() => startTabScreen(), 200)
-        else
-          this.props.updatePin(code)
+        if (pinMode == 'compare') setTimeout(() => startTabScreen(), 200)
+        else this.props.updatePin(code)
       } else {
         vibration()
         clear()
@@ -39,9 +37,8 @@ class Pin extends Component {
     }
   }
 
-
   render() {
-    return(
+    return (
       <View style={styles.container}>
         <Text style={styles.title}>{this.state.pinTitle}</Text>
         <PinCode Size={5} eventCode={this.verifyCode} />
@@ -64,7 +61,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapState = (state) => ({
+const mapState = state => ({
   user: state.auth.data,
   headers: state.auth.headers
 })
@@ -73,4 +70,7 @@ const mapDispatch = {
   updatePin
 }
 
-export default connect(mapState, mapDispatch)(Pin)
+export default connect(
+  mapState,
+  mapDispatch
+)(Pin)
