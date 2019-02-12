@@ -21,7 +21,8 @@ export const pushScreen = (componentId, options = {}) => {
       passProps: options.props,
       options: {
         bottomTabs: {
-          visible: false
+          visible: false,
+          drawBehind: true
         },
         topBar: {
           visible: options.topBar == undefined ? true : options.topBar,

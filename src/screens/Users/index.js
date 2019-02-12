@@ -43,7 +43,8 @@ class User extends Component {
           },
           options: {
             bottomTabs: {
-              visible: false
+              visible: false,
+              drawBehind: true
             },
             topBar: {
               title: {

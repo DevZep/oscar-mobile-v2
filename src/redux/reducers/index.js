@@ -11,6 +11,8 @@ import users from './users'
 import domains from './domains'
 import clients from "./clients"
 import families from './families'
+import setting from './setting'
+import programStreams from './programStreams'
 
 export default combineReducers({
   auth,
@@ -25,4 +27,6 @@ export default combineReducers({
   villages,
   departments,
   families,
+  setting,
+  programStreams
 })
