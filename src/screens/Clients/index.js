@@ -11,7 +11,7 @@ import styles from './styles'
 
 class Clients extends Component {
   componentDidMount() {
-    // this.props.fetchClients()
+    this.props.fetchClients()
     this.props.fetchSetting()
     this.props.fetchProgramStreams()
   }
@@ -20,7 +20,10 @@ class Clients extends Component {
     pushScreen(this.props.componentId, {
       screen: 'oscar.clientDetail',
       title: this.clientName(client),
-      props: { client, ...this.props }
+      props: {
+        clientId: client.id,
+        ...this.props
+      }
     })
   }
 

@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from 'react-native'
 import { connect }  from 'react-redux'
 import Swiper from 'react-native-swiper'
 import _ from 'lodash'
+import { pushScreen } from '../../../navigation/config'
 import i18n from '../../../i18n'
 import ClientInformation from './Information'
 import Menu from './Menu'
@@ -12,15 +13,21 @@ import styles from './styles'
 class ClientDetail extends Component {
   navigateToAssessments = (client) => {}
   navigateToCaseNotes = (client) => {}
-  navigateToTasks = (client) => {}
+  navigateToTasks = (client) => {
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.tasks',
+      title: i18n.t('task.title'),
+      props: { clientId: client.id }
+    })
+  }
   navigateToEnrollProgramStreams = (client) => {}
   navigateToProgramStreams = (client) => {}
   navigateToAdditionalForms = (client) => {}
   navigateToAddForms = (client) => {}
 
   render() {
-    const { client } = this.props
-    const { setting } = this.props
+    const { clients, setting } = this.props
+    const client = clients[this.props.clientId]
     const enableAssessment = setting.enable_custom_assessment || setting.enable_default_assessment
 
     const enrolledProgramStreamCount = client.program_streams.filter(
@@ -35,7 +42,7 @@ class ClientDetail extends Component {
     const overdue   = client.tasks.overdue.length
     const today     = client.tasks.today.length
     const upcoming  = client.tasks.upcoming.length
-
+    console.log(client.tasks)
     return (
       <View style={{ flex: 1, backgroundColor: '#EDEFF1' }}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -117,7 +124,8 @@ class ClientDetail extends Component {
 
 const mapState = (state) => ({
   programStreams: state.programStreams.data,
-  programStreamsLoading: state.programStreams.loading
+  programStreamsLoading: state.programStreams.loading,
+  clients: state.clients.data
 })
 
 export default connect(mapState)(ClientDetail)
