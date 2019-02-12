@@ -78,7 +78,7 @@ class ClientDetail extends Component {
                   title={i18n.t('client.program_stream')}
                   value={programStreams}
                   color='#1ab394'
-                  isLoaded={this.props.programStreamsLoading}
+                  loading={this.props.programStreamsLoading}
                   onPress={() =>  this.navigateToProgramStreams(client) }
                 />
               </View>

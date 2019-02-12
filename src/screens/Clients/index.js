@@ -17,7 +17,6 @@ class Clients extends Component {
   }
 
   onClientPress = (client) => {
-    console.log({...this.props})
     pushScreen(this.props.componentId, {
       screen: 'oscar.clientDetail',
       title: this.clientName(client),

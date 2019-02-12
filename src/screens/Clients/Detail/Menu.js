@@ -12,8 +12,8 @@ const Menu = (props) => (
   <TouchableWithoutFeedback onPress={ props.disabled ? null : props.onPress}>
     <View style={ [styles.widgetComponent, { backgroundColor: props.disabled ? '#dedede' : props.color }] }>
       {
-        props.isLoaded
-          ? <ActivityIndicator style={{ marginBottom: 15 }} />
+        props.loading
+          ? <ActivityIndicator style={{ marginBottom: 15 }} color='#fff'/>
           : <Text style={styles.itemValue}> { props.value } </Text>
       }
       <Text style={styles.itemTitle}>
