@@ -8,6 +8,7 @@ const Card = (props) => (
       <Text style={styles.headerTitle}>
         { props.title }
       </Text>
+      { props.rightButton }
     </View>
     <View style={styles.content}>
       { props.children }
@@ -29,7 +30,8 @@ const styles = StyleSheet.create({
   header: {
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    alignItems: 'flex-start',
+    justifyContent: "space-between",
+    flexDirection: 'row',
     padding: 20
   },
   headerTitle: {

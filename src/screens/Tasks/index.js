@@ -37,7 +37,8 @@ class Tasks extends Component {
   } 
 
   getClientTasksCount = () => {
-    const { client } = this.props
+    const { clients, clientId } = this.props
+    const client = clients[clientId]
     return {
       overdue:  client.tasks.overdue.length,
       today:    client.tasks.today.length,
@@ -46,7 +47,8 @@ class Tasks extends Component {
   }
 
   onTaskButtonClick = (type) => {
-    const { users, auth, domains } = this.props
+    const { users, auth, domains, clients, clientId } = this.props
+
     pushScreen(this.props.componentId, {
       screen: 'oscar.taskDetail',
       title: i18n.t(`task.${type}`),
@@ -55,13 +57,14 @@ class Tasks extends Component {
         user: users[auth.id],
         color: TASK_COLORS[type],
         domains: domains,
-        isClientTasksPage: !!this.props.client
+        client: clients[clientId],
+        isClientTasksPage: !!clientId
       },
     })
   }
 
   render() {
-    const taskCount = this.props.client
+    const taskCount = this.props.clientId
                         ? this.getClientTasksCount()
                         : this.getAllClientsTasksCount()
 
@@ -106,7 +109,8 @@ const styles = StyleSheet.create({
 const mapState = (state) => ({
   users: state.users.data,
   auth: state.auth.data,
-  domains: state.domains.data
+  domains: state.domains.data,
+  clients: state.clients.data
 })
 
 const mapDispatch = {

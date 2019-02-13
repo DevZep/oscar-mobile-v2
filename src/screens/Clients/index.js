@@ -6,6 +6,9 @@ import { fetchProvinces } from '../../redux/actions/provinces'
 import { fetchDistricts } from '../../redux/actions/districts'
 import { fetchCommunes } from '../../redux/actions/communes'
 import { fetchVillages } from '../../redux/actions/villages'
+import { fetchSetting } from '../../redux/actions/setting'
+import { fetchProgramStreams } from '../../redux/actions/programStreams'
+import { pushScreen } from '../../navigation/config'
 import FlatList from '../../components/FlatList'
 import i18n from '../../i18n'
 import styles from './styles'
@@ -17,6 +20,19 @@ class Clients extends Component {
     this.props.fetchProvinces()
     this.props.fetchCommunes()
     this.props.fetchVillages()
+    this.props.fetchSetting()
+    this.props.fetchProgramStreams()
+  }
+
+  onClientPress = client => {
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.clientDetail',
+      title: this.clientName(client),
+      props: {
+        clientId: client.id,
+        ...this.props
+      }
+    })
   }
 
   clientName = ({ given_name, family_name }) => {
@@ -45,7 +61,13 @@ class Clients extends Component {
       )
     return (
       <ScrollView style={styles.container}>
-        <FlatList data={this.props.clients} title={this.clientName} subItems={this.subItems} isClientList />
+        <FlatList
+          data={this.props.clients}
+          title={this.clientName}
+          subItems={this.subItems}
+          onPress={this.onClientPress}
+          isClientList
+        />
       </ScrollView>
     )
   }
@@ -53,7 +75,8 @@ class Clients extends Component {
 
 const mapState = state => ({
   clients: state.clients.data,
-  loading: state.clients.loading
+  loading: state.clients.loading,
+  setting: state.setting.data
 })
 
 const mapDispatch = {
@@ -61,7 +84,9 @@ const mapDispatch = {
   fetchProvinces,
   fetchDistricts,
   fetchCommunes,
-  fetchVillages
+  fetchVillages,
+  fetchSetting,
+  fetchProgramStreams
 }
 
 export default connect(

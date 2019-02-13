@@ -4,6 +4,7 @@ import { Navigation }   from "react-native-navigation"
 import moment           from "moment"
 import endpoint         from "../../constants/endpoint"
 import { updateUser }   from "./users"
+import { updateClient } from "./clients"
 
 export function deleteTask(task, clientId, taskType, onDeleteSuccess) {
   return (dispatch, getState) => {
@@ -15,7 +16,7 @@ export function deleteTask(task, clientId, taskType, onDeleteSuccess) {
       return axios.delete(path)
         .then(response => {
           dispatch(updateUserTasks(task, clientId, taskType, onDeleteSuccess, 'delete'))
-          // dispatch(updateClientTasks(task, clientId, taskType, onDeleteSuccess))
+          dispatch(updateClientTasks(task, clientId, taskType, onDeleteSuccess, 'delete'))
         })
         .catch(error => {
           console.log(error)
@@ -36,6 +37,7 @@ export function updateTask(params, task, clientId, taskType, onUpdateSuccess) {
         .then(response => {
           const updatedTask = { ...task, ...params }
           dispatch(updateUserTasks(updatedTask, clientId, taskType, onUpdateSuccess, 'update'))
+          dispatch(updateClientTasks(updatedTask, clientId, taskType, onUpdateSuccess, 'update'))
           Alert.alert(
             'Update Task',
             'You have successfully updated task', 
@@ -52,32 +54,32 @@ export function updateTask(params, task, clientId, taskType, onUpdateSuccess) {
   }
 }
 
-// export function updateClientTasks(task, clientId, taskType, onSuccess, action) {
-//   return (dispatch, getState) => {
-//     const clients     = getState().clients.data
-//     const client      = clients[clientId]
-//     let   tasks       = client.tasks
+export function updateClientTasks(task, clientId, taskType, onSuccess, action) {
+  return (dispatch, getState) => {
+    const clients     = getState().clients.data
+    const client      = clients[clientId]
+    let   tasks       = { ...client.tasks }
 
-//     if (action === 'update') {
-//       const isUpcoming  = moment(task.completion_date).isAfter(Date.now(), 'day')
-//       const isToday     = moment(task.completion_date).isSame(Date.now(), 'day')
-//       const newTaskType = isUpcoming ? 'upcoming' : isToday ? 'today' : 'overdue'
+    if (action === 'update') {
+      const isUpcoming  = moment(task.completion_date).isAfter(Date.now(), 'day')
+      const isToday     = moment(task.completion_date).isSame(Date.now(), 'day')
+      const newTaskType = isUpcoming ? 'upcoming' : isToday ? 'today' : 'overdue'
 
-//       if (taskType == newTaskType) {
-//         tasks[taskType] = tasks[taskType].map(t => t.id === task.id ? task : t )
-//       }
-//       else {
-//         tasks[taskType]    = tasks[taskType].filter(t => t.id !== task.id )
-//         tasks[newTaskType] = tasks[newTaskType].concat(task)
-//       }
-//     }
-//     if (action === 'delete')
-//       tasks[taskType] = tasks[taskType].filter(t => t.id !== task.id )
+      if (taskType == newTaskType) {
+        tasks[taskType] = tasks[taskType].map(t => t.id === task.id ? task : t )
+      }
+      else {
+        tasks[taskType]    = tasks[taskType].filter(t => t.id !== task.id )
+        tasks[newTaskType] = tasks[newTaskType].concat(task)
+      }
+    }
+    if (action === 'delete')
+      tasks[taskType] = tasks[taskType].filter(t => t.id !== task.id )
 
-//     return { ...client, tasks }
-//     })
-//   }
-// }
+    dispatch(updateClient({ ...client, tasks }))
+    onSuccess({ ...client, tasks }, null)
+  }
+}
 
 
 export function updateUserTasks(task, clientId, taskType, onSuccess, action) {

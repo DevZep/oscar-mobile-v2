@@ -21,6 +21,9 @@ export default (state = initialState, action) => {
       return state.set("error", action.error)
                   .set("loading", false)
 
+    case CLIENT_TYPES.UPDATE_CLIENT:
+      return state.setIn(['data', action.client.id], action.client)
+
     default:
       return state
   }

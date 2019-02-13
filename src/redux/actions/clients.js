@@ -16,6 +16,11 @@ requestClientsFailed = error => ({
   error
 })
 
+export const updateClient = client => ({
+  type: CLIENT_TYPES.UPDATE_CLIENT,
+  client
+})
+
 export function fetchClients() {
   return (dispatch) => {
     dispatch(requestClients())
