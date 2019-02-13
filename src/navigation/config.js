@@ -32,7 +32,8 @@ export const pushScreen = (componentId, options = {}) => {
           },
           backButton: {
             showTitle: false
-          }
+          },
+          rightButtons: options.rightButtons
         },
         customTransition: options.customTransition
       }

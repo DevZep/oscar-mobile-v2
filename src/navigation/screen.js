@@ -17,6 +17,8 @@ import TaskDetail from '../screens/Tasks/Detail'
 import EditTask from '../screens/Tasks/Edit'
 import FamilyDetail from '../screens/Families/Detail'
 import ClientDetail from '../screens/Clients/Detail'
+import Assessments from '../screens/Assessments'
+import AssessmentDetail from '../screens/Assessments/Detail'
 
 const store = configureStore()
 
@@ -36,4 +38,6 @@ export default () => {
   Navigation.registerComponentWithRedux('oscar.editTask', () => EditTask, Provider, store)
   Navigation.registerComponentWithRedux('oscar.familyDetail', () => FamilyDetail, Provider, store)
   Navigation.registerComponentWithRedux('oscar.clientDetail', () => ClientDetail, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.assessments', () => Assessments, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.assessmentDetail', () => AssessmentDetail, Provider, store)
 }

@@ -11,8 +11,19 @@ import styles from './styles'
 
 
 class ClientDetail extends Component {
-  navigateToAssessments = (client) => {}
+  navigateToAssessments = (client) => {
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.assessments',
+      title: i18n.t('task.title'),
+      props: {
+        clientId: client.id,
+        setting: this.props.setting
+      }
+    })
+  }
+
   navigateToCaseNotes = (client) => {}
+
   navigateToTasks = (client) => {
     pushScreen(this.props.componentId, {
       screen: 'oscar.tasks',
@@ -20,6 +31,7 @@ class ClientDetail extends Component {
       props: { clientId: client.id }
     })
   }
+
   navigateToEnrollProgramStreams = (client) => {}
   navigateToProgramStreams = (client) => {}
   navigateToAdditionalForms = (client) => {}
@@ -42,7 +54,7 @@ class ClientDetail extends Component {
     const overdue   = client.tasks.overdue.length
     const today     = client.tasks.today.length
     const upcoming  = client.tasks.upcoming.length
-    console.log(client.tasks)
+
     return (
       <View style={{ flex: 1, backgroundColor: '#EDEFF1' }}>
         <ScrollView showsVerticalScrollIndicator={false}>
