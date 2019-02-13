@@ -22,7 +22,7 @@ export function fetchCommunes() {
     axios
       .get(endpoint.communesPath)
       .then(response => {
-        dispatch(requestCommunesSucceed(response.data))
+        dispatch(requestCommunesSucceed(response.data.communes))
       })
       .catch(error => {
         dispatch(requestCommunesFailed(error))

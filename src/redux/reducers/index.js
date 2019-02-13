@@ -4,12 +4,13 @@ import internet from './internet'
 import language from './language'
 import ngo from './ngo'
 import provinces from './provinces'
+import districts from './districts'
 import communes from './communes'
 import villages from './villages'
 import departments from './departments'
 import users from './users'
 import domains from './domains'
-import clients from "./clients"
+import clients from './clients'
 import families from './families'
 
 export default combineReducers({
@@ -21,8 +22,9 @@ export default combineReducers({
   language,
   domains,
   provinces,
+  districts,
   communes,
   villages,
   departments,
-  families,
+  families
 })

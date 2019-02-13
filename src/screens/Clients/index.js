@@ -2,13 +2,21 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ScrollView, View, Text } from 'react-native'
 import { fetchClients } from '../../redux/actions/clients'
+import { fetchProvinces } from '../../redux/actions/provinces'
+import { fetchDistricts } from '../../redux/actions/districts'
+import { fetchCommunes } from '../../redux/actions/communes'
+import { fetchVillages } from '../../redux/actions/villages'
 import FlatList from '../../components/FlatList'
 import i18n from '../../i18n'
 import styles from './styles'
 
 class Clients extends Component {
   componentDidMount() {
-    // this.props.fetchClients()
+    this.props.fetchClients()
+    this.props.fetchDistricts()
+    this.props.fetchProvinces()
+    this.props.fetchCommunes()
+    this.props.fetchVillages()
   }
 
   clientName = ({ given_name, family_name }) => {
@@ -49,7 +57,11 @@ const mapState = state => ({
 })
 
 const mapDispatch = {
-  fetchClients
+  fetchClients,
+  fetchProvinces,
+  fetchDistricts,
+  fetchCommunes,
+  fetchVillages
 }
 
 export default connect(

@@ -22,7 +22,7 @@ export function fetchDepartments() {
     axios
       .get(endpoint.departmentsPath)
       .then(response => {
-        dispatch(requestDepartmentsSucceed(response.data))
+        dispatch(requestDepartmentsSucceed(response.data.departments))
       })
       .catch(error => {
         dispatch(requestDepartmentsFailed(error))
