@@ -152,7 +152,9 @@ configurations.all {
 
 
 dependencies {
-    compile project(':react-native-fast-image')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-document-picker')
+    implementation project(':react-native-fast-image')
     implementation project(':react-native-restart')
     implementation project(':realm')
     implementation fileTree(dir: "libs", include: ["*.jar"])

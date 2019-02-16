@@ -32,7 +32,10 @@ class UserEdit extends Component {
 
   navigationButtonPressed({ buttonId }) {
     if (buttonId === 'SAVE_FAMILY') {
-      this.props.updateFamily(this.state.family)
+      if (_.isEmpty(this.state.family.children)) {
+        this.setUpdateFamily('children', [' '])
+      }
+      this.props.updateFamily(this.state.family, this.props)
     }
   }
 
@@ -56,12 +59,17 @@ class UserEdit extends Component {
     const { departments, provinces, communes, villages, districts, clients } = this.props
     const { family } = this.state
     const clientOptions = _.assignIn({}, clients, family.clients)
+    const status = [{ name: 'Active', id: 'Active' }, { name: 'Inactive', id: 'Inactive' }]
     const familyType = [
-      { name: 'Birth Family', id: 'birth_family' },
-      { name: 'Emergency', id: 'emergency' },
-      { name: 'Foster', id: 'foster' },
-      { name: 'Inactive', id: 'inactive' },
-      { name: 'Kinship', id: 'kinship' }
+      { name: 'Birth Family (Both Parents)', id: 'Birth Family (Both Parents)' },
+      { name: 'Birth Family (Only Mother)', id: 'Birth Family (Only Mother)' },
+      { name: 'Birth Family (Only Father)', id: 'Birth Family (Only Father)' },
+      { name: 'Extended Family / Kinship Care', id: 'Extended Family / Kinship Care' },
+      { name: 'Short Term / Emergency Foster Care', id: 'Short Term / Emergency Foster Care' },
+      { name: 'Long Term Foster Care', id: 'Long Term Foster Care' },
+      { name: 'Domestically Adopted', id: 'Domestically Adopted' },
+      { name: 'Child-Headed Household', id: 'Child-Headed Household' },
+      { name: 'No Family', id: 'Other' }
     ]
     let districtOptions = _.filter(districts, { province_id: family.province_id })
     let communeOptions = _.filter(communes, { district_id: family.district_id })
@@ -96,7 +104,7 @@ class UserEdit extends Component {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>{i18n.t('family.family_type')}</Text>
               <SectionedMultiSelect
-                items={this.listItems(familyType)}
+                items={familyType}
                 uniqueKey="id"
                 selectText={i18n.t('family.select_family_type')}
                 searchPlaceholderText={i18n.t('family.search')}
@@ -110,6 +118,25 @@ class UserEdit extends Component {
                 }}
                 onSelectedItemsChange={family_type => this.setUpdateFamily('family_type', family_type[0])}
                 selectedItems={[family.family_type]}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>{i18n.t('family.status')}</Text>
+              <SectionedMultiSelect
+                items={status}
+                uniqueKey="id"
+                selectText={i18n.t('family.select_status')}
+                searchPlaceholderText={i18n.t('family.search')}
+                confirmText={i18n.t('family.confirm')}
+                showDropDowns={true}
+                single={true}
+                hideSearch={false}
+                showCancelButton={true}
+                styles={{
+                  button: { backgroundColor: MAIN_COLOR }
+                }}
+                onSelectedItemsChange={status => this.setUpdateFamily('status', status[0])}
+                selectedItems={[family.status]}
               />
             </View>
             <View style={styles.inputContainer}>
@@ -339,8 +366,8 @@ class UserEdit extends Component {
                 styles={{
                   button: { backgroundColor: MAIN_COLOR }
                 }}
-                onSelectedItemsChange={client_ids => this.setUpdateFamily('client_ids', client_ids)}
-                selectedItems={family.client_ids}
+                onSelectedItemsChange={children => this.setUpdateFamily('children', children)}
+                selectedItems={family.children}
               />
             </View>
             <View style={styles.inputContainer}>

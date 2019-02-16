@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ScrollView, View, Text } from 'react-native'
-import { fetchFamilies } from '../../redux/actions/families'
+import { fetchFamilies, requestFamiliesSuccess } from '../../redux/actions/families'
 import FlatList from '../../components/FlatList'
 import { pushScreen } from '../../navigation/config'
 import i18n from '../../i18n'
@@ -28,7 +28,7 @@ class Families extends Component {
       component: {
         name: 'oscar.familyDetail',
         passProps: {
-          family
+          familyId: family.id
         },
         options: {
           bottomTabs: {
@@ -80,7 +80,8 @@ const mapState = state => ({
 })
 
 const mapDispatch = {
-  fetchFamilies
+  fetchFamilies,
+  requestFamiliesSuccess
 }
 
 export default connect(

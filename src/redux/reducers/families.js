@@ -9,7 +9,7 @@ const initialState = Immutable({
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case FAMILY_TYPES.FAMILIES_UPDATE_SUCCESS:
+    case FAMILY_TYPES.FAMILY_UPDATE_SUCCESS:
       return state.setIn(['data', action.family.id], action.family)
 
     case FAMILY_TYPES.FAMILIES_REQUESTING:
@@ -20,6 +20,9 @@ export default (state = initialState, action) => {
 
     case FAMILY_TYPES.FAMILIES_REQUEST_FAILED:
       return state.set('error', action.error).set('loading', false)
+
+    case FAMILY_TYPES.CREATE_CUSTOM_FORM:
+      return state.setIn(['data', action.familyUpdated.id], action.familyUpdated)
 
     default:
       return state
