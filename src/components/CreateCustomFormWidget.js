@@ -1,6 +1,17 @@
-'use strict'
-
 import React, { Component } from 'react'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import DatePicker from 'react-native-datepicker'
+import ImagePicker from 'react-native-image-picker'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select'
+import _ from 'lodash'
+import { Navigation } from 'react-native-navigation'
+import { CheckBox, Button, Divider } from 'react-native-elements'
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
+import { options, MAX_SIZE } from '../constants/option'
+import { MAIN_COLOR } from '../constants/colors'
+import { validateCustomForm, formTypes, disabledUpload } from '../utils/validation.js'
+import i18n from '../i18n'
+import { customFormStyles } from '../styls'
 import {
   View,
   Text,
@@ -13,20 +24,6 @@ import {
   Image,
   TouchableWithoutFeedback
 } from 'react-native'
-import SectionedMultiSelect from 'react-native-sectioned-multi-select'
-import { CheckBox, Button, Divider } from 'react-native-elements'
-import DatePicker from 'react-native-datepicker'
-import _ from 'lodash'
-import Icon from 'react-native-vector-icons/MaterialIcons'
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
-import ImagePicker from 'react-native-image-picker'
-
-import { options, MAX_SIZE } from '../constants/option'
-import { MAIN_COLOR } from '../constants/colors'
-import { validateCustomForm, formTypes, disabledUpload } from '../utils/validation.js'
-import i18n from '../i18n'
-import { Navigation } from 'react-native-navigation'
-import { customFormStyles } from '../styls'
 
 export default class CreateCustomFormWidget extends Component {
   constructor(props) {

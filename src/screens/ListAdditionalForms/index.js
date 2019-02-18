@@ -2,43 +2,28 @@ import React, { Component } from 'react'
 import { View, Text, ScrollView, ListView, StyleSheet, FlatList } from 'react-native'
 import { List, ListItem } from 'react-native-elements'
 import { Navigation } from 'react-native-navigation'
-import { pushScreen } from '../../../navigation/config'
-import appIcon from '../../../utils/Icon'
+import { pushScreen } from '../../navigation/config'
 import { connect } from 'react-redux'
-
+import appIcon from '../../utils/Icon'
 class AdditionalForm extends Component {
   async createCustomForm(customForm) {
     const icons = await appIcon()
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'oscar.additionalFormDetail',
-        passProps: {
-          familyId: this.props.family.id,
-          customFormId: customForm.id,
-          listAddtionalFormComponentId: this.props.componentId,
-          type: 'family'
-        },
-        options: {
-          bottomTabs: {
-            visible: false
-          },
-          topBar: {
-            title: {
-              text: customForm.form_title
-            },
-            backButton: {
-              showTitle: false
-            },
-            rightButtons: [
-              {
-                id: 'ADD_CUSTOM_FORM',
-                icon: icons.add,
-                color: '#fff'
-              }
-            ]
-          }
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.additionalFormDetail',
+      title: customForm.form_title,
+      props: {
+        entityId: this.props.entity.id,
+        customFormId: customForm.id,
+        listAddtionalFormComponentId: this.props.componentId,
+        type: this.props.type
+      },
+      rightButtons: [
+        {
+          id: 'ADD_CUSTOM_FORM',
+          icon: icons.add,
+          color: '#fff'
         }
-      }
+      ]
     })
   }
 
@@ -53,12 +38,12 @@ class AdditionalForm extends Component {
   keyExtractor = (item, index) => item.id.toString()
 
   render() {
-    const { family } = this.props
+    const { entity } = this.props
     return (
       <ScrollView showsVerticalScrollIndicator={false} style={styles.mainContainer}>
-        {family.additional_form.length > 0 ? (
+        {entity.additional_form.length > 0 ? (
           <View style={styles.container}>
-            <FlatList data={family.additional_form} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
+            <FlatList data={entity.additional_form} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
           </View>
         ) : (
           <View style={styles.noDataContainer}>
@@ -91,8 +76,10 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapState = (state, ownProps) => ({
-  family: state.families.data[ownProps.familyId]
-})
+const mapState = (state, ownProps) => {
+  const entity =
+    ownProps.type == 'client' ? state.clients.data[ownProps.entityId] : state.families.data[ownProps.entityId]
+  return { entity }
+}
 
 export default connect(mapState)(AdditionalForm)

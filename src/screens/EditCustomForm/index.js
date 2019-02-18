@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-
 import EditCustomFormWidget from '../../components/EditCustomFormWidget'
+import { connect } from 'react-redux'
 import { editAdditionalForm } from '../../redux/actions/customForms'
 
 class EditAdditionalForm extends Component {

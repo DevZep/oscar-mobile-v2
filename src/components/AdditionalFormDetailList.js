@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, ScrollView, TouchableWithoutFeedback, Image, Dimensions, Alert } from 'react-native'
+import { Navigation } from 'react-native-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Swiper from 'react-native-swiper'
-import { Navigation } from 'react-native-navigation'
-import _ from 'lodash'
 import Field from './Field'
+import Card from './Card'
+import _ from 'lodash'
+import i18n from '../i18n'
 import appIcon from '../utils/Icon'
 var moment = require('moment')
 const { height } = Dimensions.get('window')
 import { connect } from 'react-redux'
-import Card from './Card'
-import i18n from '../i18n'
+import { pushScreen } from '../navigation/config'
 
-class AdditionalFormList extends Component {
+class AdditionalFormDetailList extends Component {
   constructor(props) {
     super(props)
     Navigation.events().bindComponent(this)
@@ -21,37 +22,23 @@ class AdditionalFormList extends Component {
   async navigationButtonPressed({ buttonId }) {
     if (buttonId === 'ADD_CUSTOM_FORM') {
       const icons = await appIcon()
-      Navigation.push(this.props.componentId, {
-        component: {
-          name: 'oscar.createCustomForm',
-          passProps: {
-            entity: this.props.entity,
-            customForm: this.props.customForm,
-            entityDetailComponentId: this.props.componentId,
-            type: this.props.type,
-            clickForm: 'additionalForm'
-          },
-          options: {
-            bottomTabs: {
-              visible: false
-            },
-            topBar: {
-              title: {
-                text: this.props.customForm.form_title
-              },
-              backButton: {
-                showTitle: false
-              },
-              rightButtons: [
-                {
-                  id: 'SAVE_CUSTOM_FORM',
-                  icon: icons.save,
-                  color: '#fff'
-                }
-              ]
-            }
+      pushScreen(this.props.componentId, {
+        screen: 'oscar.createCustomForm',
+        title: this.props.customForm.form_title,
+        props: {
+          entity: this.props.entity,
+          customForm: this.props.customForm,
+          entityDetailComponentId: this.props.componentId,
+          type: this.props.type,
+          clickForm: 'additionalForm'
+        },
+        rightButtons: [
+          {
+            id: 'SAVE_CUSTOM_FORM',
+            icon: icons.save,
+            color: '#fff'
           }
-        }
+        ]
       })
     }
   }
@@ -79,37 +66,24 @@ class AdditionalFormList extends Component {
 
   editAdditionalForm = async customFieldProperty => {
     const icons = await appIcon()
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'oscar.editCustomForm',
-        passProps: {
-          customForm: this.props.customForm,
-          custom_field: customFieldProperty,
-          entity: this.props.entity,
-          type: this.props.type,
-          currentComponentId: this.props.componentId
-        },
-        options: {
-          bottomTabs: {
-            visible: false
-          },
-          topBar: {
-            title: {
-              text: 'Edit Additinal Form'
-            },
-            backButton: {
-              showTitle: false
-            },
-            rightButtons: [
-              {
-                id: 'SAVE_CUSTOM_FORM',
-                icon: icons.save,
-                color: '#fff'
-              }
-            ]
-          }
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.editCustomForm',
+      title: 'Edit Additinal Form',
+      drawBehind: true,
+      props: {
+        customForm: this.props.customForm,
+        custom_field: customFieldProperty,
+        entity: this.props.entity,
+        type: this.props.type,
+        currentComponentId: this.props.componentId
+      },
+      rightButtons: [
+        {
+          id: 'SAVE_CUSTOM_FORM',
+          icon: icons.save,
+          color: '#fff'
         }
-      }
+      ]
     })
   }
 
@@ -300,10 +274,10 @@ const styles = StyleSheet.create({
 
 const mapState = (state, ownProps) => {
   const entity =
-    ownProps.familyId == undefined ? state.clients.data[ownProps.clientId] : state.families.data[ownProps.familyId]
+    ownProps.type == 'client' ? state.clients.data[ownProps.entityId] : state.families.data[ownProps.entityId]
 
   const customForm = _.find(entity.additional_form, { id: ownProps.customFormId })
   return { entity, customForm, visible: true }
 }
 
-export default connect(mapState)(AdditionalFormList)
+export default connect(mapState)(AdditionalFormDetailList)

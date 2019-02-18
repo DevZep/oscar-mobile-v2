@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { ScrollView, View, Text } from 'react-native'
-import { fetchFamilies, requestFamiliesSuccess } from '../../redux/actions/families'
 import FlatList from '../../components/FlatList'
+import { Navigation } from 'react-native-navigation'
+import { ScrollView, View, Text } from 'react-native'
+import { connect } from 'react-redux'
 import { pushScreen } from '../../navigation/config'
+import { fetchFamilies, requestFamiliesSuccess } from '../../redux/actions/families'
 import i18n from '../../i18n'
 import styles from './styles'
 import appIcon from '../../utils/Icon'
-import { Navigation } from 'react-native-navigation'
 
 class Families extends Component {
   componentDidMount() {
@@ -23,34 +23,19 @@ class Families extends Component {
 
   onPress = async family => {
     const icons = await appIcon()
-
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'oscar.familyDetail',
-        passProps: {
-          familyId: family.id
-        },
-        options: {
-          bottomTabs: {
-            visible: false
-          },
-          topBar: {
-            title: {
-              text: family.name
-            },
-            backButton: {
-              showTitle: false
-            },
-            rightButtons: [
-              {
-                id: 'EDIT_FAMILY',
-                icon: icons.edit,
-                color: '#fff'
-              }
-            ]
-          }
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.familyDetail',
+      title: family.name,
+      props: {
+        familyId: family.id
+      },
+      rightButtons: [
+        {
+          id: 'EDIT_FAMILY',
+          icon: icons.edit,
+          color: '#fff'
         }
-      }
+      ]
     })
   }
 

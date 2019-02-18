@@ -1,4 +1,16 @@
 import React, { Component } from 'react'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import ImagePicker from 'react-native-image-picker'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select'
+import DatePicker from 'react-native-datepicker'
+import _ from 'lodash'
+import i18n from '../i18n'
+import { CheckBox, Divider } from 'react-native-elements'
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
+import { options, MAX_SIZE } from '../constants/option.js'
+import { MAIN_COLOR } from '../constants/colors'
+import { Navigation } from 'react-native-navigation'
+import { customFormStyles } from '../styls'
 import {
   View,
   Text,
@@ -11,20 +23,6 @@ import {
   Image,
   TouchableWithoutFeedback
 } from 'react-native'
-import { CheckBox, Divider } from 'react-native-elements'
-import DatePicker from 'react-native-datepicker'
-import _ from 'lodash'
-import Icon from 'react-native-vector-icons/MaterialIcons'
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
-import SectionedMultiSelect from 'react-native-sectioned-multi-select'
-import ImagePicker from 'react-native-image-picker'
-
-import { options, MAX_SIZE } from '../constants/option.js'
-import { MAIN_COLOR } from '../constants/colors'
-import i18n from '../i18n'
-import { Navigation } from 'react-native-navigation'
-import { customFormStyles } from '../styls'
-
 import { validateCustomForm, validateAdditonalForm, formTypes, disabledUpload } from '../utils/validation'
 
 var moment = require('moment')

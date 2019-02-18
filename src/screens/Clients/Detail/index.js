@@ -23,24 +23,25 @@ class ClientDetail extends Component {
   navigateToProgramStreams = client => {}
   navigateToAdditionalForms = client => {
     pushScreen(this.props.componentId, {
-      screen: 'oscar.additionalFormClient',
+      screen: 'oscar.additionalForms',
       title: 'Additional Form',
       drawBehind: true,
       props: {
-        clientId: client.id,
-        clientDetailComponentId: this.props.componentId
+        entityId: client.id,
+        type: 'client'
       }
     })
   }
 
   navigateToAddForms = client => {
     pushScreen(this.props.componentId, {
-      screen: 'oscar.addFormClient',
+      screen: 'oscar.addForms',
       title: 'Add Form',
       drawBehind: true,
       props: {
-        clientId: client.id,
-        clientDetailComponentId: this.props.componentId
+        entityId: client.id,
+        entityDetailComponentId: this.props.componentId,
+        type: 'client'
       }
     })
   }

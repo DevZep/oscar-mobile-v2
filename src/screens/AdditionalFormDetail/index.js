@@ -3,11 +3,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { deleteAdditionalForm } from '../../redux/actions/customForms'
 
-import AdditionalFormList from '../../components/AdditionalFormList'
+import AdditionalFormDetailList from '../../components/AdditionalFormDetailList'
 
 class AdditionalFormDetail extends Component {
   render() {
-    return <AdditionalFormList {...this.props} />
+    return <AdditionalFormDetailList {...this.props} />
   }
 }
 

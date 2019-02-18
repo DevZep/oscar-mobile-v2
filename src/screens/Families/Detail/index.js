@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import moment from 'moment'
 import { View, Text, ScrollView } from 'react-native'
-import Button from 'apsl-react-native-button'
-import Field from '../../../components/Field'
+import Menu from '../../Clients/Detail/Menu'
 import Card from '../../../components/Card'
-import i18n from '../../../i18n'
+import Field from '../../../components/Field'
+import Button from 'apsl-react-native-button'
 import { Navigation } from 'react-native-navigation'
+import { pushScreen } from '../../../navigation/config'
+import i18n from '../../../i18n'
 import appIcon from '../../../utils/Icon'
 import styles from '../../Clients/Detail/styles'
-import Menu from '../../Clients/Detail/Menu'
-import { pushScreen } from '../../../navigation/config'
+import moment from 'moment'
 
 class FamilyDetail extends Component {
   constructor(props) {
@@ -22,58 +22,45 @@ class FamilyDetail extends Component {
     if (buttonId === 'EDIT_FAMILY') {
       const { family } = this.props
       const icons = await appIcon()
-      Navigation.push(this.props.componentId, {
-        component: {
-          name: 'oscar.editFamily',
-          passProps: {
-            family,
-            familyDetailComponentId: this.props.componentId
-          },
-          options: {
-            bottomTabs: {
-              visible: false
-            },
-            topBar: {
-              title: {
-                text: 'EDIT FAMILY'
-              },
-              backButton: {
-                showTitle: false
-              },
-              rightButtons: [
-                {
-                  id: 'SAVE_FAMILY',
-                  icon: icons.save,
-                  color: '#fff'
-                }
-              ]
-            }
+      pushScreen(this.props.componentId, {
+        screen: 'oscar.editFamily',
+        title: 'EDIT FAMILY',
+        props: {
+          family,
+          familyDetailComponentId: this.props.componentId
+        },
+        rightButtons: [
+          {
+            id: 'SAVE_FAMILY',
+            icon: icons.save,
+            color: '#fff'
           }
-        }
+        ]
       })
     }
   }
 
   navigateToAdditionalForms = family => {
     pushScreen(this.props.componentId, {
-      screen: 'oscar.additionalFormFamily',
+      screen: 'oscar.additionalForms',
       title: 'Additional Form',
       drawBehind: true,
       props: {
-        familyId: family.id,
-        familyDetailComponentId: this.props.componentId
+        entityId: family.id,
+        type: 'family'
       }
     })
   }
 
   navigateToAddForms = family => {
     pushScreen(this.props.componentId, {
-      screen: 'oscar.addFormFamily',
+      screen: 'oscar.addForms',
       title: 'Add Form',
       drawBehind: true,
       props: {
-        familyId: family.id,
-        familyDetailComponentId: this.props.componentId
+        entityId: family.id,
+        entityDetailComponentId: this.props.componentId,
+        type: 'family'
       }
     })
   }

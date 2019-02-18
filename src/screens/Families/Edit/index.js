@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import { CheckBox } from 'react-native-elements'
-import { Navigation } from 'react-native-navigation'
 import DatePicker from 'react-native-datepicker'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'
+import { CheckBox } from 'react-native-elements'
+import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import _ from 'lodash'
-import { updateFamily } from '../../../redux/actions/families'
 import { MAIN_COLOR } from '../../../constants/colors'
+import { updateFamily } from '../../../redux/actions/families'
 import styles from './styles'
 import i18n from '../../../i18n'
+import _ from 'lodash'
 import {
   View,
   Text,

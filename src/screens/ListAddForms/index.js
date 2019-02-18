@@ -2,44 +2,40 @@ import React, { Component } from 'react'
 import { View, Text, ScrollView, ListView, StyleSheet, FlatList } from 'react-native'
 import { List, ListItem } from 'react-native-elements'
 import { Navigation } from 'react-native-navigation'
-import { pushScreen } from '../../../navigation/config'
-import appIcon from '../../../utils/Icon'
+import { pushScreen } from '../../navigation/config'
 import { connect } from 'react-redux'
+import appIcon from '../../utils/Icon'
 
-class AdditionalForm extends Component {
+class AddForm extends Component {
   async createCustomForm(customForm) {
     const icons = await appIcon()
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'oscar.additionalFormDetail',
-        passProps: {
-          clientId: this.props.client.id,
-          customFormId: customForm.id,
-          listAddtionalFormComponentId: this.props.componentId,
-          type: 'client'
-        },
-        options: {
-          bottomTabs: {
-            visible: false
-          },
-          topBar: {
-            title: {
-              text: customForm.form_title
-            },
-            backButton: {
-              showTitle: false
-            },
-            rightButtons: [
-              {
-                id: 'ADD_CUSTOM_FORM',
-                icon: icons.add,
-                color: '#fff'
-              }
-            ]
-          }
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.createCustomForm',
+      title: customForm.form_title,
+      props: {
+        entity: this.props.entity,
+        customForm: customForm,
+        entityDetailComponentId: this.props.entityDetailComponentId,
+        type: this.props.type
+      },
+      rightButtons: [
+        {
+          id: 'SAVE_CUSTOM_FORM',
+          icon: icons.save,
+          color: '#fff'
         }
-      }
+      ]
     })
+  }
+
+  renderAddForm(customForm) {
+    return (
+      <ListItem
+        key={customForm.id}
+        title={customForm.form_title == ' ' ? '(unknow)' : customForm.form_title}
+        onPress={() => this.createCustomForm(customForm)}
+      />
+    )
   }
 
   renderItem = ({ item }) => (
@@ -53,12 +49,12 @@ class AdditionalForm extends Component {
   keyExtractor = (item, index) => item.id.toString()
 
   render() {
-    const { client } = this.props
+    const { entity } = this.props
     return (
       <ScrollView showsVerticalScrollIndicator={false} style={styles.mainContainer}>
-        {client.additional_form.length > 0 ? (
+        {entity.add_forms.length > 0 ? (
           <View style={styles.container}>
-            <FlatList data={client.additional_form} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
+            <FlatList data={entity.add_forms} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
           </View>
         ) : (
           <View style={styles.noDataContainer}>
@@ -91,8 +87,9 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapState = (state, ownProps) => ({
-  client: state.clients.data[ownProps.clientId]
-})
-
-export default connect(mapState)(AdditionalForm)
+const mapState = (state, ownProps) => {
+  const entity =
+    ownProps.type == 'client' ? state.clients.data[ownProps.entityId] : state.families.data[ownProps.entityId]
+  return { entity }
+}
+export default connect(mapState)(AddForm)
