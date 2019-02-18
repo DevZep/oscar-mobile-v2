@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import EditCustomFormWidget from '../../components/EditCustomFormWidget'
-import { editFamilyAdditionalForm } from '../../redux/actions/families'
+import { editAdditionalForm } from '../../redux/actions/customForms'
 
 class EditAdditionalForm extends Component {
   render() {
@@ -11,7 +11,7 @@ class EditAdditionalForm extends Component {
 }
 
 const mapDispatch = {
-  editFamilyAdditionalForm
+  editAdditionalForm
 }
 
 export default connect(

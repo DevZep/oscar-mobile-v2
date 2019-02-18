@@ -6,21 +6,17 @@ import { pushScreen } from '../../../navigation/config'
 import appIcon from '../../../utils/Icon'
 import { connect } from 'react-redux'
 
-const ds = new ListView.DataSource({
-  rowHasChanged: (r1, r2) => r1 !== r2
-})
-
-class AddForm extends Component {
+class AdditionalForm extends Component {
   async createCustomForm(customForm) {
     const icons = await appIcon()
     Navigation.push(this.props.componentId, {
       component: {
-        name: 'oscar.createCustomForm',
+        name: 'oscar.additionalFormDetail',
         passProps: {
-          entity: this.props.family,
-          customForm: customForm,
-          entityDetailComponentId: this.props.familyDetailComponentId,
-          type: 'family'
+          clientId: this.props.client.id,
+          customFormId: customForm.id,
+          listAddtionalFormComponentId: this.props.componentId,
+          type: 'client'
         },
         options: {
           bottomTabs: {
@@ -35,8 +31,8 @@ class AddForm extends Component {
             },
             rightButtons: [
               {
-                id: 'SAVE_CUSTOM_FORM',
-                icon: icons.save,
+                id: 'ADD_CUSTOM_FORM',
+                icon: icons.add,
                 color: '#fff'
               }
             ]
@@ -44,16 +40,6 @@ class AddForm extends Component {
         }
       }
     })
-  }
-
-  renderAddForm(customForm) {
-    return (
-      <ListItem
-        key={customForm.id}
-        title={customForm.form_title == ' ' ? '(unknow)' : customForm.form_title}
-        onPress={() => this.createCustomForm(customForm)}
-      />
-    )
   }
 
   renderItem = ({ item }) => (
@@ -67,12 +53,12 @@ class AddForm extends Component {
   keyExtractor = (item, index) => item.id.toString()
 
   render() {
-    const { family } = this.props
+    const { client } = this.props
     return (
       <ScrollView showsVerticalScrollIndicator={false} style={styles.mainContainer}>
-        {family.add_forms.length > 0 ? (
+        {client.additional_form.length > 0 ? (
           <View style={styles.container}>
-            <FlatList data={family.add_forms} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
+            <FlatList data={client.additional_form} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
           </View>
         ) : (
           <View style={styles.noDataContainer}>
@@ -106,6 +92,7 @@ const styles = StyleSheet.create({
 })
 
 const mapState = (state, ownProps) => ({
-  family: state.families.data[ownProps.familyId]
+  client: state.clients.data[ownProps.clientId]
 })
-export default connect(mapState)(AddForm)
+
+export default connect(mapState)(AdditionalForm)

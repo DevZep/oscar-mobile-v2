@@ -25,9 +25,9 @@ class AdditionalFormList extends Component {
         component: {
           name: 'oscar.createCustomForm',
           passProps: {
-            family: this.props.family,
+            entity: this.props.entity,
             customForm: this.props.customForm,
-            familyDetailComponentId: this.props.componentId,
+            entityDetailComponentId: this.props.componentId,
             type: this.props.type,
             clickForm: 'additionalForm'
           },
@@ -67,11 +67,11 @@ class AdditionalFormList extends Component {
   }
 
   deleteAdditionalForm = customForm => {
-    const { deleteFamilyAdditionalForm, family } = this.props
+    const { deleteAdditionalForm, entity } = this.props
     Alert.alert('Warning', 'Are you sure you want to delete?', [
       {
         text: 'OK',
-        onPress: () => deleteFamilyAdditionalForm(customForm, family, this.props)
+        onPress: () => deleteAdditionalForm(customForm, entity, this.props)
       },
       { text: 'Cancel' }
     ])
@@ -85,8 +85,8 @@ class AdditionalFormList extends Component {
         passProps: {
           customForm: this.props.customForm,
           custom_field: customFieldProperty,
-          family: this.props.family,
-          type: this.props.type || '',
+          entity: this.props.entity,
+          type: this.props.type,
           currentComponentId: this.props.componentId
         },
         options: {
@@ -299,9 +299,11 @@ const styles = StyleSheet.create({
 })
 
 const mapState = (state, ownProps) => {
-  const family = state.families.data[ownProps.familyId]
-  const customForm = _.find(family.additional_form, { id: ownProps.customFormId })
-  return { family, customForm, visible: true }
+  const entity =
+    ownProps.familyId == undefined ? state.clients.data[ownProps.clientId] : state.families.data[ownProps.familyId]
+
+  const customForm = _.find(entity.additional_form, { id: ownProps.customFormId })
+  return { entity, customForm, visible: true }
 }
 
 export default connect(mapState)(AdditionalFormList)

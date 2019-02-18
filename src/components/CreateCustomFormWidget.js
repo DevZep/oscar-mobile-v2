@@ -58,11 +58,11 @@ export default class CreateCustomFormWidget extends Component {
 
   navigationButtonPressed({ buttonId }) {
     if (buttonId === 'SAVE_CUSTOM_FORM') {
-      const { customForm, family, type } = this.props
+      const { customForm, entity, type } = this.props
       const { fields } = this.state
       const validated = validateCustomForm(fields, customForm.fields)
       if (validated) {
-        this.props.createFamilyAdditionalForm(fields, family, customForm, this.props)
+        this.props.createAdditionalForm(fields, entity, customForm, this.props)
       }
     }
   }

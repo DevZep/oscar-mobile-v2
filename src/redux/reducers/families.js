@@ -21,8 +21,8 @@ export default (state = initialState, action) => {
     case FAMILY_TYPES.FAMILIES_REQUEST_FAILED:
       return state.set('error', action.error).set('loading', false)
 
-    case FAMILY_TYPES.CREATE_CUSTOM_FORM:
-      return state.setIn(['data', action.familyUpdated.id], action.familyUpdated)
+    case FAMILY_TYPES.FAMILY_CUSTOM_FORM:
+      return state.setIn(['data', action.entityUpdated.id], action.entityUpdated)
 
     default:
       return state

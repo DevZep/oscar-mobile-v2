@@ -33,8 +33,7 @@ export default class EditAdditionalFormWidget extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      client: props.client,
-      family: props.family,
+      entity: props.entity,
       customForm: props.customForm,
       custom_field: props.custom_field,
       fields: {},
@@ -87,16 +86,12 @@ export default class EditAdditionalFormWidget extends Component {
 
   navigationButtonPressed({ buttonId }) {
     if (buttonId === 'SAVE_CUSTOM_FORM') {
-      const { family, client, fields, customForm, custom_field_property, custom_field } = this.state
+      const { entity, fields, customForm, custom_field_property, custom_field } = this.state
       const { type } = this.props
 
       const validated = validateCustomForm(fields, customForm.fields)
       if (validated) {
-        if (type == undefined) {
-          this.props.editAdditionalForm(fields, client, custom_field, customForm, this.props)
-        } else if (type != undefined && type == 'family') {
-          this.props.editFamilyAdditionalForm(fields, family, custom_field, customForm, this.props)
-        }
+        this.props.editAdditionalForm(fields, entity, custom_field, customForm, this.props)
       }
     }
   }

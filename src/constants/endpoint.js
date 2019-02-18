@@ -38,5 +38,6 @@ export default {
   editTrackingProgramPath:
     '/clients/${client_id}/client_enrollments/${client_enrollment_id}/client_enrollment_trackings/${id}',
   createTrackingPath: '/clients/${client_id}/client_enrollments/${client_enrollment_id}/client_enrollment_trackings',
-  createFamilyAdditonalFormPath: '/families/${family_id}/custom_field_properties'
+  createFamilyAdditonalFormPath: '/families/${entity_id}/custom_field_properties',
+  createClientAdditonalFormPath: '/clients/${entity_id}/custom_field_properties'
 }

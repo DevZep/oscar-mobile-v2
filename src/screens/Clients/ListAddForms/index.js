@@ -6,10 +6,6 @@ import { pushScreen } from '../../../navigation/config'
 import appIcon from '../../../utils/Icon'
 import { connect } from 'react-redux'
 
-const ds = new ListView.DataSource({
-  rowHasChanged: (r1, r2) => r1 !== r2
-})
-
 class AddForm extends Component {
   async createCustomForm(customForm) {
     const icons = await appIcon()
@@ -17,10 +13,10 @@ class AddForm extends Component {
       component: {
         name: 'oscar.createCustomForm',
         passProps: {
-          entity: this.props.family,
+          entity: this.props.client,
           customForm: customForm,
-          entityDetailComponentId: this.props.familyDetailComponentId,
-          type: 'family'
+          entityDetailComponentId: this.props.clientDetailComponentId,
+          type: 'client'
         },
         options: {
           bottomTabs: {
@@ -67,12 +63,12 @@ class AddForm extends Component {
   keyExtractor = (item, index) => item.id.toString()
 
   render() {
-    const { family } = this.props
+    const { client } = this.props
     return (
       <ScrollView showsVerticalScrollIndicator={false} style={styles.mainContainer}>
-        {family.add_forms.length > 0 ? (
+        {client.add_forms.length > 0 ? (
           <View style={styles.container}>
-            <FlatList data={family.add_forms} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
+            <FlatList data={client.add_forms} keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
           </View>
         ) : (
           <View style={styles.noDataContainer}>
@@ -106,6 +102,6 @@ const styles = StyleSheet.create({
 })
 
 const mapState = (state, ownProps) => ({
-  family: state.families.data[ownProps.familyId]
+  client: state.clients.data[ownProps.clientId]
 })
 export default connect(mapState)(AddForm)

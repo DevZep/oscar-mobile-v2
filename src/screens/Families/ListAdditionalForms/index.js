@@ -15,7 +15,6 @@ class AdditionalForm extends Component {
         passProps: {
           familyId: this.props.family.id,
           customFormId: customForm.id,
-          updateStateAdditionalForms: this.updateStateAdditionalForms,
           listAddtionalFormComponentId: this.props.componentId,
           type: 'family'
         },
