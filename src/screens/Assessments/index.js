@@ -41,15 +41,16 @@ class Assessments extends Component {
       }
     }
 
-    // pushScreen(this.props.componentId, {
-    //   screen: 'oscar.assessmentForm',
-    //   title: 'Create Assessment',
-    //   props: {
-    //     custom_domain: isCustom,
-    //     client,
-    //     domains
-    //   }
-    // })
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.assessmentForm',
+      title: 'Create Assessment',
+      props: {
+        custom_domain: isCustom,
+        action: 'create',
+        client,
+        domains
+      }
+    })
   }
 
   _renderNextAssessment(assessmentType) {
@@ -58,7 +59,7 @@ class Assessments extends Component {
     const assessments         = client.assessments.filter(assessment => assessment.default === isDefault)
     const lastAssessment      = _.maxBy(assessments, 'created_at') || {}
     const today               = moment()
-    const title               = assessmentType === 'default' 
+    const title               = assessmentType === 'default'
                                   ? `Next ${setting.default_assessment} on`
                                   : `Next ${setting.custom_assessment} on`
 

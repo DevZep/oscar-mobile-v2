@@ -19,6 +19,8 @@ import FamilyDetail from '../screens/Families/Detail'
 import ClientDetail from '../screens/Clients/Detail'
 import Assessments from '../screens/Assessments'
 import AssessmentDetail from '../screens/Assessments/Detail'
+import AssessmentForm from '../screens/Assessments/Form'
+import DomainDescriptionModal from '../screens/Assessments/Form/domainDescriptionModal'
 
 const store = configureStore()
 
@@ -40,4 +42,6 @@ export default () => {
   Navigation.registerComponentWithRedux('oscar.clientDetail', () => ClientDetail, Provider, store)
   Navigation.registerComponentWithRedux('oscar.assessments', () => Assessments, Provider, store)
   Navigation.registerComponentWithRedux('oscar.assessmentDetail', () => AssessmentDetail, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.assessmentForm', () => AssessmentForm, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.domainDescriptionModal', () => DomainDescriptionModal, Provider, store)
 }

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { Navigation } from 'react-native-navigation'
 import _ from 'lodash'
 import styles from './styles'
 import { SCORE_COLOR } from '../../../constants/colors'
+import { pushScreen } from '../../../navigation/config'
 import i18n from '../../../i18n'
 
 export default class ClientAssessmentWidget extends Component {
@@ -14,36 +16,30 @@ export default class ClientAssessmentWidget extends Component {
       assessment: props.assessment,
       domains: props.domains
     }
-    // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
-    this.updateStateAssessment = this.updateStateAssessment.bind(this)
+
+    Navigation.events().bindComponent(this)
   }
 
-  onNavigatorEvent(event) {
-    let { client, assessment, domains } = this.state
-    if (event.type == 'NavBarButtonPress') {
-      if (event.id == 'edit') {
-        this.props.navigator.push({
-          screen: 'cif.clientAssessmentEditScreen',
-          title: 'Edit ClientAssessment',
-          navigatorStyle: { tabBarHidden: true },
-          passProps: {
-            client: client,
-            assessment: assessment,
-            domains: domains,
-            updateStateAssessment: this.updateStateAssessment,
-            updateStateClient: this.props.updateStateClient
-          }
-        })
+  navigationButtonPressed = () => {
+    const { client, assessment, domains } = this.props
+
+    pushScreen(this.props.componentId, {
+      screen: 'oscar.assessmentForm',
+      title: 'Edit Assessment',
+      props: {
+        action: 'update',
+        assessment,
+        client,
+        domains
       }
-    }
+    })
   }
 
-  updateStateAssessment(client) {
-    const self = this
+  updateStateAssessment = client => {
     const { assessment } = this.state
     client.assessments.map(assessment_updated => {
       if (assessment_updated.id == assessment.id) {
-        self.setState({
+        this.setState({
           assessment: assessment_updated
         })
       }
@@ -53,7 +49,7 @@ export default class ClientAssessmentWidget extends Component {
     this.props.updateStateClientAssessments(client)
   }
 
- renderAttachments = attachments => {
+  renderAttachments = attachments => {
     if (attachments.length === 0)
       return
 
