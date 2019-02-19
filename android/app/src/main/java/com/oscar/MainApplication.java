@@ -3,6 +3,8 @@ package com.oscar;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import io.realm.react.RealmReactPackage;
@@ -48,7 +50,9 @@ public class MainApplication extends NavigationApplication {
             new VectorIconsPackage(),
             new RealmReactPackage(),
             new ReactNativeRestartPackage(),
-            new FastImageViewPackage()
+            new FastImageViewPackage(),
+            new ReactNativeDocumentPicker(),
+            new ImagePickerPackage()
         );
     }
 

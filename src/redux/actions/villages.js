@@ -22,7 +22,7 @@ export function fetchVillages() {
     axios
       .get(endpoint.villagesPath)
       .then(response => {
-        dispatch(requestVillagesSucceed(response.data))
+        dispatch(requestVillagesSucceed(response.data.villages))
       })
       .catch(error => {
         dispatch(requestVillagesFailed(error))

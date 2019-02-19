@@ -28,8 +28,7 @@ class Pin extends Component {
       const oldCode = String(pinCode)
 
       if (newCode == oldCode) {
-        if (pinMode == 'compare') setTimeout(() => startTabScreen(), 200)
-        else this.props.updatePin(code)
+        pinMode == 'compare' ? startTabScreen() : this.props.updatePin(code)
       } else {
         vibration()
         clear()

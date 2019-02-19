@@ -1,34 +1,41 @@
-import React, { Component }       from 'react'
-import { connect }                from 'react-redux'
+import React, { Component } from 'react'
+import FlatList from '../../components/FlatList'
+import { Navigation } from 'react-native-navigation'
 import { ScrollView, View, Text } from 'react-native'
-import { fetchFamilies }          from '../../redux/actions/families'
-import FlatList                   from '../../components/FlatList'
-import { pushScreen }             from '../../navigation/config'
-import i18n                       from '../../i18n'
-import styles                     from './styles'
+import { connect } from 'react-redux'
+import { pushScreen } from '../../navigation/config'
+import { fetchFamilies, requestFamiliesSuccess } from '../../redux/actions/families'
+import i18n from '../../i18n'
+import styles from './styles'
+import appIcon from '../../utils/Icon'
 
 class Families extends Component {
   componentDidMount() {
-    // this.props.fetchFamilies()
+    this.props.fetchFamilies()
   }
 
-  subItems = (family) => {
+  subItems = family => {
     const clientsCount = family.clients.length
-    const familyType   = family.family_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
+    const familyType = family.family_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
 
-    return [
-      familyType,
-      `${ clientsCount } ${ i18n.t('family.member_count') }`,
-    ]
+    return [familyType, `${clientsCount} ${i18n.t('family.member_count')}`]
   }
 
-  onPress = (family) => {
+  onPress = async family => {
+    const icons = await appIcon()
     pushScreen(this.props.componentId, {
       screen: 'oscar.familyDetail',
       title: family.name,
       props: {
-        family
-      }
+        familyId: family.id
+      },
+      rightButtons: [
+        {
+          id: 'EDIT_FAMILY',
+          icon: icons.edit,
+          color: '#fff'
+        }
+      ]
     })
   }
 
@@ -42,23 +49,27 @@ class Families extends Component {
     return (
       <ScrollView style={styles.container}>
         <FlatList
-          data={ this.props.families }
-          title={ ({ name }) => name || '(No Name)' }
-          subItems={ this.subItems }
-          onPress={ this.onPress }
+          data={this.props.families}
+          title={({ name }) => name || '(No Name)'}
+          subItems={this.subItems}
+          onPress={this.onPress}
         />
       </ScrollView>
     )
   }
 }
 
-const mapState = (state) => ({
+const mapState = state => ({
   families: state.families.data,
   loading: state.families.loading
 })
 
 const mapDispatch = {
-  fetchFamilies
+  fetchFamilies,
+  requestFamiliesSuccess
 }
 
-export default connect(mapState, mapDispatch)(Families)
+export default connect(
+  mapState,
+  mapDispatch
+)(Families)

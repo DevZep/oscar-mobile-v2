@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ScrollView, View, Text } from 'react-native'
 import { fetchClients } from '../../redux/actions/clients'
+import { fetchProvinces } from '../../redux/actions/provinces'
+import { fetchDistricts } from '../../redux/actions/districts'
+import { fetchCommunes } from '../../redux/actions/communes'
+import { fetchVillages } from '../../redux/actions/villages'
 import { fetchSetting } from '../../redux/actions/setting'
 import { fetchProgramStreams } from '../../redux/actions/programStreams'
 import { pushScreen } from '../../navigation/config'
@@ -11,12 +15,16 @@ import styles from './styles'
 
 class Clients extends Component {
   componentDidMount() {
-    // this.props.fetchClients()
+    this.props.fetchClients()
+    this.props.fetchDistricts()
+    this.props.fetchProvinces()
+    this.props.fetchCommunes()
+    this.props.fetchVillages()
     this.props.fetchSetting()
     this.props.fetchProgramStreams()
   }
 
-  onClientPress = (client) => {
+  onClientPress = client => {
     pushScreen(this.props.componentId, {
       screen: 'oscar.clientDetail',
       title: this.clientName(client),
@@ -68,13 +76,17 @@ class Clients extends Component {
 const mapState = state => ({
   clients: state.clients.data,
   loading: state.clients.loading,
-  setting: state.setting.data,
+  setting: state.setting.data
 })
 
 const mapDispatch = {
   fetchClients,
+  fetchProvinces,
+  fetchDistricts,
+  fetchCommunes,
+  fetchVillages,
   fetchSetting,
-  fetchProgramStreams,
+  fetchProgramStreams
 }
 
 export default connect(

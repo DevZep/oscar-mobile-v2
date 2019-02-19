@@ -17,7 +17,7 @@ requestUsersFailed = error => ({
 })
 
 export const updateUser = user => ({
-  type: USER_TYPES.UPDATE_USER,
+  type: USER_TYPES.FAMILIES_UPDATE_SUCCESS,
   user
 })
 

@@ -48,58 +48,35 @@ class User extends Component {
 
   render() {
     const { provinces, departments, user, loading } = this.props
-    const { first_name,last_name, gender,
-            job_title, department_id, mobile,
-            email, date_of_birth, start_date, 
-            province_id
-          } = user
+    const {
+      first_name,
+      last_name,
+      gender,
+      job_title,
+      department_id,
+      mobile,
+      email,
+      date_of_birth,
+      start_date,
+      province_id
+    } = user
     const department = _.find(departments, { id: user.department_id })
-    const province   = _.find(provinces, { id: province_id })
+    const province = _.find(provinces, { id: province_id })
 
     return (
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Card title={ i18n.t('user.about_user') }>
-            <Field
-              name={i18n.t('user.first_name')}
-              value={first_name}
-            />
-            <Field
-              name={i18n.t('user.last_name')}
-              value={last_name}
-            />
-            <Field
-              name={i18n.t('user.gender')}
-              value={_.capitalize(user.gender)}
-            />
-            <Field
-              name={i18n.t('user.job_title')}
-              value={job_title}
-            />
-            <Field
-              name={i18n.t('user.department')}
-              value={department && department.name}
-            />
-            <Field
-              name={i18n.t('user.mobile')}
-              value={mobile}
-            />
-            <Field
-              name={i18n.t('user.email')}
-              value={email}
-            />
-            <Field
-              name={i18n.t('user.dob')}
-              value={date_of_birth}
-            />
-            <Field
-              name={i18n.t('user.start_date')}
-              value={start_date}
-            />
-            <Field
-              name={i18n.t('user.province')}
-              value={province && province.name}
-            />
+          <Card title={i18n.t('user.about_user')}>
+            <Field name={i18n.t('user.first_name')} value={first_name} />
+            <Field name={i18n.t('user.last_name')} value={last_name} />
+            <Field name={i18n.t('user.gender')} value={_.capitalize(user.gender)} />
+            <Field name={i18n.t('user.job_title')} value={job_title} />
+            <Field name={i18n.t('user.department')} value={department && department.name} />
+            <Field name={i18n.t('user.mobile')} value={mobile} />
+            <Field name={i18n.t('user.email')} value={email} />
+            <Field name={i18n.t('user.dob')} value={date_of_birth} />
+            <Field name={i18n.t('user.start_date')} value={start_date} />
+            <Field name={i18n.t('user.province')} value={province && province.name} />
           </Card>
         </ScrollView>
         <Button
@@ -119,8 +96,8 @@ class User extends Component {
 const mapState = state => ({
   user: state.auth.data,
   loading: state.auth.loading,
-  departments: state.departments.data.departments,
-  provinces: state.provinces.data.provinces
+  departments: state.departments.data,
+  provinces: state.provinces.data
 })
 
 const mapDispatch = {
@@ -129,4 +106,7 @@ const mapDispatch = {
   logoutUser
 }
 
-export default connect(mapState, mapDispatch)(User)
+export default connect(
+  mapState,
+  mapDispatch
+)(User)

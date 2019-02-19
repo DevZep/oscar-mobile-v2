@@ -60,6 +60,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 5
+  },
+  inputTextArea: {
+    borderColor: '#009999',
+    borderWidth: 1,
+    marginBottom: 3,
+    borderRadius: 2
   }
 })
 

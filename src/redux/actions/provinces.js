@@ -22,7 +22,7 @@ export function fetchProvinces() {
     axios
       .get(endpoint.provincesPath)
       .then(response => {
-        dispatch(requestProvincesSucceed(response.data))
+        dispatch(requestProvincesSucceed(response.data.provinces))
       })
       .catch(error => {
         dispatch(requestProvincesFailed(error))
