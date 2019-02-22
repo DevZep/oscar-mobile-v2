@@ -9,9 +9,13 @@ import { pushScreen } from '../../navigation/config'
 import appIcon from '../../utils/Icon'
 
 class Assessments extends Component {
+  state = {
+    client: this.props.client,
+    domains: this.props.domains
+  }
 
   navigateToDetail = async (assessment, assessmentName, isEditable) => {
-    const { client, domains } = this.props
+    const { client, domains } = this.state
     const icons = await appIcon()
     const rightButtons = isEditable ? [{ id: 'SAVE_ASSESSMENT', icon: icons.edit, color: "#fff" }] : []
 
@@ -28,7 +32,7 @@ class Assessments extends Component {
   }
 
   onCreateNewAssessment = isCustom => {
-    const { client, domains } = this.props
+    const { client, domains } = this.state
 
     if (isCustom) {
       const customDomains = domains.domains.filter(d => d.custom_domain)
@@ -45,23 +49,26 @@ class Assessments extends Component {
       screen: 'oscar.assessmentForm',
       title: 'Create Assessment',
       props: {
-        custom_domain: isCustom,
-        action: 'create',
         client,
-        domains
+        domains,
+        action: 'create',
+        custom_domain: isCustom,
+        previousComponentId: this.props.componentId,
+        onCreateSuccess: (client) => this.setState({ client })
       }
     })
   }
 
   _renderNextAssessment(assessmentType) {
-    const { setting, client } = this.props
-    const isDefault           = assessmentType === 'default'
-    const assessments         = client.assessments.filter(assessment => assessment.default === isDefault)
-    const lastAssessment      = _.maxBy(assessments, 'created_at') || {}
-    const today               = moment()
-    const title               = assessmentType === 'default'
-                                  ? `Next ${setting.default_assessment} on`
-                                  : `Next ${setting.custom_assessment} on`
+    const { setting }     = this.props
+    const { client }      = this.state
+    const isDefault       = assessmentType === 'default'
+    const assessments     = client.assessments.filter(assessment => assessment.default === isDefault)
+    const lastAssessment  = _.maxBy(assessments, 'created_at') || {}
+    const today           = moment()
+    const title           = assessmentType === 'default'
+                              ? `Next ${setting.default_assessment} on`
+                              : `Next ${setting.custom_assessment} on`
 
     const threeMonthsAfterAssessment = moment(lastAssessment.created_at).add(3, 'months')
     const sixMonthsAfterAssessment   = moment(lastAssessment.created_at).add(6, 'months')
@@ -91,7 +98,8 @@ class Assessments extends Component {
   }
 
   _renderAssessments() {
-    const { setting, client } = this.props
+    const { setting }         = this.props
+    const { client }          = this.state
     const assessments         = _.orderBy(client.assessments, ['created_at'], ['asc'])
     const defaultAssessments  = assessments.filter(assessment => assessment.default)
     const customAssessments   = assessments.filter(assessment => !assessment.default)
@@ -122,7 +130,8 @@ class Assessments extends Component {
   }
 
   render() {
-    const { setting, client } = this.props
+    const { setting }         = this.props
+    const { client }          = this.state
     const defaultAssessments  = client.assessments.filter(assessment => assessment.default)
     const customAssessments   = client.assessments.filter(assessment => !assessment.default)
 

@@ -100,7 +100,10 @@ const styles = StyleSheet.create({
   taskTitle: {
     backgroundColor: '#fef49c',
     padding: 10,
-    marginBottom: 5,
+    marginBottom: 10,
+    marginTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
     elevation: 1
   },
   label: {

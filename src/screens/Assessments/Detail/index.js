@@ -8,7 +8,7 @@ import { SCORE_COLOR } from '../../../constants/colors'
 import { pushScreen } from '../../../navigation/config'
 import i18n from '../../../i18n'
 
-export default class ClientAssessmentWidget extends Component {
+export default class AssessmentDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -21,33 +21,23 @@ export default class ClientAssessmentWidget extends Component {
   }
 
   navigationButtonPressed = () => {
-    const { client, assessment, domains } = this.props
+    const { client, assessment, domains } = this.state
 
     pushScreen(this.props.componentId, {
       screen: 'oscar.assessmentForm',
       title: 'Edit Assessment',
       props: {
-        action: 'update',
-        assessment,
         client,
-        domains
+        domains,
+        assessment,
+        action: 'update',
+        previousComponentId: this.props.componentId,
+        onUpdateSuccess: this.onUpdateSuccess
       }
     })
   }
 
-  updateStateAssessment = client => {
-    const { assessment } = this.state
-    client.assessments.map(assessment_updated => {
-      if (assessment_updated.id == assessment.id) {
-        this.setState({
-          assessment: assessment_updated
-        })
-      }
-    })
-
-    this.props.updateStateClient(client)
-    this.props.updateStateClientAssessments(client)
-  }
+  onUpdateSuccess = (client, assessment) => this.setState({ client, assessment })
 
   renderAttachments = attachments => {
     if (attachments.length === 0)

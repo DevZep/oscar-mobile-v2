@@ -14,7 +14,7 @@ import Users from '../screens/Users'
 import Families from '../screens/Families'
 import EditUser from '../screens/Users/Edit'
 import TaskDetail from '../screens/Tasks/Detail'
-import EditTask from '../screens/Tasks/Edit'
+import TaskForm from '../screens/Tasks/Form'
 import FamilyDetail from '../screens/Families/Detail'
 import EditFamily from '../screens/Families/Edit'
 import AdditionalFormDetail from '../screens/AdditionalFormDetail'
@@ -43,7 +43,7 @@ export default () => {
   Navigation.registerComponentWithRedux('oscar.users', () => Users, Provider, store)
   Navigation.registerComponentWithRedux('oscar.editUser', () => EditUser, Provider, store)
   Navigation.registerComponentWithRedux('oscar.taskDetail', () => TaskDetail, Provider, store)
-  Navigation.registerComponentWithRedux('oscar.editTask', () => EditTask, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.taskForm', () => TaskForm, Provider, store)
   Navigation.registerComponentWithRedux('oscar.familyDetail', () => FamilyDetail, Provider, store)
   Navigation.registerComponentWithRedux('oscar.editFamily', () => EditFamily, Provider, store)
   Navigation.registerComponentWithRedux('oscar.addForms', () => ListAddForms, Provider, store)

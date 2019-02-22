@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import HTMLView from 'react-native-htmlview'
 import { Button, Divider, CheckBox } from 'react-native-elements'
+import ImagePicker from 'react-native-image-picker'
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Swiper from 'react-native-swiper'
 import { Navigation } from 'react-native-navigation'
 import * as AssessmentHelper from '../helpers'
 import i18n from '../../../i18n'
+import { createTask, deleteTask } from '../../../redux/actions/tasks'
+import { createAssessment, updateAssessment } from '../../../redux/actions/assessments'
 import { SCORE_COLOR } from '../../../constants/colors'
 
 import {
@@ -23,16 +28,17 @@ import {
 
 import styles from './styles'
 
+const MAX_UPLOAD_SIZE = 30000
+
 class AssessmentForm extends Component {
   state = {
-    id: Date.now(),
     attachmentsSize: 0,
     assessmentDomains: [],
     incompletedDomainIds: [],
   }
 
   componentWillMount() {
-    const { domains, client, assessment, custom_domain } = this.props
+    const { domains, client, assessment } = this.props
     const assessmentDomains = AssessmentHelper.populateAssessmentDomains(assessment, domains, client)
     this.setState({ assessmentDomains })
   }
@@ -47,6 +53,25 @@ class AssessmentForm extends Component {
     this.setState({ incompletedDomainIds, attachmentsSize })
   }
 
+  saveAssessment() {
+    const { action, assessment, client, previousComponentId, custom_domain }  = this.props
+    const { assessmentDomains } = this.state
+
+    const params = { assessmentDomains, default: !custom_domain }
+
+    if (action === 'create') {
+      this.props.createAssessment(params, client, previousComponentId, this.props.onCreateSuccess)
+    } else {
+      this.props.updateAssessment(params, assessment.id, client, previousComponentId, this.onUpdateSuccess)
+    }
+  }
+
+  onUpdateSuccess = (client) => {
+    const { assessment } = this.props
+    const { assessmentDomains } = this.state
+    this.props.onUpdateSuccess(client, { ...assessment, assessment_domain: assessmentDomains })
+  }
+
   setAssessmentDomainField = (assessmentDomain, key, value) => {
     let { assessmentDomains } = this.state
 
@@ -59,7 +84,7 @@ class AssessmentForm extends Component {
     this.setState({ assessmentDomains })
   }
 
-  setRequireTaskLast(assessmentDomain, addInLastStep) {
+  setRequireTaskLast = (assessmentDomain, addInLastStep) => {
     let { incompletedDomainIds } = this.state
     if (addInLastStep)
       incompletedDomainIds.push(assessmentDomain.domain_id)
@@ -70,7 +95,78 @@ class AssessmentForm extends Component {
     this.setState({ incompletedDomainIds })
   }
 
- removeAttactment(assessmentDomain, index) {
+  uploadAttachment = assessmentDomain => {
+    const options = {
+      noData: true,
+      title: 'Select Document',
+      customButtons: [{ name: 'Document', title: 'Choose Document from Library ...' }],
+      storageOptions: {
+        cameraRoll: true,
+        waitUntilSaved: true
+      }
+    }
+
+    ImagePicker.showImagePicker(options, response => {
+      if (response.error) {
+        alert('ImagePicker Error: ', response.error)
+      } else if (response.customButton) {
+        this.selectAllFile(assessmentDomain)
+      } else if (response.didCancel) {
+      } else {
+        this.handleSelectedFile(response, assessmentDomain)
+      }
+    })
+  }
+
+  selectAllFile = assessmentDomain => {
+    DocumentPicker.show(
+      {
+        filetype: [DocumentPickerUtil.allFiles()]
+      },
+      (error, res) => {
+        if (error === null && res.uri != null) {
+          const type = res.fileName.substring(res.fileName.lastIndexOf('.') + 1)
+          if ('jpg jpeg png doc docx xls xlsx pdf'.includes(type)) {
+            this.handleSelectedFile(res, assessmentDomain)
+          } else {
+            Alert.alert('Invalid file type', 'Allow only : jpg jpeg png doc docx xls xlsx pdf')
+          }
+        }
+      }
+    )
+  }
+
+  handleSelectedFile = (response, assessmentDomain) => {
+    let { assessmentDomains, attachmentsSize } = this.state
+    const fileSize    = response.fileSize / 1024
+    attachmentsSize  += fileSize
+
+    if (attachmentsSize > MAX_UPLOAD_SIZE) {
+      Alert.alert('Upload file is reach limit', 'We allow only 30MB upload per request.')
+    } else {
+      const filePath = response.path != undefined ? `file://${response.path}` : response.uri
+      const fileName = Platform.OS === 'android'
+                       ? response.fileName
+                       : response.uri.split('/').pop()
+
+      const source   = {
+        uri: response.uri,
+        path: filePath,
+        name: fileName,
+        type: response.type,
+        size: fileSize
+      }
+
+      assessmentDomains = assessmentDomains.map(element => {
+        return element.domain_id === assessmentDomain.domain_id ?
+          { ...element, attachments: element.attachments.concat(source) } : element
+      })
+
+      this.setState({ attachmentsSize, assessmentDomains })
+    }
+  }
+
+  removeAttactment = (assessmentDomain, index) => {
     let { assessmentDomains } = this.state
     let attachments = assessmentDomain.attachments
     attachments     = attachments.filter((attachment, attIndex) => attIndex !== index )
@@ -83,115 +179,44 @@ class AssessmentForm extends Component {
     this.setState({ assessmentDomains })
   }
 
-  _openTaskModal(domain) {
+  openTaskModal = domain => {
     const { client } = this.props
-    const self = this
-    this.props.navigator.showModal({
-      screen: 'cif.assessmentTaskModal',
-      passProps: {
-        onCreateNewTask: self.oncreateTaskSuccess,
-        domain: domain.id,
-        client: client
-      },
-      navigatorStyle: { navBarHidden: true }
+    Navigation.showModal({
+      component: {
+        name: 'oscar.taskForm',
+        passProps: {
+          domain,
+          onCreateTask: (params) => this.props.createTask(params, client.id, (task) => this.handleTaskUpdate(task, 'create'))
+        },
+      }
     })
   }
 
-  oncreateTaskSuccess(task) {
-    this.handleTaskUpdate(task, 'create')
-    this.props.navigator.dismissModal({})
+  deleteTask = task => {
+    const { client } = this.props
+    this.props.deleteTask(task, client.id, (task) => this.handleTaskUpdate(task, 'delete'))
   }
 
-  deleteTask(task) {
-    // const { client } = this.props
-    // this.props.deleteTask(task, client, this)
-  }
+  handleTaskUpdate = (task, action) => {
+    let { assessmentDomains } = this.state
 
-  ondeleteTaskSuccess(task) {
-    this.handleTaskUpdate(task, 'delete')
-  }
+    assessmentDomains = assessmentDomains.map(ad => {
+      if (ad.domain.id === task.domain.id)
 
-  handleTaskUpdate(task, type) {
-    let { client, assessments } = this.state
-    const isUpcoming = moment(task.completion_date).isAfter(Date.now(), 'day')
-    const isToday    = moment(task.completion_date).isSame(Date.now(), 'day')
+        if (action === 'create')
+          ad.incomplete_tasks = ad.incomplete_tasks.concat(task)
 
-    assessments = assessments.map(assessment => {
-      if (assessment.domain.id === task.domain.id)
-        assessment.incomplete_tasks = this._updateTask(assessment.incomplete_tasks, task, type)
+        if (action === 'delete')
+          ad.incomplete_tasks = ad.incomplete_tasks.filter(t => t.id !== task.id)
 
-      return assessment
+      return ad
     })
 
-    let tasks = isUpcoming ?
-                  client.tasks.upcoming : isToday ?
-                  client.tasks.today :
-                  client.tasks.overdue
-
-    const taskType = isUpcoming ?
-                      'upcoming' : isToday ?
-                      'today' :
-                      'overdue'
-
-    tasks = this._updateTask(tasks, task, type)
-
-    const updatedTasks  = { ...client.tasks, [taskType]: tasks }
-    let   updatedClient = { ...client, tasks: updatedTasks}
-
-    if (this.props.action === 'create') {
-      this.setState({ client: updatedClient, assessments })
-      this.props.updateStateClient(updatedClient)
-    } else {
-      const params = {
-        id: this.props.assessment.id,
-        client_id: client.id,
-        created_at: this.props.assessment.created_at,
-        assessment_domain: assessments
-      }
-
-      const updatedAssessments = _.map(updatedClient.assessments, assessment => {
-        if (assessment.id == params.id)
-          return params
-        return assessment
-      })
-
-      updatedClient = { ...updatedClient, assessments: updatedAssessments }
-
-      this.setState({ client: updatedClient, assessments })
-      this.props.updateStateAssessment(updatedClient)
-
-      if (!this.props.isHasInternet) {
-        this.handleUpdateClientsOffline(updatedClient)
-      }
-    }
+    this.setState({ assessmentDomains })
   }
-
-  handleUpdateClientsOffline(clientUpdated) {
-    const { clients } = this.props
-    const updatedClients = _.map(clients, client => {
-      if (client.id == clientUpdated.id) {
-        return clientUpdated
-      }
-      return client
-    })
-
-    this.props.updateClientsOffline(updatedClients)
-  }
-
-
-  _updateTask(tasks, task, action) {
-    if (action === 'create')
-      return tasks.concat(task)
-
-    if (action === 'delete')
-      return tasks.filter(t => t.id !== task.id)
-
-    return tasks
-  }
-
-
 
   handleValidation = (e, state, context) => {
+    return
     if (state.index == 0) return
 
     const previousIndex         = state.index - 1
@@ -291,7 +316,7 @@ class AssessmentForm extends Component {
     </View>
   )
 
-renderIncompletedTask = ({ incomplete_tasks }) => {
+  renderIncompletedTask = ({ incomplete_tasks }) => {
     if (incomplete_tasks.length == 0) return
 
     return (
@@ -317,9 +342,10 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
 
   renderButtonDone = () => {
     const { assessmentDomains } = this.state
-    const isDisabled = assessmentDomains.reduce(
-      (result, ad) => result || this.isRequireTask(ad),
-      false)
+    // const isDisabled = assessmentDomains.reduce(
+    //   (result, ad) => result || this.isRequireTask(ad),
+    //   false)
+    const isDisabled = false
 
     return (
       <View style={{ marginTop: 10 }}>
@@ -327,29 +353,18 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
           raised
           backgroundColor={ isDisabled ? "#d5d5d5" : "#009999" }
           icon={{ name: 'save' }}
-          buttonStyle={{
-            marginBottom: 5,
-            marginLeft: 0,
-            marginRight: 0
-          }}
           title={ i18n.t('button.save') }
-          onPress={() => isDisabled ? {} : this._saveAssessments()}
+          onPress={() => isDisabled ? {} : this.saveAssessment()}
         />
       </View>
     )
   }
 
   renderButtonAddTask = assessmentDomain => (
-    <View>
+    <View style={{ marginBottom: 15, marginTop: 5 }}>
       <Button
         raised
-        buttonStyle={{
-          marginBottom: 15,
-          marginTop: 5,
-          marginLeft: 0,
-          marginRight: 0
-        }}
-        onPress={() => this._openTaskModal(assessmentDomain.domain)}
+        onPress={() => this.openTaskModal(assessmentDomain.domain)}
         backgroundColor="#000"
         icon={{ name: 'add-circle' }}
         title={i18n.t('button.add_task')}
@@ -361,29 +376,40 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
     </View>
   )
 
-  renderAttachment = assessmentDomain => (
-    assessmentDomain.attachments.map((attachment, index) => (
-      <View key={index} style={styles.attachmentWrapper}>
-        <Image
-          style={{ width: 40, height: 40 }}
-          source={{ uri: attachment.uri }}
-        />
-        <Text style={styles.listAttachments} numberOfLines={1}>
-          { index + 1 }{'. '}{attachment.name || attachment.url.split('/').pop()}
+  renderAttachment = assessmentDomain => {
+    if (assessmentDomain.attachments.length == 0) return
+
+    return (
+      <View style={{ margin: 6, paddingLeft: 20, paddingRight: 20 }}>
+        <Text style={{ fontWeight: 'bold', marginBottom: 10}}>
+          Attachments :
         </Text>
         {
-          attachment.size &&
-            <TouchableWithoutFeedback
-              onPress={() => this.removeAttactment(assessmentDomain, index)}
-            >
-              <View style={styles.deleteAttactmentWrapper}>
-                <Icon color="#888" name="delete" size={25} />
-              </View>
-            </TouchableWithoutFeedback>
+          assessmentDomain.attachments.map((attachment, index) => (
+            <View key={index} style={styles.attachmentWrapper}>
+              <Image
+                style={{ width: 40, height: 40 }}
+                source={{ uri: attachment.uri }}
+              />
+              <Text style={styles.listAttachments} numberOfLines={1}>
+                { index + 1 }{'. '}{attachment.name || attachment.url.split('/').pop()}
+              </Text>
+              {
+                attachment.size &&
+                  <TouchableWithoutFeedback
+                    onPress={() => this.removeAttactment(assessmentDomain, index)}
+                  >
+                    <View style={styles.deleteAttactmentWrapper}>
+                      <Icon color="#009999" name="delete" size={25} />
+                    </View>
+                  </TouchableWithoutFeedback>
+              }
+            </View>
+          ))
         }
       </View>
-    ))
-  )
+    )
+  }
 
   renderTasksPage = () => {
     const { assessmentDomains, incompletedDomainIds } = this.state
@@ -421,6 +447,7 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
 
   renderAssessmentDomain = ad => {
     const { client } = this.props
+    const domainDescription = ad.domain.description.replace(/<[^>]+>/gi, '').split('&nbsp;')[0]
 
     return (
       <ScrollView key={ad.id} keyboardDismissMode="on-drag" showsVerticalScrollIndicator={false}>
@@ -437,7 +464,7 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
           <TouchableOpacity
             onPress={() => this.openDomainDescriptionModal(ad.domain)}>
             <View style={styles.domainDescriptionContainer}>
-              <HTMLView value={ad.domain.description.replace(/<[^>]+>|<p>|\\n/gi, '')} />
+              <HTMLView value={domainDescription} />
             </View>
           </TouchableOpacity>
         </View>
@@ -513,23 +540,20 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
             </View>
         }
 
-        <View>
-          { this.renderAttachment(ad) }
-          <Button
-            raised
-            backgroundColor="#000"
-            icon={{ name: 'cloud-upload' }}
-            buttonStyle={{
-              marginTop: 15,
-              marginBottom: 5,
-              marginLeft: 0,
-              marginRight: 0
-            }}
-            title={i18n.t('button.upload')}
-            onPress={() => this._uploader(ad)}
-          />
+        <View style={{ paddingBottom: 50 }}>
+          <View style={{ marginBottom: 5 }}>
+            <Button
+              raised
+              backgroundColor="#000"
+              icon={{ name: 'cloud-upload' }}
+              title={i18n.t('button.upload')}
+              onPress={() => this.uploadAttachment(ad)}
+            />
+          </View>
           { !ad.required_task_last && this.renderButtonAddTask(ad) }
+          { this.renderAttachment(ad) }
           <View>{ this.renderIncompletedTask(ad) }</View>
+          { this.renderButtonDone() }
         </View>
       </ScrollView>
     )
@@ -546,7 +570,7 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
           ref={swiper => { this._swiper = swiper }}
           loop={false}
           style={styles.container}
-          onMomentumScrollEnd={this._handleValidation}
+          onMomentumScrollEnd={this.handleValidation}
         >
           { assessmentPages }
         </Swiper>
@@ -555,4 +579,11 @@ renderIncompletedTask = ({ incomplete_tasks }) => {
   }
 }
 
-export default AssessmentForm
+const mapDispatch = {
+  createTask,
+  deleteTask,
+  createAssessment,
+  updateAssessment
+}
+
+export default connect(null, mapDispatch)(AssessmentForm)

@@ -16,7 +16,7 @@ const TASK_COLORS = {
 
 class Tasks extends Component {
   componentDidMount() {
-    if (!this.props.client) {
+    if (!this.props.clientId) {
       this.props.fetchUser()
       this.props.fetchDomains()
     }

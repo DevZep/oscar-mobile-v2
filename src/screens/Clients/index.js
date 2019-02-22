@@ -15,13 +15,13 @@ import styles from './styles'
 
 class Clients extends Component {
   componentDidMount() {
-    this.props.fetchClients()
-    this.props.fetchDistricts()
-    this.props.fetchProvinces()
-    this.props.fetchCommunes()
-    this.props.fetchVillages()
-    this.props.fetchSetting()
-    this.props.fetchProgramStreams()
+    // this.props.fetchClients()
+    // this.props.fetchDistricts()
+    // this.props.fetchProvinces()
+    // this.props.fetchCommunes()
+    // this.props.fetchVillages()
+    // this.props.fetchSetting()
+    // this.props.fetchProgramStreams()
   }
 
   onClientPress = client => {
@@ -30,7 +30,7 @@ class Clients extends Component {
       title: this.clientName(client),
       props: {
         clientId: client.id,
-        ...this.props
+        setting: this.props.setting
       }
     })
   }
