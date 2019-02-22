@@ -13,7 +13,7 @@ class ClientDetail extends Component {
   navigateToAssessments = (client) => {
     pushScreen(this.props.componentId, {
       screen: 'oscar.assessments',
-      title: i18n.t('task.title'),
+      title: i18n.t('client.assessments'),
       props: {
         clientId: client.id,
         setting: this.props.setting

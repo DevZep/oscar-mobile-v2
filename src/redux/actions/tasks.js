@@ -10,7 +10,6 @@ export function deleteTask(task, clientId, onDeleteSuccess) {
   return (dispatch, getState) => {
     const hasInternet = getState().internet.hasInternet
     const path        = `${endpoint.clientsPath}/${clientId}${endpoint.deleteTaskPath}/${task.id}`
-    console.log(path)
 
     if (hasInternet) {
       return axios.delete(path)
