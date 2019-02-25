@@ -132,7 +132,7 @@ const additionalFormDetailList = StyleSheet.create({
     height: '12%'
   },
   title: { flex: 1 },
-  iconWrapper: { flex: 0.4, flexDirection: 'row' },
+  iconWrapper: { flexDirection: 'row' },
   deleteIcon: { marginLeft: 15 },
   mainContainer: {
     height: '95%',

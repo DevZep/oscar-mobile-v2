@@ -123,7 +123,7 @@ class EnrollmentDetail extends Component {
     const { deleteAble, editAble, type } = props
     if (type == 'Exit') {
       return (
-        <View style={{ flex: 0.3, flexDirection: 'row', marginRight: 10 }}>
+        <View style={{ flexDirection: 'row' }}>
           <TouchableWithoutFeedback onPress={() => this._editForm(enrollment, deleteAble)}>
             <Icon color="#fff" name="edit" size={25} />
           </TouchableWithoutFeedback>
@@ -131,7 +131,7 @@ class EnrollmentDetail extends Component {
       )
     }
     return (
-      <View style={{ flex: 0.4, flexDirection: 'row', marginRight: 10 }}>
+      <View style={{ flexDirection: 'row' }}>
         <TouchableWithoutFeedback onPress={() => this._editForm(enrollment, deleteAble)}>
           <Icon color="#fff" name="edit" size={25} />
         </TouchableWithoutFeedback>
