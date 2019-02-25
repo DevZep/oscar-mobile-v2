@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Navigation } from 'react-native-navigation'
 import i18n from '../../../i18n'
 import { deleteTask, updateTask } from '../../../redux/actions/tasks'
-import { updateUser } from '../../../redux/actions/users'
 import Card from '../../../components/Card'
 import styles from './styles'
 
@@ -28,12 +27,23 @@ class TaskDetail extends Component {
     client: this.props.client
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { users, clients } = nextProps
+    const { user, client } = this.state
+
+    if (user)
+      this.setState({ user: users[user.id] })
+
+    if (client)
+      this.setState({ client: clients[client.id] })
+  }
+
   onDelete(task, client) {
     Alert.alert(i18n.t('task.delete_title'), i18n.t('task.delete_detail'), [
       { text: i18n.t('button.cancel'), style: 'cancel' },
       {
         text: i18n.t('button.save'),
-        onPress: () => this.props.deleteTask(task, client.id, this.props.type, this.onUpdateSuccess)
+        onPress: () => this.props.deleteTask(task, client.id)
       }
     ])
   }
@@ -41,20 +51,15 @@ class TaskDetail extends Component {
   onUpdateTask = (task, client) => {
     Navigation.showModal({
       component: {
-        name: 'oscar.editTask',
+        name: 'oscar.taskForm',
         passProps: {
           task,
           client,
           domains: this.props.domains,
-          onUpdateTask: params => this.props.updateTask(params, task, client.id, this.props.type, this.onUpdateSuccess)
+          onUpdateTask: params => this.props.updateTask(params, task, client.id, this.props.type)
         }
       }
     })
-  }
-
-  onUpdateSuccess = (client, user) => {
-    if (client) this.setState({ client })
-    if (user) this.setState({ user })
   }
 
   clientName = ({ family_name, given_name }) => {
@@ -115,13 +120,17 @@ class TaskDetail extends Component {
   }
 }
 
+const mapState = (state) => ({
+  users: state.users.data,
+  clients: state.clients.data
+})
+
 const mapDispatch = {
   updateTask,
   deleteTask,
-  updateUser
 }
 
 export default connect(
-  null,
+  mapState,
   mapDispatch
 )(TaskDetail)

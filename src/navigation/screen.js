@@ -14,11 +14,15 @@ import Users from '../screens/Users'
 import Families from '../screens/Families'
 import EditUser from '../screens/Users/Edit'
 import TaskDetail from '../screens/Tasks/Detail'
-import EditTask from '../screens/Tasks/Edit'
+import TaskForm from '../screens/Tasks/Form'
 import FamilyDetail from '../screens/Families/Detail'
 import EditFamily from '../screens/Families/Edit'
 import AdditionalFormDetail from '../screens/AdditionalFormDetail'
 import ClientDetail from '../screens/Clients/Detail'
+import Assessments from '../screens/Assessments'
+import AssessmentDetail from '../screens/Assessments/Detail'
+import AssessmentForm from '../screens/Assessments/Form'
+import DomainDescriptionModal from '../screens/Assessments/Form/domainDescriptionModal'
 import CreateCustomForm from '../screens/CreateCustomForm'
 import EditCustomForm from '../screens/EditCustomForm'
 import ListAddForms from '../screens/ListAddForms'
@@ -49,12 +53,16 @@ export default () => {
   Navigation.registerComponentWithRedux('oscar.users', () => Users, Provider, store)
   Navigation.registerComponentWithRedux('oscar.editUser', () => EditUser, Provider, store)
   Navigation.registerComponentWithRedux('oscar.taskDetail', () => TaskDetail, Provider, store)
-  Navigation.registerComponentWithRedux('oscar.editTask', () => EditTask, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.taskForm', () => TaskForm, Provider, store)
   Navigation.registerComponentWithRedux('oscar.familyDetail', () => FamilyDetail, Provider, store)
   Navigation.registerComponentWithRedux('oscar.editFamily', () => EditFamily, Provider, store)
   Navigation.registerComponentWithRedux('oscar.addForms', () => ListAddForms, Provider, store)
   Navigation.registerComponentWithRedux('oscar.additionalForms', () => ListAdditionalForms, Provider, store)
   Navigation.registerComponentWithRedux('oscar.clientDetail', () => ClientDetail, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.assessments', () => Assessments, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.assessmentDetail', () => AssessmentDetail, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.assessmentForm', () => AssessmentForm, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.domainDescriptionModal', () => DomainDescriptionModal, Provider, store)
   Navigation.registerComponentWithRedux('oscar.createCustomForm', () => CreateCustomForm, Provider, store)
   Navigation.registerComponentWithRedux('oscar.editCustomForm', () => EditCustomForm, Provider, store)
   Navigation.registerComponentWithRedux('oscar.additionalFormDetail', () => AdditionalFormDetail, Provider, store)

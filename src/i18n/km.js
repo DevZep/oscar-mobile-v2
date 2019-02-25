@@ -99,8 +99,8 @@ export default {
       title_domain: 'សូមបញ្ចូលតម្លៃ',
       title_task: 'សូមបន្ថែមកិច្ចការ',
       warning_task: '* យ៉ាងហោចណាស់ត្រូវបង្កើតកាតព្វកិច្ចមួយ',
-      warning_domain: (title, domainName) => `កាតព្វកិច្ច ${title} កាតព្វកិច្ច ${domainName}!`,
-      warning_tasks: domainName => `យ៉ាងហោចណាស់ត្រូវបង្កើតកាតព្វកិច្ចមួយ សំរាប់កត្តា ${domainName}!`
+      warning_domain: 'កាតព្វកិច្ច {{title}} កាតព្វកិច្ច {{domainName}}!',
+      warning_tasks: 'យ៉ាងហោចណាស់ត្រូវបង្កើតកាតព្វកិច្ចមួយ សំរាប់កត្តា {{domainName}}!'
     },
     case_note_form: {
       create_title: 'កំណត់ត្រាករណីថ្មី',

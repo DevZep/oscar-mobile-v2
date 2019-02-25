@@ -99,8 +99,8 @@ export default {
       task_arising: 'Tasks arising',
       title_domain: 'Please enter the value',
       title_task: 'Please add a Task',
-      warning_domain: (title, domainName) => `Aassessment ${title} domain ${domainName} is required!`,
-      warning_tasks: domainName => `Aassessment domain ${domainName} is required at least one task!`
+      warning_domain: 'Assessment {{title}} domain {{domainName}} is required!',
+      warning_tasks: 'Aassessment domain {{domainName}} is required at least one task!'
     },
     case_note_form: {
       create_title: 'Create Case Note',

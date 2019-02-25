@@ -30,7 +30,7 @@ class Clients extends Component {
       title: this.clientName(client),
       props: {
         clientId: client.id,
-        ...this.props
+        setting: this.props.setting
       }
     })
   }

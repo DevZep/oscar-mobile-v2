@@ -33,36 +33,15 @@ class User extends Component {
       const { departments, provinces, user } = this.props
       const icons = await appIcon()
 
-      Navigation.push(this.props.componentId, {
-        component: {
-          name: 'oscar.editUser',
-          passProps: {
-            departments: departments,
-            provinces: provinces,
-            user: user
-          },
-          options: {
-            bottomTabs: {
-              visible: false,
-              drawBehind: true
-            },
-            topBar: {
-              title: {
-                text: i18n.t('user.edit_title')
-              },
-              backButton: {
-                showTitle: false
-              },
-              rightButtons: [
-                {
-                  id: 'SAVE_USER',
-                  icon: icons.save,
-                  color: '#fff'
-                }
-              ]
-            }
-          }
-        }
+      pushScreen(this.props.componentId, {
+        screen: 'oscar.editUser',
+        title: i18n.t('user.edit_title'),
+        props: { departments, provinces, user },
+        rightButtons: [{
+          id: 'SAVE_USER',
+          icon: icons.save,
+          color: '#fff'
+        }]
       })
     }
   }

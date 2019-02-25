@@ -18,9 +18,25 @@ import {
 
 export default class Task extends Component {
   state = {
-    name: this.props.task.name,
-    domain_id: this.props.task.domain.id,
-    completion_date: this.props.task.completion_date,
+    name: '',
+    domain_id: null,
+    completion_date: null
+  }
+
+  componentDidMount() {
+    const { task, domain } = this.props
+
+    if (task)
+      this.setState({
+        name: task.name,
+        domain_id: task.domain.id,
+        completion_date: task.completion_date,
+      })
+
+    if (domain)
+      this.setState({
+        domain_id: domain.id
+      })
   }
 
   updateTask = () => {
@@ -32,7 +48,10 @@ export default class Task extends Component {
     else if (!completion_date)
       Alert.alert(i18n.t('task.completion_blank_title'), i18n.t('task.completion_blank'))
     else
-      this.props.onUpdateTask(this.state)
+      if (this.props.task)
+        this.props.onUpdateTask(this.state)
+      else
+        this.props.onCreateTask(this.state)
   }
 
   render() {
@@ -45,24 +64,27 @@ export default class Task extends Component {
             <Text style={styles.modalTitle}>{i18n.t('task.edit_title')}</Text>
           </View>
           <View style={styles.modalContentWrapper}>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.label}>{i18n.t('task.domain')}</Text>
-              <SectionedMultiSelect
-                items={ domains.map(domain => ({ id: domain.id, name: `${domain.name} ${domain.identity}` })) }
-                uniqueKey='id'
-                selectText='Please choose domain'
-                single={true}
-                hideSearch={true}
-                styles={{
-                  container: { backgroundColor: 'transparent' },
-                  item: { padding: 10},
-                }}
-                onSelectedItemsChange={ domainIds => this.setState({ domain_id: domainIds[0] }) }
-                selectedItems={[this.state.domain_id]}
-                modalWithSafeAreaView
-                hideConfirm
-              />
-            </View>
+            {
+              !this.props.domain &&
+                <View style={styles.inputWrapper}>
+                  <Text style={styles.label}>{i18n.t('task.domain')}</Text>
+                  <SectionedMultiSelect
+                    items={ domains.map(domain => ({ id: domain.id, name: `${domain.name} ${domain.identity}` })) }
+                    uniqueKey='id'
+                    selectText='Please choose domain'
+                    single={true}
+                    hideSearch={true}
+                    styles={{
+                      container: { backgroundColor: 'transparent' },
+                      item: { padding: 10},
+                    }}
+                    onSelectedItemsChange={ domainIds => this.setState({ domain_id: domainIds[0] }) }
+                    selectedItems={[this.state.domain_id]}
+                    modalWithSafeAreaView
+                    hideConfirm
+                  />
+                </View>
+            }
             <View style={styles.inputWrapper}>
               <Text style={styles.label}>* {i18n.t('task.task_detail')}</Text>
               <TextInput
