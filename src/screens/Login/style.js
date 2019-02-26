@@ -1,15 +1,15 @@
-import { StyleSheet }	from 'react-native'
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
-	container: {
+  container: {
     flex: 1,
     backgroundColor: '#fff',
     padding: 30,
     paddingTop: 0
   },
   imageWrapper: {
-    paddingTop: 50,
-    paddingBottom: 30,
+    paddingTop: 15,
+    paddingBottom: 15,
     alignItems: 'center'
   },
   image: {

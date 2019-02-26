@@ -48,12 +48,7 @@ class Families extends Component {
       )
     return (
       <ScrollView style={styles.container}>
-        <FlatList
-          data={this.props.families}
-          title={({ name }) => name || '(No Name)'}
-          subItems={this.subItems}
-          onPress={this.onPress}
-        />
+        <FlatList data={this.props.families} title={({ name }) => name || '(No Name)'} subItems={this.subItems} onPress={this.onPress} />
       </ScrollView>
     )
   }
