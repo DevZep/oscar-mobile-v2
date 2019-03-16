@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
-import Modal from 'react-native-modal'
 import ClientForm from '../../../components/ClientForm'
 import { updateClientProperty } from '../../../redux/actions/clients'
 
@@ -12,6 +11,7 @@ class EditClient extends Component {
 }
 
 const mapState = state => ({
+  birthProvinces: state.birthProvinces.data,
   provinces: state.provinces.data,
   districts: state.districts.data,
   communes: state.communes.data,

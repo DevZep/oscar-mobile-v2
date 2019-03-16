@@ -14,6 +14,7 @@ import clients from './clients'
 import families from './families'
 import setting from './setting'
 import programStreams from './programStreams'
+import birthProvinces from './birthProvinces'
 import quantitativeTypes from './quantitativeTypes'
 import referralSources from './referralSources'
 import agencies from './agencies'
@@ -35,6 +36,7 @@ export default combineReducers({
   families,
   setting,
   programStreams,
+  birthProvinces,
   quantitativeTypes,
   referralSources,
   agencies,

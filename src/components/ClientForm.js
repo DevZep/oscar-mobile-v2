@@ -100,6 +100,16 @@ export default class ClientForm extends Component {
     return _.map(users, user => ({ name: `${user.first_name} ${user.last_name}`, id: user.id }))
   }
 
+  listBirthProvinces(birthProvinces) {
+    let listBirthProvinces = []
+    _.forEach(birthProvinces, (birthProvince, index) => {
+      const provinces = this.listItems(birthProvince.provinces)
+      const country = { name: birthProvince.country, id: index, children: provinces }
+      listBirthProvinces.push(country)
+    })
+    return listBirthProvinces
+  }
+
   renderQuantitativeTypes = () => {
     const { quantitativeTypes } = this.props
     const { client } = this.state
@@ -138,7 +148,7 @@ export default class ClientForm extends Component {
 
   render() {
     const { client } = this.state
-    const { users, provinces, donors, referralSources, communes, villages, quantitativeTypes, agencies, districts } = this.props
+    const { users, birthProvinces, provinces, donors, referralSources, communes, villages, quantitativeTypes, agencies, districts } = this.props
 
     let districtOptions = _.filter(districts, { province_id: client.province_id })
     let communeOptions = _.filter(communes, { district_id: client.district_id })
@@ -215,8 +225,9 @@ export default class ClientForm extends Component {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>{i18n.t('client.form.birth_province')}</Text>
               <SectionedMultiSelect
-                items={this.listItems(provinces)}
+                items={this.listBirthProvinces(birthProvinces)}
                 uniqueKey="id"
+                subKey='children'
                 modalWithSafeAreaView
                 selectText={i18n.t('select_option')}
                 searchPlaceholderText={i18n.t('search')}
@@ -225,6 +236,8 @@ export default class ClientForm extends Component {
                 single={true}
                 hideSearch={false}
                 showCancelButton={true}
+                readOnlyHeadings={true}
+                expandDropDowns={true}
                 styles={{
                   button: { backgroundColor: MAIN_COLOR },
                   cancelButton: { width: 150 },

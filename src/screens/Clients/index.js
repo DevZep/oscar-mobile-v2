@@ -10,6 +10,7 @@ import { fetchDistricts }                 from '../../redux/actions/districts'
 import { fetchCommunes }                  from '../../redux/actions/communes'
 import { fetchVillages }                  from '../../redux/actions/villages'
 import { fetchSetting }                   from '../../redux/actions/setting'
+import { fetchBirthProvinces }            from '../../redux/actions/birthProvinces'
 import { fetchProgramStreams }            from '../../redux/actions/programStreams'
 import { fetchReferralSources }           from '../../redux/actions/referralSources'
 import { fetchQuantitativeTypes }         from '../../redux/actions/quantitativeTypes'
@@ -44,12 +45,13 @@ class Clients extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchClients()
+    // this.props.fetchClients()
     this.props.fetchDistricts()
     this.props.fetchProvinces()
     this.props.fetchCommunes()
     this.props.fetchVillages()
     this.props.fetchSetting()
+    this.props.fetchBirthProvinces()
     this.props.fetchProgramStreams()
     this.props.fetchReferralSources()
     this.props.fetchQuantitativeTypes()
@@ -182,6 +184,7 @@ const mapDispatch = {
   fetchCommunes,
   fetchVillages,
   fetchSetting,
+  fetchBirthProvinces,
   fetchProgramStreams,
   fetchReferralSources,
   fetchQuantitativeTypes,

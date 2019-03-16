@@ -10,6 +10,7 @@ export default {
   domainPath: '/domains',
   domainGroupsPath: '/domain_groups',
   familiesPath: '/families',
+  birthProvincesPath: '/birth_provinces',
   provincesPath: '/provinces',
   districtsPath: '/districts',
   communesPath: '/communes',
