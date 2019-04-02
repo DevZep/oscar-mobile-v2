@@ -493,13 +493,13 @@ const DomainGroupCard = props => {
   const iconName = props.collapsed ? 'arrow-drop-down' :  'arrow-drop-up'
   return (
     <View style={[styles.card, props.style]}>
-      <View style={[styles.header, {flexDirection: 'row'}]}>
-        <TouchableOpacity onPress={props.toggleExpanded}>
-          <Icon name={iconName} size={30} style={{marginRight: 5, color: '#ffffff'}}/>
-        </TouchableOpacity>
+      <View style={[styles.header, {flexDirection: 'row', justifyContent: 'space-between'}]}>
         <Text style={styles.headerTitle}>
           { props.title }
         </Text>
+        <TouchableOpacity onPress={props.toggleExpanded}>
+          <Icon name={iconName} size={30} style={{marginRight: 5, color: '#ffffff'}}/>
+        </TouchableOpacity>
       </View>
       <Collapsible collapsed={props.collapsed}>
         <View style={styles.content}>
