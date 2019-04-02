@@ -55,6 +55,22 @@ export function updateClientProperty(clientParams, actions) {
   }
 }
 
+export const updateStatus = (client, params) => {
+  return dispatch => {
+    const path = endpoint.clientsPath + '/' + client.id
+
+    axios
+      .put(path, params)
+      .then(response => {
+        console.log(response)
+        // dispatch(updateClient(response.data.client))
+      })
+      .catch(error => {
+        dispatch(requestClientsFailed(error))
+      })
+  }
+}
+
 export function fetchClients() {
   return dispatch => {
     dispatch(requestClients())

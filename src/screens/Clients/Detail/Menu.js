@@ -14,11 +14,14 @@ const Menu = (props) => (
       {
         props.loading
           ? <ActivityIndicator style={{ marginBottom: 15 }} color='#fff'/>
-          : <Text style={styles.itemValue}> { props.value } </Text>
+          : <Text style={[styles.itemValue, { fontSize: props.title ? 25 : 20 }]}> { props.value } </Text>
       }
-      <Text style={styles.itemTitle}>
-        { props.title }
-      </Text>
+      {
+        props.title &&
+          <Text style={styles.itemTitle}>
+            { props.title }
+          </Text>
+      }
     </View>
   </TouchableWithoutFeedback>
 )
@@ -41,7 +44,6 @@ const styles = StyleSheet.create({
   },
   itemValue: {
     color: '#fff',
-    fontSize: 25,
     paddingBottom: 5,
   },
   itemTitle: {

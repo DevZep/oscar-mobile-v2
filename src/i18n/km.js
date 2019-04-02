@@ -139,6 +139,14 @@ export default {
       partner: 'ដៃគូបន្ត',
       family: 'គ្រួសារ',
       family_preservation: 'ករណីអភិរក្សគ្រួសារ?'
+    },
+    exit_ngos: {
+      exit_ngo: 'ចាកចេញពីអង្គការ',
+      exit_circumstance: 'ស្ថានភាពនៃការចាកចេញ',
+      exit_date: 'ថ្ងៃចាកចេញ',
+      exit_note: 'កំណត់ហេតុនៃការចាកចេញ',
+      exit_reasons: 'មូលហេតុនៃការចាកចេញ',
+      other_info_of_exit: 'ព័ត៌មានបន្ថែមនៃការចាកចេញ'
     }
   },
   family: {

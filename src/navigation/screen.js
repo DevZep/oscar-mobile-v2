@@ -42,6 +42,7 @@ import CaseNotes from '../screens/CaseNotes'
 import CaseNoteDetail from '../screens/CaseNotes/Detail'
 import CaseNoteForm from '../screens/CaseNotes/Form'
 import Loading from '../screens/Loading'
+import ExitNgo from '../screens/Clients/ExitNgo'
 
 const store = configureStore()
 
@@ -86,4 +87,5 @@ export default () => {
   Navigation.registerComponentWithRedux('oscar.caseNoteDetail', () => CaseNoteDetail, Provider, store)
   Navigation.registerComponentWithRedux('oscar.caseNoteForm', () => CaseNoteForm, Provider, store)
   Navigation.registerComponentWithRedux('oscar.loading', () => Loading, Provider, store)
+  Navigation.registerComponentWithRedux('oscar.exitNgo', () => ExitNgo, Provider, store)
 }

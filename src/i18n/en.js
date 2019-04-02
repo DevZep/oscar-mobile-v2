@@ -139,6 +139,14 @@ export default {
       partner: 'Ongoing Partner',
       family: 'Family',
       family_preservation: 'Family Preservation'
+    },
+    exit_ngos: {
+      exit_ngo: 'Exit Client from NGO',
+      exit_circumstance: 'Exit Circumstance',
+      exit_date: 'Exit Date',
+      exit_note: 'Exit Note',
+      exit_reasons: 'Reason for Exit / Case Rejection',
+      other_info_of_exit: 'Other - More Information',
     }
   },
   family: {

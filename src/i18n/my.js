@@ -139,6 +139,14 @@ export default {
       partner: 'လက္ရွိ လက္တြဲေဖာ္',
       family: 'မိသားစု',
       family_preservation: 'မိသားစု၏ ေစာင့္ေရွာက္မႈွရွိပါသလား'
+    },
+    exit_ngos: {
+      exit_ngo: 'NGOမွ ထြက္ရန္',
+      exit_circumstance: 'ထွက်ပေါက်အခြေအနေ',
+      exit_date: 'ထြက္သည့္ရက္စြဲ',
+      exit_note: 'ထြက္သည့္မွတ္စု',
+      exit_reasons: 'ထွက်ပေါက်ဘို့အကြောင်းပြချက်',
+      other_info_of_exit: 'အခြားအ - နောက်ထပ်သတင်းအချက်အလက်များ'
     }
   },
   family: {
