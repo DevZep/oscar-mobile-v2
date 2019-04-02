@@ -18,6 +18,7 @@
     "moment": "^2.24.0",
     "react": "16.6.3",
     "react-native": "0.57.8",
+    "react-native-collapsible": "^1.4.0",
     "react-native-datepicker": "^1.7.2",
     "react-native-document-picker": "^2.2.0",
     "react-native-dropdownalert": "^3.9.1",

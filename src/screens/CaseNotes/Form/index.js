@@ -6,11 +6,13 @@ import { groupBy, map }                         from 'lodash'
 import { saveCaseNote }                         from '../../../redux/actions/caseNotes'
 import { Button, CheckBox }                     from 'react-native-elements'
 import { createTask, deleteTask }               from '../../../redux/actions/tasks'
-import styles                                   from './styles'
+import _                                        from 'lodash'
 import i18n                                     from '../../../i18n'
 import Icon                                     from 'react-native-vector-icons/MaterialIcons'
+import styles                                   from './styles'
 import DatePicker                               from 'react-native-datepicker'
 import ImagePicker                              from 'react-native-image-picker'
+import Collapsible                              from 'react-native-collapsible'
 import SectionedMultiSelect                     from 'react-native-sectioned-multi-select'
 import { DocumentPicker, DocumentPickerUtil }   from 'react-native-document-picker'
 import {
@@ -22,7 +24,8 @@ import {
   Platform,
   Image,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
+  TouchableOpacity
 } from 'react-native'
 
 const MAX_UPLOAD_SIZE = 30000
@@ -37,7 +40,8 @@ class CaseNoteForm extends Component {
       caseNoteDomainGroups: [],
       attachmentsSize: 0,
       arisingTasks: [],
-      onGoingTasks: []
+      onGoingTasks: [],
+      collapsibles: {}
     }
 
     Navigation.events().bindComponent(this)
@@ -94,24 +98,26 @@ class CaseNoteForm extends Component {
   componentDidMount() {
     const { domains, action, custom, caseNote, client } = this.props
     const tasks = [...client.tasks.overdue, ...client.tasks.today, ...client.tasks.upcoming]
-
+    let caseNoteDomainGroups = []
+    let caseNoteDomainIds = {}
     if (action === 'update') {
+      caseNoteDomainGroups = caseNote.case_note_domain_group.map(cndg => ({
+        ...cndg,
+        task_ids: [],
+        domains: domains.filter(d => d.domain_group_id === cndg.domain_group_id)
+      }))
       this.setState({
         id: caseNote.id,
         meetingDate: caseNote.meeting_date,
         attendee: caseNote.attendee,
         interactionType: caseNote.interaction_type,
         onGoingTasks: tasks,
-        caseNoteDomainGroups: caseNote.case_note_domain_group.map(cndg => ({
-          ...cndg,
-          task_ids: [],
-          domains: domains.filter(d => d.domain_group_id === cndg.domain_group_id)
-        })),
+        caseNoteDomainGroups
       })
     } else {
       const availableDomains = domains.filter(domain => domain.custom_domain == custom)
       const domainGroups = availableDomains.length > 0 ? groupBy(availableDomains, 'domain_group_id') : {}
-      const caseNoteDomainGroups = map(domainGroups, (domains, domainGroupId) => {
+      caseNoteDomainGroups = map(domainGroups, (domains, domainGroupId) => {
         const domainGroupIdentity = map(domains, 'identity').join(', ')
 
         return {
@@ -123,9 +129,13 @@ class CaseNoteForm extends Component {
           domain_group_identities: domainGroupIdentity,
         }
       })
-
       this.setState({ caseNoteDomainGroups, onGoingTasks: tasks })
     }
+    caseNoteDomainGroups.forEach((caseNoteDomainGroup, index) => {
+      const collapsed = index != 0
+      caseNoteDomainIds = {...caseNoteDomainIds, [caseNoteDomainGroup.domain_group_id]: collapsed}
+    })
+    this.setState({collapsibles: caseNoteDomainIds})
   }
 
   uploadAttachment = caseNote => {
@@ -278,123 +288,133 @@ class CaseNoteForm extends Component {
     ]
   }
 
-  renderDomainGroup = (caseNote, index) => (
-    <Card key={index} title={caseNote.domain_group_identities}>
-      <TextInput
-        autoCapitalize="sentences"
-        placeholder={i18n.t('client.case_note_form.enter_text')}
-        placeholderTextColor="#ccc"
-        multiline={true}
-        numberOfLines={5}
-        textAlignVertical="top"
-        style={styles.textarea}
-        value={caseNote.note}
-        onChangeText={note => this.updateNote(caseNote, note)}
-      />
-      {
-        caseNote.attachments.length > 0 &&
-          <View style={{ marginTop: 15 }}>
-            <Text style={styles.label}>{i18n.t('client.assessment_form.attachments')}:</Text>
-            {
-              caseNote.attachments.map((attachment, index) => {
-                const name = (attachment.name || attachment.url.split('/').pop()).substring(0, 20)
+  toggleExpanded(domainGroupId, collapsed) {
+    const { collapsibles } = this.state
+    this.setState({collapsibles: {...collapsibles, [domainGroupId]: !collapsed}})
+  }
 
-                return (
-                  <View style={styles.attachmentWrapper} key={index}>
-                    <Image
-                      style={{ width: 40, height: 40 }}
-                      source={{ uri: attachment.uri }}
-                    />
-                    <Text style={styles.listAttachments}>{index + 1}. { name }...</Text>
-                    {
-                      attachment.size &&
-                        <TouchableWithoutFeedback
-                          onPress={() => this.removeAttactment(caseNote, index)}>
-                          <View>
-                            <Icon color="red" name="delete" size={25} />
-                          </View>
-                        </TouchableWithoutFeedback>
-                    }
-                  </View>
-                )
-              })
-            }
-          </View>
-      }
-      <View style={styles.buttonWrapper}>
-        <Button
-          raised
-          onPress={() => this.uploadAttachment(caseNote)}
-          backgroundColor="#000"
-          icon={{ name: 'cloud-upload' }}
-          title={i18n.t('button.upload')}
+  renderDomainGroup = (caseNote, index) => {
+    const { collapsibles } = this.state
+    const domainGroupId = caseNote.domain_group_id
+    const collapsed = collapsibles[domainGroupId]
+    return (
+      <DomainGroupCard key={index} title={caseNote.domain_group_identities} toggleExpanded={() => this.toggleExpanded(domainGroupId, collapsed)} collapsed={collapsed}>
+        <TextInput
+          autoCapitalize="sentences"
+          placeholder={i18n.t('client.case_note_form.enter_text')}
+          placeholderTextColor="#ccc"
+          multiline={true}
+          numberOfLines={5}
+          textAlignVertical="top"
+          style={styles.textarea}
+          value={caseNote.note}
+          onChangeText={note => this.updateNote(caseNote, note)}
         />
-      </View>
-
-      <View style={styles.buttonWrapper}>
-        <Button
-          raised
-          onPress={() => this.openTaskModal(caseNote.domain_group_id)}
-          backgroundColor="#088"
-          icon={{ name: 'add-circle' }}
-          title={i18n.t('button.add_task')}
-        />
-      </View>
-      <View style={{ marginTop: 10 }}>
         {
-          caseNote.domains.map((domain, index) => {
-            const tasks = this.state.onGoingTasks.filter(task => task.domain.id === domain.id)
+          caseNote.attachments.length > 0 &&
+            <View style={{ marginTop: 15 }}>
+              <Text style={styles.label}>{i18n.t('client.assessment_form.attachments')}:</Text>
+              {
+                caseNote.attachments.map((attachment, index) => {
+                  const name = (attachment.name || attachment.url.split('/').pop()).substring(0, 20)
 
-            if (tasks.length === 0)
-              return
-
-            return (
-              <Card key={index} title={`${i18n.t('task.domain')} ${domain.name}`} style={{ marginLeft: 0, marginRight: 0 }}>
-                <Text style={styles.label}>
-                  {i18n.t('client.case_note_form.on_going')}
-                </Text>
-                {
-                  tasks.map(task => (
-                    <CheckBox
-                      key={task.id}
-                      title={task.name}
-                      checked={caseNote.task_ids.includes(task.id)}
-                      iconType="material"
-                      checkedIcon="check-box"
-                      uncheckedIcon="check-box-outline-blank"
-                      checkedColor="#009999"
-                      uncheckedColor="#009999"
-                      textStyle={styles.checkBox}
-                      containerStyle={styles.checkBoxWrapper}
-                      onPress={() => this.handleTaskCheck(caseNote, task.id)}
-                    />
-                  ))
-                }
-              </Card>
-            )
-          })
+                  return (
+                    <View style={styles.attachmentWrapper} key={index}>
+                      <Image
+                        style={{ width: 40, height: 40 }}
+                        source={{ uri: attachment.uri }}
+                      />
+                      <Text style={styles.listAttachments}>{index + 1}. { name }...</Text>
+                      {
+                        attachment.size &&
+                          <TouchableWithoutFeedback
+                            onPress={() => this.removeAttactment(caseNote, index)}>
+                            <View>
+                              <Icon color="red" name="delete" size={25} />
+                            </View>
+                          </TouchableWithoutFeedback>
+                      }
+                    </View>
+                  )
+                })
+              }
+            </View>
         }
-      </View>
-      {
-        this.state.arisingTasks.length > 0 &&
-          <View style={{ marginTop: 15 }}>
-            <Text style={styles.label}>{i18n.t('client.assessment_form.task_arising')}:</Text>
-            {
-              this.state.arisingTasks.map((task, index) => (
-                <View key={index} style={styles.attachmentWrapper}>
-                  <Text style={styles.listAttachments}>
-                    {index + 1}. {task.name}
+        <View style={styles.buttonWrapper}>
+          <Button
+            raised
+            onPress={() => this.uploadAttachment(caseNote)}
+            backgroundColor="#000"
+            icon={{ name: 'cloud-upload' }}
+            title={i18n.t('button.upload')}
+          />
+        </View>
+
+        <View style={styles.buttonWrapper}>
+          <Button
+            raised
+            onPress={() => this.openTaskModal(caseNote.domain_group_id)}
+            backgroundColor="#088"
+            icon={{ name: 'add-circle' }}
+            title={i18n.t('button.add_task')}
+          />
+        </View>
+        <View style={{ marginTop: 10 }}>
+          {
+            caseNote.domains.map((domain, index) => {
+              const tasks = this.state.onGoingTasks.filter(task => task.domain.id === domain.id)
+
+              if (tasks.length === 0)
+                return
+
+              return (
+                <Card key={index} title={`${i18n.t('task.domain')} ${domain.name}`} style={{ marginLeft: 0, marginRight: 0 }}>
+                  <Text style={styles.label}>
+                    {i18n.t('client.case_note_form.on_going')}
                   </Text>
-                  <TouchableWithoutFeedback onPress={() => this.deleteTask(task)}>
-                    <Icon color="red" name="delete" size={25}/>
-                  </TouchableWithoutFeedback>
-                </View>
-              ))
-            }
-          </View>
-      }
-    </Card>
-  )
+                  {
+                    tasks.map(task => (
+                      <CheckBox
+                        key={task.id}
+                        title={task.name}
+                        checked={caseNote.task_ids.includes(task.id)}
+                        iconType="material"
+                        checkedIcon="check-box"
+                        uncheckedIcon="check-box-outline-blank"
+                        checkedColor="#009999"
+                        uncheckedColor="#009999"
+                        textStyle={styles.checkBox}
+                        containerStyle={styles.checkBoxWrapper}
+                        onPress={() => this.handleTaskCheck(caseNote, task.id)}
+                      />
+                    ))
+                  }
+                </Card>
+              )
+            })
+          }
+        </View>
+        {
+          this.state.arisingTasks.length > 0 &&
+            <View style={{ marginTop: 15 }}>
+              <Text style={styles.label}>{i18n.t('client.assessment_form.task_arising')}:</Text>
+              {
+                this.state.arisingTasks.map((task, index) => (
+                  <View key={index} style={styles.attachmentWrapper}>
+                    <Text style={styles.listAttachments}>
+                      {index + 1}. {task.name}
+                    </Text>
+                    <TouchableWithoutFeedback onPress={() => this.deleteTask(task)}>
+                      <Icon color="red" name="delete" size={25}/>
+                    </TouchableWithoutFeedback>
+                  </View>
+                ))
+              }
+            </View>
+        }
+      </DomainGroupCard>
+    )
+  }
 
   render() {
     return (
@@ -468,6 +488,26 @@ class CaseNoteForm extends Component {
     )
   }
 }
+
+const DomainGroupCard = props => {
+  const iconName = props.collapsed ? 'arrow-drop-down' :  'arrow-drop-up'
+  return (
+    <View style={[styles.card, props.style]}>
+      <View style={[styles.header, {flexDirection: 'row'}]}>
+        <TouchableOpacity onPress={props.toggleExpanded}>
+          <Icon name={iconName} size={30} style={{marginRight: 5, color: '#ffffff'}}/>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>
+          { props.title }
+        </Text>
+      </View>
+      <Collapsible collapsed={props.collapsed}>
+        <View style={styles.content}>
+          { props.children }
+        </View>
+      </Collapsible>
+    </View>
+  )}
 
 const Card = props => (
   <View style={[styles.card, props.style]}>
