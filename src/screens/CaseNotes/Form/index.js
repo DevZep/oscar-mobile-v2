@@ -2,7 +2,7 @@ import React, { Component }                     from 'react'
 import { connect }                              from 'react-redux'
 import { Navigation }                           from 'react-native-navigation'
 import { MAIN_COLOR }                           from '../../../constants/colors'
-import { groupBy, map }                         from 'lodash'
+import { groupBy, map, debounce }               from 'lodash'
 import { saveCaseNote }                         from '../../../redux/actions/caseNotes'
 import { Button, CheckBox }                     from 'react-native-elements'
 import { createTask, deleteTask }               from '../../../redux/actions/tasks'
@@ -218,7 +218,7 @@ class CaseNoteForm extends Component {
     this.setState({ caseNoteDomainGroups })
   }
 
-  openTaskModal = domainGroupId => {
+  openTaskModal = debounce(domainGroupId => {
     const { client, domains, custom } = this.props
     Navigation.showModal({
       component: {
@@ -229,7 +229,7 @@ class CaseNoteForm extends Component {
         },
       }
     })
-  }
+  }, 1000, { maxWait: 1000, leading: true, trailing: false })
 
   deleteTask = task => {
     const { client } = this.props
@@ -422,7 +422,10 @@ class CaseNoteForm extends Component {
         <ScrollView showsVerticalScrollIndicator={false} ref={ref => this.scrollView = ref}>
           <Card title={i18n.t('client.case_note_form.meeting_detail')}>
             <View style={styles.inputWrapper}>
-              <Text style={styles.label}>* {i18n.t('client.case_note_form.on_date')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.case_note_form.on_date')}</Text>
+              </View>
               <DatePicker
                 style={styles.datePicker}
                 date={this.state.meetingDate}
@@ -445,7 +448,10 @@ class CaseNoteForm extends Component {
             </View>
 
             <View style={styles.inputWrapper}>
-              <Text style={styles.label}>* {i18n.t('client.case_note_form.who_was_there')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.case_note_form.who_was_there')}</Text>
+              </View>
               <TextInput
                 autoCapitalize="sentences"
                 placeholder={i18n.t('client.case_note_form.enter_text')}
@@ -458,7 +464,10 @@ class CaseNoteForm extends Component {
             </View>
 
             <View style={styles.inputWrapper}>
-              <Text style={styles.label}>{i18n.t('client.case_note_form.select_type')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color:'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.case_note_form.type')}</Text>
+              </View>
               <SectionedMultiSelect
                 items={this.interactionTypes()}
                 uniqueKey="id"
@@ -478,6 +487,7 @@ class CaseNoteForm extends Component {
                 onSelectedItemsChange={ interactionTypes => this.setState({ interactionType: interactionTypes[0] }) }
                 selectedItems={[this.state.interactionType]}
               />
+              <Text style={{fontStyle: 'italic'}}>{i18n.t('client.case_note_form.noted')}</Text>
             </View>
           </Card>
           {
@@ -494,9 +504,11 @@ const DomainGroupCard = props => {
   return (
     <View style={[styles.card, props.style]}>
       <View style={[styles.header, {flexDirection: 'row', justifyContent: 'space-between'}]}>
-        <Text style={styles.headerTitle}>
-          { props.title }
-        </Text>
+        <View style={{width: '95%'}}>
+          <Text style={styles.headerTitle}>
+            { props.title }
+          </Text>
+        </View>
         <TouchableOpacity onPress={props.toggleExpanded}>
           <Icon name={iconName} size={30} style={{marginRight: 5, color: '#ffffff'}}/>
         </TouchableOpacity>
@@ -507,7 +519,8 @@ const DomainGroupCard = props => {
         </View>
       </Collapsible>
     </View>
-  )}
+  )
+}
 
 const Card = props => (
   <View style={[styles.card, props.style]}>

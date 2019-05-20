@@ -5,7 +5,7 @@ import { loadingScreen }            from '../../navigation/config'
 import { Navigation }               from 'react-native-navigation'
 import endpoint                     from '../../constants/endpoint'
 
-export function updateAssessment(params, assessmentId, client, previousComponentId, onSuccess) {
+export function updateAssessment(params, assessmentId, client, previousComponentId, alertMessage) {
   return dispatch => {
     NetInfo.isConnected.fetch().then(isConnected => {
       if (isConnected) {
@@ -17,12 +17,13 @@ export function updateAssessment(params, assessmentId, client, previousComponent
           .put(path, assessmentParams)
           .then(response => {
             client.assessments.forEach(assessment => {
-              if (assessment.id === assessmentId) assessment.assessment_domain = params.assessmentDomains
+              if (assessment.id === assessmentId) assessment.assessment_domain = response.data.assessment.assessment_domain
             })
-            updateClient(client)
-            onSuccess(client)
+            dispatch(updateClient(client))
+
             Navigation.dismissOverlay('LOADING_SCREEN')
             Navigation.popTo(previousComponentId)
+            alertMessage()
           })
           .catch(err => {
             console.log(err)
@@ -46,11 +47,11 @@ export function createAssessment(params, client, previousComponentId, onSuccess)
         .post(path, assessmentParams)
         .then(response => {
           client.assessments.push(response.data.assessment)
-          updateClient(client)
-          onSuccess(client)
+          dispatch(updateClient(client))
 
           Navigation.dismissOverlay('LOADING_SCREEN')
           Navigation.popTo(previousComponentId)
+          alertMessage()
         })
         .catch(err => {
           console.log(err.response)

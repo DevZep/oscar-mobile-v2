@@ -1,4 +1,3 @@
-import React from 'react'
 import { sumBy, map, filter } from 'lodash'
 
 export const populateAssessmentDomains = (assessment, domains, client) => {
@@ -12,10 +11,11 @@ export const populateAssessmentDomains = (assessment, domains, client) => {
     id: domain.id,
     goal: '',
     score: null,
-    reason: null,
+    reason: '',
     domain: domain,
     domain_id: domain.id,
     attachments: [],
+    goal_required: true,
     required_task_last: false,
     incomplete_tasks: incomplete_tasks.filter((task) => task.domain.id == domain.id)
   }))

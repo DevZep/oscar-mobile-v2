@@ -87,7 +87,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.gender')}</Text>
+              <Text style={styles.label}>* {i18n.t('user.gender')}</Text>
               <SectionedMultiSelect
                 items={this.listItems(genders)}
                 uniqueKey="id"

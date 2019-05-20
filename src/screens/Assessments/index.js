@@ -9,13 +9,9 @@ import { pushScreen }                     from '../../navigation/config'
 import { orderBy, maxBy }                 from 'lodash'
 import { View, Text, TouchableOpacity }   from 'react-native'
 class Assessments extends Component {
-  state = {
-    client: this.props.client,
-    domains: this.props.domains
-  }
 
   navigateToDetail = async (assessment, assessmentName, isEditable) => {
-    const { client, domains } = this.state
+    const { client, domains } = this.props
     const icons = await appIcon()
     const rightButtons = isEditable ? [{ id: 'SAVE_ASSESSMENT', icon: icons.edit, color: '#fff' }] : []
 
@@ -23,8 +19,8 @@ class Assessments extends Component {
       screen: 'oscar.assessmentDetail',
       title: assessmentName,
       props: {
-        assessment,
-        client,
+        assessmentId: assessment.id,
+        clientId: client.id,
         domains
       },
       rightButtons
@@ -35,8 +31,9 @@ class Assessments extends Component {
     this.refs.dropdown.alertWithType('success', 'Success', message)
   }
 
-  onCreateNewAssessment = isCustom => {
-    const { client, domains } = this.state
+  onCreateNewAssessment = async isCustom => {
+    const { client, domains } = this.props
+    const icons = await appIcon()
     if (isCustom) {
       const customDomains = domains.filter(d => d.custom_domain)
       if (customDomains.length === 0) {
@@ -60,13 +57,19 @@ class Assessments extends Component {
         previousComponentId: this.props.componentId,
         onCreateSuccess: client => this.setState({ client }),
         alertMessage: () => this.alertMessage('Assessment has been successfully created.')
-      }
+      },
+      rightButtons: [
+        {
+          id: 'SAVE_ASSESSMENT',
+          icon: icons.save,
+          color: '#fff'
+        }
+      ]
     })
   }
 
   _renderNextAssessment(assessmentType) {
-    const { setting } = this.props
-    const { client } = this.state
+    const { setting, client } = this.props
     const isDefault = assessmentType === 'default'
     const assessments = client.assessments.filter(assessment => assessment.default === isDefault)
     const lastAssessment = maxBy(assessments, 'created_at') || {}
@@ -86,8 +89,7 @@ class Assessments extends Component {
   }
 
   _renderAssessments() {
-    const { setting } = this.props
-    const { client } = this.state
+    const { setting, client } = this.props
     const assessments = orderBy(client.assessments, ['created_at'], ['asc'])
     const defaultAssessments = assessments.filter(assessment => assessment.default)
     const customAssessments = assessments.filter(assessment => !assessment.default)
@@ -111,8 +113,7 @@ class Assessments extends Component {
   }
 
   render() {
-    const { setting } = this.props
-    const { client } = this.state
+    const { setting, client } = this.props
     const defaultAssessments = client.assessments.filter(assessment => assessment.default)
     const customAssessments = client.assessments.filter(assessment => !assessment.default)
 

@@ -123,11 +123,15 @@ export default class EditAdditionalFormWidget extends Component {
     )
   }
 
-  datePickerType(label, data) {
+  datePickerType(label, data, formField) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <DatePicker
           date={value}
           style={customFormStyles.datePicker}
@@ -146,11 +150,15 @@ export default class EditAdditionalFormWidget extends Component {
     )
   }
 
-  textType(label, data) {
+  textType(label, data, formField) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <TextInput
           autoCapitalize="sentences"
           returnKeyType="next"
@@ -162,11 +170,15 @@ export default class EditAdditionalFormWidget extends Component {
     )
   }
 
-  numberType(label, data) {
-    let value = data != undefined ? data : ''
+  numberType(label, data, formField) {
+    const required = formField.required
+    const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <TextInput
           autoCapitalize="sentences"
           returnKeyType="next"
@@ -179,11 +191,15 @@ export default class EditAdditionalFormWidget extends Component {
     )
   }
 
-  textareaType(label, data) {
+  textareaType(label, data, formField) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <TextInput
           autoCapitalize="sentences"
           placeholder="Relevant Referral Infromation"
@@ -201,10 +217,14 @@ export default class EditAdditionalFormWidget extends Component {
   }
 
   checkBoxType(label, formField, data) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
-      <View style={[customFormStyles.fieldContainer]}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+      <View style={customFormStyles.fieldContainer}>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         {map(formField.values, (fieldValue, index) => {
           return (
             <View key={index} style={customFormStyles.row}>
@@ -225,9 +245,13 @@ export default class EditAdditionalFormWidget extends Component {
   }
 
   radioType(label, formField, data) {
+    const required = formField.required
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         {map(formField.values, (fieldValue, index) => {
           return (
             <View key={index} style={customFormStyles.row}>
@@ -236,7 +260,7 @@ export default class EditAdditionalFormWidget extends Component {
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
                 checkedColor="#009999"
-                style={customFormStyles.checkBox}
+                style={{ backgroundColor: 'transparent' }}
                 onPress={() => this.updateField(label, fieldValue.label)}
                 checked={data == fieldValue.label ? true : false}
               />
@@ -248,10 +272,14 @@ export default class EditAdditionalFormWidget extends Component {
   }
 
   selectType(label, formField, data) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <SectionedMultiSelect
           items={this.listItems(formField.values)}
           uniqueKey="id"
@@ -277,6 +305,7 @@ export default class EditAdditionalFormWidget extends Component {
   }
 
   fileUploader(label, formField, data) {
+    const required = formField.required
     return (
       <View style={[customFormStyles.fieldContainer, { marginTop: 10 }]}>
         <View
@@ -287,7 +316,8 @@ export default class EditAdditionalFormWidget extends Component {
             padding: 4
           }}
         >
-          <Text style={[customFormStyles.label, customFormStyles.labelMargin, { flex: 1 }]}>{label}</Text>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin, {flex: 1}]}>{label}</Text>
           <Icon name="add-circle" size={22} color="#fff" onPress={() => this.uploader(label, formField, data)} />
         </View>
         {map(data, (attachment, index) => {
@@ -405,17 +435,16 @@ export default class EditAdditionalFormWidget extends Component {
   }
 
   renderFormField = () => {
-    const self = this
     const { customForm, fields } = this.state
     return map(customForm.fields, (formField, index) => {
       const fieldType = formField.type
       const label = formField.label
       return (
         <View key={index}>
-          {fieldType == 'text' && this.textType(label, fields[label])}
-          {fieldType == 'number' && this.numberType(label, fields[label])}
-          {fieldType == 'textarea' && this.textareaType(label, fields[label])}
-          {fieldType == 'date' && this.datePickerType(label, fields[label])}
+          {fieldType == 'text' && this.textType(label, fields[label], formField)}
+          {fieldType == 'number' && this.numberType(label, fields[label], formField)}
+          {fieldType == 'textarea' && this.textareaType(label, fields[label], formField)}
+          {fieldType == 'date' && this.datePickerType(label, fields[label], formField)}
           {fieldType == 'checkbox-group' && this.checkBoxType(label, formField, fields[label])}
           {fieldType == 'radio-group' && this.radioType(label, formField, fields[label])}
           {fieldType == 'select' && formField.multiple && this.checkBoxType(label, formField, fields[label])}

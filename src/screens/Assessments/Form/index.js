@@ -1,16 +1,17 @@
 import React, { Component }                   from 'react'
 import { connect }                            from 'react-redux'
-import { Navigation }                         from 'react-native-navigation'
+import Swiper                                 from 'react-native-swiper'
 import { Button, CheckBox }                   from 'react-native-elements'
+import HTMLView                               from 'react-native-htmlview'
+import { Navigation }                         from 'react-native-navigation'
+import ImagePicker                            from 'react-native-image-picker'
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
+import Icon                                   from 'react-native-vector-icons/MaterialIcons'
+
+import * as AssessmentHelper                  from '../helpers'
 import { createTask, deleteTask }             from '../../../redux/actions/tasks'
 import { createAssessment, updateAssessment } from '../../../redux/actions/assessments'
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 import i18n                                   from '../../../i18n'
-import Icon                                   from 'react-native-vector-icons/MaterialIcons'
-import Swiper                                 from 'react-native-swiper'
-import HTMLView                               from 'react-native-htmlview'
-import ImagePicker                            from 'react-native-image-picker'
-import * as AssessmentHelper                  from '../helpers'
 import { SCORE_COLOR }                        from '../../../constants/colors'
 import {
   View,
@@ -32,13 +33,36 @@ class AssessmentForm extends Component {
   state = {
     attachmentsSize: 0,
     assessmentDomains: [],
-    incompletedDomainIds: []
+    incompletedDomainIds: [],
+    currentDomain: 0
+  }
+
+  constructor(props) {
+    super(props)
+    Navigation.events().bindComponent(this)
+  }
+
+  navigationButtonPressed({ buttonId }) {
+    if (buttonId === 'SAVE_ASSESSMENT') {
+      if (this.handleValidationSaveDraft()) {
+        const { action, assessment, client, previousComponentId, custom_domain } = this.props
+        const { assessmentDomains } = this.state
+        const params = { assessmentDomains, default: !custom_domain }
+
+        if (action === 'create') {
+          this.props.createAssessment(params, client, previousComponentId, this.props.alertMessage())
+        } else {
+          this.props.updateAssessment(params, assessment.id, client, previousComponentId, this.props.alertMessage())
+        }
+      }
+    }
   }
 
   componentWillMount() {
     const { domains, client, assessment } = this.props
     const assessmentDomains = AssessmentHelper.populateAssessmentDomains(assessment, domains, client)
-    this.setState({ assessmentDomains })
+    const scores = this.shuffleScores()
+    this.setState({ assessmentDomains, scores })
   }
 
   componentDidMount() {
@@ -203,9 +227,34 @@ class AssessmentForm extends Component {
     this.setState({ assessmentDomains })
   }
 
+  handleValidationSaveDraft = () => {
+    const { assessmentDomains, currentDomain } = this.state
+    const assessmentDomain = assessmentDomains[currentDomain]
+
+    if (assessmentDomain == undefined) return true
+
+    const domainName = assessmentDomain.domain.name
+
+    if (!assessmentDomain.score) {
+      return this.handleSaveDraftValidationFail(domainName, 'score')
+    }
+
+    if (!assessmentDomain.reason) {
+      return this.handleSaveDraftValidationFail(domainName, 'observation')
+    }
+
+    if (this.isRequireGoal(assessmentDomain) && !assessmentDomain.goal) {
+      return this.handleSaveDraftValidationFail(domainName, 'goal')
+    }
+
+    if (this.isRequireTask(assessmentDomain) && !assessmentDomain.required_task_last) {
+      return this.handleSaveDraftValidationFail(domainName, 'task')
+    }
+    return true
+  }
+
   handleValidation = (e, state, context) => {
     if (state.index == 0) return
-
     const previousIndex = state.index - 1
     const { assessmentDomains } = this.state
     const assessmentDomain = assessmentDomains[previousIndex]
@@ -229,6 +278,8 @@ class AssessmentForm extends Component {
     if (this.isRequireTask(assessmentDomain) && !assessmentDomain.required_task_last) {
       this.handleValidationFail(domainName, 'task')
     }
+
+    this.setState({currentDomain: state.index})
   }
 
   handleValidationFail = (domainName, field) => {
@@ -243,11 +294,23 @@ class AssessmentForm extends Component {
     this._swiper.scrollBy(-1)
   }
 
+  handleSaveDraftValidationFail = (domainName, field) => {
+    const message =
+      field === 'task'
+        ? i18n.t('client.assessment_form.warning_tasks', { domainName })
+        : i18n.t('client.assessment_form.warning_domain', { title: field, domainName })
+
+    const title = field === 'task' ? i18n.t('client.assessment_form.title_task') : i18n.t('client.assessment_form.title_domain')
+
+    Alert.alert(title, message)
+    return false
+  }
+
   isRequireGoal = assessmentDomain => {
     if (!assessmentDomain.score) return false
 
     const score = this.getScoreInfo(assessmentDomain)
-    return score.colorCode !== 'primary'
+    return score.colorCode !== 'primary' || score.colorCode === 'primary' && assessmentDomain.goal_required
   }
 
   isRequireTask = assessmentDomain => {
@@ -262,11 +325,13 @@ class AssessmentForm extends Component {
   getScoreInfo = assessmentDomain => {
     const { domain, score } = assessmentDomain
     const scoreInfo = domain[`score_${score}`]
+    const colorCode = scoreInfo ? scoreInfo.color : ''
+    const definition = scoreInfo ? scoreInfo.definition : ''
 
     return {
-      colorCode: scoreInfo.color,
-      color: SCORE_COLOR[scoreInfo.color],
-      definition: scoreInfo.definition
+      colorCode,
+      color: SCORE_COLOR[colorCode],
+      definition
     }
   }
 
@@ -279,16 +344,33 @@ class AssessmentForm extends Component {
     })
   }
 
+  shuffleScores = () => {
+    return [1,2,3,4].sort(() => Math.random() - 0.5)
+  }
+
+  setAssessmentDomainScore = (assessmentDomain, score) => {
+    let { assessmentDomains } = this.state
+    let goalRequired = true
+    goalRequired = (score == 4) ? assessmentDomain.goal_required : true
+    assessmentDomains = assessmentDomains.map(ad => {
+      if (ad.domain_id === assessmentDomain.domain_id) ad = { ...ad, score: score,  goal_required: goalRequired}
+      return ad
+    })
+
+    this.setState({ assessmentDomains })
+  }
+
   renderButtonScore = assessmentDomain => (
     <View style={styles.buttonContainer}>
-      {[1, 2, 3, 4].map(score => {
+      { this.state.scores.map(score => {
         const newAd = { ...assessmentDomain, score }
         const scoreInfo = this.getScoreInfo(newAd)
         const label = scoreInfo.definition ? scoreInfo.definition : score
-        const color = assessmentDomain.score == score ? scoreInfo.color : '#bfbfbf'
+        // const color = assessmentDomain.score == score ? scoreInfo.color : '#bfbfbf'
+        const color = assessmentDomain.score == score ? '#009999' : '#bfbfbf'
 
         return (
-          <TouchableOpacity key={score} onPress={() => this.setAssessmentDomainField(assessmentDomain, 'score', score)}>
+          <TouchableOpacity key={score} onPress={() => this.setAssessmentDomainScore(assessmentDomain, score)}>
             <View style={[styles.button, { backgroundColor: color }]}>
               <Text style={styles.buttonText}>{label}</Text>
             </View>
@@ -399,7 +481,6 @@ class AssessmentForm extends Component {
             </View>
           </View>
         ))}
-        <View>{this.renderButtonDone()}</View>
       </ScrollView>
     )
   }
@@ -407,7 +488,7 @@ class AssessmentForm extends Component {
   renderAssessmentDomain = ad => {
     const { client } = this.props
     const domainDescription = ad.domain.description.replace(/<[^>]+>/gi, '').split('&nbsp;')[0]
-
+    const primaryScore = ad.score != null && this.getScoreInfo(ad).colorCode == 'primary'
     return (
       <ScrollView key={ad.id} keyboardDismissMode="on-drag" showsVerticalScrollIndicator={false}>
         <View style={styles.domainDetailContainer}>
@@ -422,14 +503,17 @@ class AssessmentForm extends Component {
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{ flexDirection: 'row', padding: 20 }}>
-          <Text style={{ color: 'red' }}>* </Text>
+        <View style={{ padding: 20 }}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.label, { color: 'red' }]}>* </Text>
+            <Text style={styles.label}>{i18n.t('client.assessment_form.reason')}</Text>
+          </View>
           <TextInput
             autoCapitalize="sentences"
             placeholder={i18n.t('client.assessment_form.reason')}
             placeholderTextColor="#ccc"
             returnKeyType="done"
-            style={{ flex: 1, borderBottomColor: '#ccc', borderBottomWidth: 1, height: 100 }}
+            style={{ flex: 1, borderBottomColor: '#009999', borderBottomWidth: 1, height: 100 }}
             value={ad.reason}
             multiline
             numberOfLines={5}
@@ -439,29 +523,59 @@ class AssessmentForm extends Component {
             }}
           />
         </View>
-        <View style={styles.domainInfoContainer}>
-          <Text style={styles.domainInfo}>
-            Choose which of the following description most closely describes the client's situation, base on your observations.
+        <View style={{ padding: 20 }}>
+          <Text style={styles.label}>
+            {i18n.t('client.assessment_form.description')}
           </Text>
           {this.renderButtonScore(ad)}
         </View>
 
-        <View style={{ flexDirection: 'row', padding: 20 }}>
-          {!!ad.score && this.isRequireGoal(ad) && <Text style={{ color: 'red' }}>* </Text>}
-          <TextInput
-            autoCapitalize="sentences"
-            placeholder={i18n.t('client.assessment_form.goal')}
-            placeholderTextColor="#ccc"
-            returnKeyType="done"
-            style={{ flex: 1, borderBottomColor: '#ccc', borderBottomWidth: 1, height: 100 }}
-            value={ad.goal}
-            multiline
-            numberOfLines={5}
-            textAlignVertical="top"
-            onChangeText={text => {
-              this.setAssessmentDomainField(ad, 'goal', text)
-            }}
-          />
+        <View style={{ padding: 20 }}>
+          <View style={{flexDirection: 'row'}}>
+            {ad.goal_required && <Text style={[styles.label, { color: 'red' }]}>* </Text>}
+            <Text style={styles.label}>{i18n.t('client.assessment_form.goal')}: {i18n.t('client.assessment_form.specific')}</Text>
+          </View>
+          {primaryScore && (
+            <View style={{ paddingTop: 10 }}>
+              <Text style={{ marginBottom: 10 }}>{i18n.t('client.assessment_form.set_goal')}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <CheckBox
+                  title={i18n.t('language.yes')}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#009999"
+                  style={{ backgroundColor: 'transparent', marginRight: 10 }}
+                  checked={ad.goal_required}
+                  onPress={() => this.setAssessmentDomainField(ad, 'goal_required', true)}
+                />
+                <CheckBox
+                  title={i18n.t('language.no')}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#009999"
+                  style={{ backgroundColor: 'transparent' }}
+                  checked={!ad.goal_required}
+                  onPress={() => this.setAssessmentDomainField(ad, 'goal_required', false)}
+                />
+              </View>
+            </View>
+          )}
+          {primaryScore && !ad.goal_required ? null :
+            <TextInput
+              autoCapitalize="sentences"
+              placeholder={i18n.t('client.assessment_form.goal')}
+              placeholderTextColor="#ccc"
+              returnKeyType="done"
+              style={{ flex: 1, borderBottomColor: '#009999', borderBottomWidth: 1, height: 100 }}
+              value={ad.goal}
+              multiline
+              numberOfLines={5}
+              textAlignVertical="top"
+              onChangeText={text => {
+                this.setAssessmentDomainField(ad, 'goal', text)
+              }}
+            />
+          }
         </View>
         {this.props.action === 'create' && (
           <View style={{ padding: 20 }}>
@@ -510,7 +624,8 @@ class AssessmentForm extends Component {
   render() {
     const { assessmentDomains } = this.state
     let assessmentPages = assessmentDomains.map(this.renderAssessmentDomain)
-    assessmentPages = [...assessmentPages, this.renderTasksPage()]
+    if (this.props.action == 'create')
+      assessmentPages = [...assessmentPages, this.renderTasksPage()]
 
     return (
       <KeyboardAvoidingView style={styles.mainContainer}>
@@ -518,6 +633,7 @@ class AssessmentForm extends Component {
           ref={swiper => {
             this._swiper = swiper
           }}
+          showsButtons={true}
           loop={false}
           containerStyle={styles.container}
           onMomentumScrollEnd={this.handleValidation}

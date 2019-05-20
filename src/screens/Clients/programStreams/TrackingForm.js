@@ -42,8 +42,8 @@ class TrackingForm extends Component {
 
       const lastActive = find(programStream.enrollments, { status: 'Active' })
       const client_enrolled_programs_id = lastActive.id
-
-      const validated = validateCustomForm(field_properties, tracking.fields)
+      const fields = action == 'create' ? tracking.fields : tracking.tracking_field
+      const validated = validateCustomForm(field_properties, fields)
       if (validated) {
         if (action == 'create') {
           this.props.createTrackingForm(field_properties, tracking, client_enrolled_programs_id, client.id, tracking.id, this.props)
@@ -99,11 +99,15 @@ class TrackingForm extends Component {
     return map(options, option => ({ name: option.label, id: option.label }))
   }
 
-  datePickerType(label, data) {
+  datePickerType(label, data, formField) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <DatePicker
           date={value}
           style={customFormStyles.datePicker}
@@ -123,10 +127,14 @@ class TrackingForm extends Component {
   }
 
   textType(label, data, formField) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <TextInput
           autoCapitalize="sentences"
           returnKeyType="next"
@@ -139,10 +147,14 @@ class TrackingForm extends Component {
   }
 
   numberType(label, data, formField) {
+    const required = formField.required
     let value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <TextInput
           autoCapitalize="sentences"
           returnKeyType="next"
@@ -155,11 +167,15 @@ class TrackingForm extends Component {
     )
   }
 
-  textareaType(label, data) {
+  textareaType(label, data, formField) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <TextInput
           autoCapitalize="sentences"
           placeholder="Relevant Referral Infromation"
@@ -177,10 +193,14 @@ class TrackingForm extends Component {
   }
 
   checkBoxType(label, formField, data) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         {map(formField.values, (fieldValue, index) => {
           return (
             <View key={index} style={customFormStyles.row}>
@@ -201,9 +221,13 @@ class TrackingForm extends Component {
   }
 
   radioType(label, formField, data) {
+    const required = formField.required
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         {map(formField.values, (fieldValue, index) => {
           return (
             <View key={index} style={customFormStyles.row}>
@@ -232,10 +256,14 @@ class TrackingForm extends Component {
   }
 
   selectType(label, formField, data) {
+    const required = formField.required
     const value = data != undefined ? data : ''
     return (
       <View style={customFormStyles.fieldContainer}>
-        <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
         <SectionedMultiSelect
           items={this.listItems(formField.values)}
           uniqueKey="id"
@@ -261,6 +289,7 @@ class TrackingForm extends Component {
   }
 
   fileUploader(label, formField, data) {
+    const required = formField.required
     return (
       <View style={[customFormStyles.fieldContainer, { marginTop: 10 }]}>
         <View
@@ -271,7 +300,8 @@ class TrackingForm extends Component {
             padding: 4
           }}
         >
-          <Text style={[customFormStyles.label, customFormStyles.labelMargin, { flex: 1 }]}>{label}</Text>
+          {required && <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>}
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin, {flex: 1}]}>{label}</Text>
           <Icon name="add-circle" size={22} color="#fff" onPress={() => this.uploader(label, formField, data)} />
         </View>
         {map(data, (attachment, index) => {
@@ -393,9 +423,9 @@ class TrackingForm extends Component {
             return (
               <View key={index}>
                 {fieldType == 'text' && this.textType(label, field_properties[label], formField)}
-                {fieldType == 'number' && this.numberType(label, field_properties[label])}
-                {fieldType == 'textarea' && this.textareaType(label, field_properties[label])}
-                {fieldType == 'date' && this.datePickerType(label, field_properties[label])}
+                {fieldType == 'number' && this.numberType(label, field_properties[label], formField)}
+                {fieldType == 'textarea' && this.textareaType(label, field_properties[label], formField)}
+                {fieldType == 'date' && this.datePickerType(label, field_properties[label], formField)}
                 {fieldType == 'checkbox-group' && this.checkBoxType(label, formField, field_properties[label])}
                 {fieldType == 'radio-group' && this.radioType(label, formField, field_properties[label])}
                 {fieldType == 'select' && formField.multiple && this.checkBoxType(label, formField, field_properties[label])}

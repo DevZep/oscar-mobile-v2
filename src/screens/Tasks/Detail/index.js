@@ -1,6 +1,6 @@
 import React, { Component }       from 'react'
 import { connect }                from 'react-redux'
-import { sortBy }                 from 'lodash'
+import { sortBy, debounce }       from 'lodash'
 import { Navigation }             from 'react-native-navigation'
 import { deleteTask, updateTask } from '../../../redux/actions/tasks'
 import Icon                       from 'react-native-vector-icons/MaterialIcons'
@@ -53,7 +53,7 @@ class TaskDetail extends Component {
     ])
   }
 
-  onUpdateTask = (task, client) => {
+  onUpdateTask = debounce((task, client) => {
     Navigation.showModal({
       component: {
         name: 'oscar.taskForm',
@@ -68,7 +68,7 @@ class TaskDetail extends Component {
         }
       }
     })
-  }
+  }, 1000, { maxWait: 1000, leading: true, trailing: false })
 
   clientName = ({ family_name, given_name }) => {
     const fullName = [given_name, family_name].filter(Boolean).join(' ')

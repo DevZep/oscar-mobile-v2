@@ -284,7 +284,10 @@ export default class ClientForm extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('client.form.gender')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.form.gender')}</Text>
+              </View>
               <SectionedMultiSelect
                 items={genders}
                 uniqueKey="id"
@@ -477,7 +480,10 @@ export default class ClientForm extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('client.form.initial_referral_date')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.form.initial_referral_date')}</Text>
+              </View>
               <DatePicker
                 date={client.initial_referral_date}
                 style={styles.datePicker}
@@ -494,7 +500,10 @@ export default class ClientForm extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('client.form.referral_source')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.form.referral_source')}</Text>
+              </View>
               <SectionedMultiSelect
                 items={this.listItems(referralSources)}
                 uniqueKey="id"
@@ -530,7 +539,10 @@ export default class ClientForm extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('client.form.name_of_referee')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.form.name_of_referee')}</Text>
+              </View>
               <TextInput
                 autoCapitalize="sentences"
                 placeholder={i18n.t('client.form.name_of_referee')}
@@ -594,7 +606,10 @@ export default class ClientForm extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('client.form.received_by_id')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.form.received_by_id')}</Text>
+              </View>
               <SectionedMultiSelect
                 items={this.listUserItems(users)}
                 uniqueKey="id"
@@ -765,7 +780,10 @@ export default class ClientForm extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('client.form.case_worker')}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.label, {color: 'red'}]}>* </Text>
+                <Text style={styles.label}>{i18n.t('client.form.case_worker')}</Text>
+              </View>
               <SectionedMultiSelect
                 items={this.listUserItems(users)}
                 uniqueKey="id"

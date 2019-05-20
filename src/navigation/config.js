@@ -1,4 +1,5 @@
 import { Navigation } from 'react-native-navigation'
+import { debounce } from 'lodash'
 import { MAIN_COLOR } from '../constants/colors'
 import i18n from '../i18n'
 import appIcon from '../utils/Icon'
@@ -23,7 +24,7 @@ export const loadingScreen = () => {
   })
 }
 
-export const pushScreen = (componentId, options = {}) => {
+export const pushScreen = debounce((componentId, options = {}) => {
   Navigation.push(componentId, {
     component: {
       name: options.screen,
@@ -48,7 +49,7 @@ export const pushScreen = (componentId, options = {}) => {
       }
     }
   })
-}
+}, 1000, { maxWait: 1000, leading: true, trailing: false })
 
 export const startNgoScreen = () => {
   Navigation.setRoot({
