@@ -55,12 +55,28 @@ export function updateClientProperty(clientParams, actions) {
   }
 }
 
-export const updateStatus = (client, params) => {
+export const acceptClient = client => {
   return dispatch => {
     const path = endpoint.clientsPath + '/' + client.id
-
+    dispatch(requestClients())
     axios
-      .put(path, params)
+      .post(path)
+      .then(response => {
+        console.log(response)
+        // dispatch(updateClient(response.data.client))
+      })
+      .catch(error => {
+        dispatch(requestClientsFailed(error))
+      })
+  }
+}
+
+export const rejectClient = (client, params) => {
+  return dispatch => {
+    const path = endpoint.clientsPath + '/' + client.id
+    dispatch(requestClients())
+    axios
+      .post(path, params)
       .then(response => {
         console.log(response)
         // dispatch(updateClient(response.data.client))
