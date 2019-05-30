@@ -36,6 +36,23 @@ class ExitNgoForm extends Component {
     exit_note: ""
   }
 
+  onSubmit = () => {
+    const { exit_date, exit_reasons, other_info_of_exit, exit_circumstance, exit_note } = this.state
+    const isValid = Boolean(exit_date) &&
+                    Boolean(other_info_of_exit) &&
+                    Boolean(exit_note) &&
+                    exit_reasons.length > 0
+
+    if (!isValid)
+      alert("Please complete all the fields!")
+    else
+      this.props.rejectClient(this.state)
+  }
+
+  onCancel = () => {
+    Navigation.dismissAllModals()
+  }
+
   render() {
     const { exit_date, exit_reasons, other_info_of_exit, exit_circumstance, exit_note } = this.state
 
@@ -136,13 +153,13 @@ class ExitNgoForm extends Component {
             <Button
               textStyle={styles.submitButtonText}
               style={styles.submitButton}
-              onPress={() => Navigation.dismissAllModals()}>
+              onPress={this.onSubmit}>
               {i18n.t('button.save')}
             </Button>
             <Button
               textStyle={styles.cancelButtonText}
               style={styles.cancelButton}
-              onPress={ () => Navigation.dismissAllModals() }>
+              onPress={this.onCancel}>
               {i18n.t('button.cancel')}
             </Button>
           </View>

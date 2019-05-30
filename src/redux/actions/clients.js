@@ -1,8 +1,9 @@
 import axios                      from 'axios'
+import moment                     from 'moment'
 import { map, size }              from 'lodash'
-import { CLIENT_TYPES }           from '../types'
 import { Alert, NetInfo }         from 'react-native'
 import { Navigation }             from 'react-native-navigation'
+import { CLIENT_TYPES }           from '../types'
 import { loadingScreen }          from '../../navigation/config'
 import endpoint                   from '../../constants/endpoint'
 import i18n                       from '../../i18n'
@@ -57,15 +58,17 @@ export function updateClientProperty(clientParams, actions) {
 
 export const acceptClient = client => {
   return dispatch => {
-    const path = endpoint.clientsPath + '/' + client.id
+    const path = endpoint.clientsPath + '/' + client.id + endpoint.enterNgoPath
+    loadingScreen()
     dispatch(requestClients())
     axios
-      .post(path)
+      .post(path, { enter_ngo: { accepted_date: moment().format("YYYY-MM-DD") } })
       .then(response => {
-        console.log(response)
-        // dispatch(updateClient(response.data.client))
+        dispatch(updateClient(response.data.client))
+        Navigation.dismissOverlay('LOADING_SCREEN')
       })
       .catch(error => {
+        Navigation.dismissOverlay('LOADING_SCREEN')
         dispatch(requestClientsFailed(error))
       })
   }
@@ -73,16 +76,20 @@ export const acceptClient = client => {
 
 export const rejectClient = (client, params) => {
   return dispatch => {
-    const path = endpoint.clientsPath + '/' + client.id
+    const path = endpoint.clientsPath + '/' + client.id + endpoint.exitNgoPath
+    loadingScreen()
     dispatch(requestClients())
     axios
-      .post(path, params)
+      .post(path, { exit_ngo: params  })
       .then(response => {
-        console.log(response)
-        // dispatch(updateClient(response.data.client))
+        dispatch(updateClient(response.data.client))
+        Navigation.dismissOverlay('LOADING_SCREEN')
+        Navigation.dismissAllModals()
       })
       .catch(error => {
         dispatch(requestClientsFailed(error))
+        Navigation.dismissOverlay('LOADING_SCREEN')
+        Navigation.dismissAllModals()
       })
   }
 }

@@ -8,7 +8,7 @@ import { some }                     from 'lodash'
 import i18n                         from '../../../i18n'
 import appIcons                     from '../../../utils/Icon'
 import { pushScreen }               from '../../../navigation/config'
-import { updateStatus }             from '../../../redux/actions/clients'
+import { acceptClient, rejectClient } from '../../../redux/actions/clients'
 import Menu                         from './Menu'
 import ClientInformation            from './Information'
 import styles                       from './styles'
@@ -130,7 +130,7 @@ class ClientDetail extends Component {
   }
 
   onAcceptClient = client => {
-    // this.props.updateStatus(client, { status: 'Accepted' })
+    this.props.acceptClient(client)
   }
 
   onRejectClient = client => {
@@ -138,8 +138,7 @@ class ClientDetail extends Component {
       component: {
         name: 'oscar.exitNgo',
         passProps: {
-          client,
-          onUpdateClient: params => {},
+          rejectClient: params => this.props.rejectClient(client, params),
         }
       }
     })
@@ -275,7 +274,8 @@ const mapState = (state, ownProps) => ({
 })
 
 const mapDispatch = {
-  updateStatus
+  acceptClient,
+  rejectClient
 }
 
 export default connect(mapState, mapDispatch)(ClientDetail)
