@@ -59,11 +59,12 @@ class ListTrackingReport extends Component {
   }
 
   editTrackingForm = async trackingProperty => {
-    const { client, programStream } = this.props
+    const { client, programStream, translations } = this.props
+    const trackingTranslation = translations.client_enrolled_program_trackings
     const icons = await appIcon()
     pushScreen(this.props.componentId, {
       screen: 'oscar.trackingForm',
-      title: 'Edit Tracking',
+      title: trackingTranslation.edit.edit_tracking,
       props: {
         tracking: trackingProperty,
         programStream: programStream,
@@ -225,7 +226,9 @@ const mapState = (state, ownProps) => {
   const client = state.clients.data[ownProps.clientId]
   const programStream = find(client.program_streams, { id: ownProps.programStreamId })
   const enrollment = find(programStream.enrollments, { id: ownProps.enrollmentId })
-  return { client, programStream, enrollment }
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return { client, programStream, enrollment, translations }
 }
 
 const mapDispatch = {

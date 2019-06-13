@@ -44,7 +44,8 @@ class Tasks extends Component {
   }
 
   onTaskButtonClick = type => {
-    const { users, auth, domains, clients, clientId } = this.props
+    const { users, auth, domains, clients, clientId, translations } = this.props
+    const formTranslations = translations.client.tasks.form
 
     pushScreen(this.props.componentId, {
       screen: 'oscar.taskDetail',
@@ -55,7 +56,8 @@ class Tasks extends Component {
         color: TASK_COLORS[type],
         domains: domains,
         client: clients[clientId],
-        isClientTasksPage: !!clientId
+        isClientTasksPage: !!clientId,
+        formTranslations
       }
     })
   }
@@ -64,12 +66,14 @@ class Tasks extends Component {
     const taskCount = this.props.clientId ? this.getClientTasksCount() : this.getAllClientsTasksCount()
 
     const { overdue, today, upcoming } = taskCount
+    const { translations } = this.props
+    const indexTranslations = translations.tasks.index
 
     return (
       <View style={styles.mainContainer}>
-        <TaskButton color={TASK_COLORS.overdue} data={overdue} title={i18n.t('task.overdue')} onPress={() => this.onTaskButtonClick('overdue')} />
-        <TaskButton color={TASK_COLORS.today} data={today} title={i18n.t('task.today')} onPress={() => this.onTaskButtonClick('today')} />
-        <TaskButton color={TASK_COLORS.upcoming} data={upcoming} title={i18n.t('task.upcoming')} onPress={() => this.onTaskButtonClick('upcoming')} />
+        <TaskButton color={TASK_COLORS.overdue} data={overdue} title={indexTranslations.overdue_tasks} onPress={() => this.onTaskButtonClick('overdue')} />
+        <TaskButton color={TASK_COLORS.today} data={today} title={indexTranslations.today_tasks} onPress={() => this.onTaskButtonClick('today')} />
+        <TaskButton color={TASK_COLORS.upcoming} data={upcoming} title={indexTranslations.upcoming_tasks} onPress={() => this.onTaskButtonClick('upcoming')} />
       </View>
     )
   }
@@ -86,12 +90,17 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapState = state => ({
-  users: state.users.data,
-  auth: state.auth.data,
-  domains: state.domains.data,
-  clients: state.clients.data
-})
+const mapState = state => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    users: state.users.data,
+    auth: state.auth.data,
+    domains: state.domains.data,
+    clients: state.clients.data,
+    translations
+  }
+}
 
 const mapDispatch = {
   fetchUser,

@@ -1,5 +1,4 @@
 import React, { Component }               from 'react'
-import i18n                               from '../../i18n'
 import moment                             from 'moment'
 import styles                             from './styles'
 import appIcon                            from '../../utils/Icon'
@@ -32,7 +31,8 @@ class Assessments extends Component {
   }
 
   onCreateNewAssessment = async isCustom => {
-    const { client, domains } = this.props
+    const { client, domains, translations } = this.props
+    const assessmentIndexTranslations = translations.assessments.index
     const icons = await appIcon()
     if (isCustom) {
       const customDomains = domains.filter(d => d.custom_domain)
@@ -40,7 +40,7 @@ class Assessments extends Component {
         this.refs.dropdown.alertWithType(
           'info',
           'Info',
-          i18n.t('client.assessment_form.no_custom_domains_available') + ' ' + i18n.t('client.assessment_form.please_add_custom_domains')
+          assessmentIndexTranslations.no_custom_domains_available + ' ' + assessmentIndexTranslations.please_add_custom_domains
         )
         return
       }
@@ -113,19 +113,19 @@ class Assessments extends Component {
   }
 
   render() {
-    const { setting, client } = this.props
+    const { setting, client, translations } = this.props
     const defaultAssessments = client.assessments.filter(assessment => assessment.default)
     const customAssessments = client.assessments.filter(assessment => !assessment.default)
-
+    const assessmentIndexTranslations = translations.assessments.index
     return (
       <View style={styles.container}>
         {client.assessments.length > 0 && this._renderAssessments()}
         {setting.enable_default_assessment && defaultAssessments.length === 0 && (
-          <AssessmentButton label={`Start Initial ${setting.default_assessment}`} onPress={() => this.onCreateNewAssessment(false)} initail />
+          <AssessmentButton label={`${assessmentIndexTranslations.begin_now} ${setting.default_assessment}`} onPress={() => this.onCreateNewAssessment(false)} initail />
         )}
         {setting.enable_default_assessment && defaultAssessments.length > 0 && this._renderNextAssessment('default')}
         {setting.enable_custom_assessment && customAssessments.length === 0 && (
-          <AssessmentButton label={`Start Initial ${setting.custom_assessment}`} onPress={() => this.onCreateNewAssessment(true)} initail />
+          <AssessmentButton label={`${assessmentIndexTranslations.begin_now} ${setting.custom_assessment}`} onPress={() => this.onCreateNewAssessment(true)} initail />
         )}
         {setting.enable_custom_assessment && customAssessments.length > 0 && this._renderNextAssessment('custom')}
         <DropdownAlert ref="dropdown" updateStatusBar={false} useNativeDriver={true} />
@@ -161,9 +161,14 @@ const AssessmentButton = props => {
   )
 }
 
-const mapState = (state, ownProps) => ({
-  client: state.clients.data[ownProps.clientId],
-  domains: state.domains.data
-})
+const mapState = (state, ownProps) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    client: state.clients.data[ownProps.clientId],
+    domains: state.domains.data,
+    translations
+  }
+}
 
 export default connect(mapState)(Assessments)

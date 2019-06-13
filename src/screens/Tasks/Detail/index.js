@@ -54,6 +54,7 @@ class TaskDetail extends Component {
   }
 
   onUpdateTask = debounce((task, client) => {
+    const formTranslations = this.props.formTranslations
     Navigation.showModal({
       component: {
         name: 'oscar.taskForm',
@@ -61,6 +62,7 @@ class TaskDetail extends Component {
           task,
           client,
           domains: this.props.domains,
+          formTranslations,
           onUpdateTask: params =>
             this.props.updateTask(params, task, client.id, this.props.type, () =>
               this.refs.dropdown.alertWithType('success', 'Success', 'Task has successfully been updated.')

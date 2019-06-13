@@ -196,12 +196,14 @@ class AssessmentForm extends Component {
   }
 
   openTaskModal = domain => {
-    const { client } = this.props
+    const { client, translations } = this.props
+    const taskFormTranslations = translations.client.tasks.form
     Navigation.showModal({
       component: {
         name: 'oscar.taskForm',
         passProps: {
           domain,
+          formTranslations: taskFormTranslations,
           onCreateTask: params => this.props.createTask(params, client.id, task => this.handleTaskUpdate(task, 'create'))
         }
       }
@@ -380,12 +382,12 @@ class AssessmentForm extends Component {
     </View>
   )
 
-  renderIncompletedTask = ({ incomplete_tasks }) => {
+  renderIncompletedTask = ({ incomplete_tasks }, assessmentFormTranslations) => {
     if (incomplete_tasks.length == 0) return
 
     return (
       <View style={{ margin: 6, padding: 20 }}>
-        <Text style={{ fontWeight: 'bold' }}>{i18n.t('client.assessment_form.task_arising')}:</Text>
+        <Text style={{ fontWeight: 'bold' }}>{assessmentFormTranslations.tasks_arising}:</Text>
         {incomplete_tasks.map((task, index) => (
           <View key={index} style={styles.taskContainer}>
             <Text style={styles.taskName}>{`${index + 1}. ${task.name}`}</Text>
@@ -398,7 +400,7 @@ class AssessmentForm extends Component {
     )
   }
 
-  renderButtonDone = () => {
+  renderButtonDone = (assessmentFormTranslations) => {
     const { assessmentDomains } = this.state
     const isDisabled = assessmentDomains.reduce((result, ad) => result || this.isRequireTask(ad), false)
 
@@ -408,34 +410,34 @@ class AssessmentForm extends Component {
           raised
           backgroundColor={isDisabled ? '#d5d5d5' : '#009999'}
           icon={{ name: 'save' }}
-          title={i18n.t('button.save')}
+          title={assessmentFormTranslations.save}
           onPress={() => (isDisabled ? {} : this.saveAssessment())}
         />
       </View>
     )
   }
 
-  renderButtonAddTask = assessmentDomain => (
+  renderButtonAddTask = (assessmentDomain, assessmentFormTranslations) => (
     <View style={{ marginBottom: 15, marginTop: 5 }}>
       <Button
         raised
         onPress={() => this.openTaskModal(assessmentDomain.domain)}
         backgroundColor="#000"
         icon={{ name: 'add-circle' }}
-        title={i18n.t('button.add_task')}
+        title={assessmentFormTranslations.add_task}
       />
       {this.isRequireTask(assessmentDomain) && !assessmentDomain.required_task_last && (
-        <Text style={styles.taskTitle}>{i18n.t('client.assessment_form.warning_task')}</Text>
+        <Text style={styles.taskTitle}>{assessmentFormTranslations.at_least_one_task_required}</Text>
       )}
     </View>
   )
 
-  renderAttachment = assessmentDomain => {
+  renderAttachment = (assessmentDomain, attachmentTranslations) => {
     if (assessmentDomain.attachments.length == 0) return
 
     return (
       <View style={{ margin: 6, paddingLeft: 20, paddingRight: 20 }}>
-        <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Attachments :</Text>
+        <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>{attachmentTranslations} :</Text>
         {assessmentDomain.attachments.map((attachment, index) => (
           <View key={index} style={styles.attachmentWrapper}>
             <Image style={{ width: 40, height: 40 }} source={{ uri: attachment.uri }} />
@@ -458,6 +460,8 @@ class AssessmentForm extends Component {
   }
 
   renderTasksPage = () => {
+    const { translations } = this.props
+    const assessmentFormTranslations = translations.assessments.form
     const { assessmentDomains, incompletedDomainIds } = this.state
     const incompletedAssessmentDomains = assessmentDomains.filter(ad => incompletedDomainIds.includes(ad.domain_id))
 
@@ -465,7 +469,7 @@ class AssessmentForm extends Component {
       <ScrollView keyboardDismissMode="on-drag" key="task" showsVerticalScrollIndicator={false}>
         {incompletedAssessmentDomains.length === 0 && (
           <View style={styles.finishedAssessment}>
-            <Text style={styles.label}>{i18n.t('client.assessment_form.finished_assessment_msg')}</Text>
+            <Text style={styles.label}>{assessmentFormTranslations.finished_assessment_msg}</Text>
           </View>
         )}
         {incompletedAssessmentDomains.map(ad => (
@@ -476,8 +480,8 @@ class AssessmentForm extends Component {
                 {' : '}
                 {ad.domain.identity}
               </Text>
-              {this.renderButtonAddTask(ad)}
-              <View>{this.renderIncompletedTask(ad)}</View>
+              {this.renderButtonAddTask(ad, assessmentFormTranslations)}
+              <View>{this.renderIncompletedTask(ad, assessmentFormTranslations)}</View>
             </View>
           </View>
         ))}
@@ -486,7 +490,9 @@ class AssessmentForm extends Component {
   }
 
   renderAssessmentDomain = ad => {
-    const { client } = this.props
+    const { client, translations } = this.props
+    const assessmentFormTranslations = translations.assessments.form
+    const attachmentTranslations = translations.assessments.attachment
     const domainDescription = ad.domain.description.replace(/<[^>]+>/gi, '').split('&nbsp;')[0]
     const primaryScore = ad.score != null && this.getScoreInfo(ad).colorCode == 'primary'
     return (
@@ -506,11 +512,11 @@ class AssessmentForm extends Component {
         <View style={{ padding: 20 }}>
           <View style={{flexDirection: 'row'}}>
             <Text style={[styles.label, { color: 'red' }]}>* </Text>
-            <Text style={styles.label}>{i18n.t('client.assessment_form.reason')}</Text>
+            <Text style={styles.label}>{assessmentFormTranslations.reason}</Text>
           </View>
           <TextInput
             autoCapitalize="sentences"
-            placeholder={i18n.t('client.assessment_form.reason')}
+            placeholder={assessmentFormTranslations.reason}
             placeholderTextColor="#ccc"
             returnKeyType="done"
             style={{ flex: 1, borderBottomColor: '#009999', borderBottomWidth: 1, height: 100 }}
@@ -525,7 +531,7 @@ class AssessmentForm extends Component {
         </View>
         <View style={{ padding: 20 }}>
           <Text style={styles.label}>
-            {i18n.t('client.assessment_form.description')}
+            {assessmentFormTranslations.description}
           </Text>
           {this.renderButtonScore(ad)}
         </View>
@@ -533,11 +539,11 @@ class AssessmentForm extends Component {
         <View style={{ padding: 20 }}>
           <View style={{flexDirection: 'row'}}>
             {ad.goal_required && <Text style={[styles.label, { color: 'red' }]}>* </Text>}
-            <Text style={styles.label}>{i18n.t('client.assessment_form.goal')}: {i18n.t('client.assessment_form.specific')}</Text>
+            <Text style={styles.label}>{assessmentFormTranslations.goal}: </Text>
           </View>
           {primaryScore && (
             <View style={{ paddingTop: 10 }}>
-              <Text style={{ marginBottom: 10 }}>{i18n.t('client.assessment_form.set_goal')}</Text>
+              <Text style={{ marginBottom: 10 }}>{assessmentFormTranslations.set_goal}</Text>
               <View style={{ flexDirection: 'row' }}>
                 <CheckBox
                   title={i18n.t('language.yes')}
@@ -563,7 +569,7 @@ class AssessmentForm extends Component {
           {primaryScore && !ad.goal_required ? null :
             <TextInput
               autoCapitalize="sentences"
-              placeholder={i18n.t('client.assessment_form.goal')}
+              placeholder={assessmentFormTranslations.goal}
               placeholderTextColor="#ccc"
               returnKeyType="done"
               style={{ flex: 1, borderBottomColor: '#009999', borderBottomWidth: 1, height: 100 }}
@@ -579,7 +585,7 @@ class AssessmentForm extends Component {
         </View>
         {this.props.action === 'create' && (
           <View style={{ padding: 20 }}>
-            <Text style={{ marginBottom: 10 }}>{i18n.t('client.assessment_form.required_task_last')}</Text>
+          <Text style={{ marginBottom: 10 }}>{assessmentFormTranslations.add_task_confirm}</Text>
             <View style={{ flexDirection: 'row' }}>
               <CheckBox
                 title={i18n.t('client.form.yes')}
@@ -613,9 +619,9 @@ class AssessmentForm extends Component {
               onPress={() => this.uploadAttachment(ad)}
             />
           </View>
-          {!ad.required_task_last && this.renderButtonAddTask(ad)}
-          {this.renderAttachment(ad)}
-          <View>{this.renderIncompletedTask(ad)}</View>
+          {!ad.required_task_last && this.renderButtonAddTask(ad, assessmentFormTranslations)}
+          {this.renderAttachment(ad, attachmentTranslations.attachments)}
+          <View>{this.renderIncompletedTask(ad, assessmentFormTranslations)}</View>
         </View>
       </ScrollView>
     )
@@ -645,6 +651,13 @@ class AssessmentForm extends Component {
   }
 }
 
+const mapState = state => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return { translations }
+}
+
+
 const mapDispatch = {
   createTask,
   deleteTask,
@@ -653,6 +666,6 @@ const mapDispatch = {
 }
 
 export default connect(
-  null,
+  mapState,
   mapDispatch
 )(AssessmentForm)

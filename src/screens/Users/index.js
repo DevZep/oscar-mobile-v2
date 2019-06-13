@@ -39,13 +39,14 @@ class User extends Component {
         title: i18n.t('language.languages')
       })
     } else if (buttonId === 'EDIT_USER') {
-      const { departments, provinces, user } = this.props
+      const { departments, provinces, user, translations } = this.props
       const icons = await appIcon()
+      const languages = translations.users.form
 
       pushScreen(this.props.componentId, {
         screen: 'oscar.editUser',
         title: i18n.t('user.edit_title'),
-        props: { departments, provinces, user, alertMessage: this.alertMessage },
+        props: { departments, provinces, user, alertMessage: this.alertMessage, languages },
         rightButtons: [
           {
             id: 'SAVE_USER',
@@ -58,20 +59,21 @@ class User extends Component {
   }
 
   render() {
-    const { provinces, departments, user, loading } = this.props
+    const { provinces, departments, user, loading, translations } = this.props
+    const languages = translations.users.show
     const { first_name, last_name, gender, job_title, department_id, mobile, email, date_of_birth, start_date, province_id } = user
     const department = find(departments, { id: department_id })
     const province = find(provinces, { id: province_id })
     return (
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Card title={i18n.t('user.about_user')}>
-            <Field name={i18n.t('user.first_name')} value={first_name} />
-            <Field name={i18n.t('user.last_name')} value={last_name} />
-            <Field name={i18n.t('user.gender')} value={capitalize(gender)} />
-            <Field name={i18n.t('user.job_title')} value={job_title} />
-            <Field name={i18n.t('user.department')} value={department && department.name} />
-            <Field name={i18n.t('user.mobile')}>
+          <Card title={languages.general_info}>
+            <Field name={languages.first_name} value={first_name} />
+            <Field name={languages.last_name} value={last_name} />
+            <Field name={languages.gender} value={capitalize(gender)} />
+            <Field name={languages.job_title} value={job_title} />
+            <Field name={languages.department} value={department && department.name} />
+            <Field name={languages.mobile}>
               {
                 mobile && (
                   <TouchableWithoutFeedback onPress={() => call({ number: mobile, prompt: false }) }>
@@ -82,10 +84,10 @@ class User extends Component {
                 )
               }
             </Field>
-            <Field name={i18n.t('user.email')} value={email} />
-            <Field name={i18n.t('user.dob')} value={date_of_birth} />
-            <Field name={i18n.t('user.start_date')} value={start_date} />
-            <Field name={i18n.t('user.province')} value={province && province.name} />
+            <Field name={languages.email} value={email} />
+            <Field name={languages.date_of_birth} value={date_of_birth} />
+            <Field name={languages.start_date} value={start_date} />
+            <Field name={languages.province} value={province && province.name} />
           </Card>
         </ScrollView>
         <Button
@@ -103,13 +105,18 @@ class User extends Component {
   }
 }
 
-const mapState = state => ({
-  user: state.auth.data,
-  loading: state.auth.loading,
-  departments: state.departments.data,
-  provinces: state.provinces.data,
-  message: state.auth.message
-})
+const mapState = state => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    user: state.auth.data,
+    loading: state.auth.loading,
+    departments: state.departments.data,
+    provinces: state.provinces.data,
+    message: state.auth.message,
+    translations
+  }
+}
 
 const mapDispatch = {
   fetchProvinces,

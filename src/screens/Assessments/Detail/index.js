@@ -1,6 +1,5 @@
 import React, { Component }         from 'react'
 import _                            from 'lodash'
-import i18n                         from '../../../i18n'
 import Icon                         from 'react-native-vector-icons/MaterialIcons'
 import styles                       from './styles'
 import DropdownAlert                from 'react-native-dropdownalert'
@@ -49,12 +48,12 @@ class AssessmentDetail extends Component {
     this.refs.dropdown.alertWithType('success', 'Success', message)
   }
 
-  renderAttachments = attachments => {
+  renderAttachments = (attachments, attachmentsTranslation) => {
     if (attachments.length === 0) return
 
     return (
       <View style={{ flex: 1 }}>
-        <Text style={styles.label}>{i18n.t('client.assessment_form.attachments')}: </Text>
+        <Text style={styles.label}>{attachmentsTranslation}: </Text>
         {attachments.map((attachment, index) => {
           const filename = attachment.url != undefined ? attachment.url.substring(attachment.url.lastIndexOf('/') + 1) : attachment.name
 
@@ -75,12 +74,12 @@ class AssessmentDetail extends Component {
     )
   }
 
-  renderTasks = tasks => {
+  renderTasks = (tasks, tasksTranslation) => {
     if (tasks == undefined || tasks.length === 0) return
 
     return (
       <View>
-        <Text style={styles.label}>{i18n.t('client.assessment_form.tasks')}: </Text>
+        <Text style={styles.label}>{tasksTranslation}: </Text>
         {tasks.map((task, index) => (
           <View key={index} style={styles.taskItem}>
             <Icon size={10} name="label" color="#fff" style={{ marginTop: 4 }} />
@@ -119,9 +118,11 @@ class AssessmentDetail extends Component {
   )
 
   renderAssessmentDomain = (assessmentDomain, index) => {
-    const { domains } = this.props
+    const { domains, translations } = this.props
+    const assessmentDetailTranslations = translations.assessments.show
+    const attachmentTranslations = translations.assessments.attachment
     const domain = _.find(domains, {id: assessmentDomain.domain_id})
-    const domainName = `Domain ${domain.name} : ${domain.identity}`
+    const domainName = `${assessmentDetailTranslations.domain} ${domain.name} : ${domain.identity}`
 
     const score = domains[index][`score_${assessmentDomain.score}`]
     const scoreColor = score ? SCORE_COLOR[score.color] : 'gray'
@@ -142,25 +143,25 @@ class AssessmentDetail extends Component {
         </View>
         <View style={styles.fieldDataContainer}>
           <Text style={[styles.label, styles.fieldData]}>
-            {i18n.t('client.assessment_form.score')} {assessmentDomain.score}
+            {assessmentDetailTranslations.score} {assessmentDomain.score}
             {!!scoreDefinition && `: ${scoreDefinition}`}
           </Text>
         </View>
         <View style={styles.fieldDataContainer}>
           <Text style={styles.fieldData}>
-            <Text style={styles.label}>{i18n.t('client.assessment_form.reason')}: </Text>
+            <Text style={styles.label}>{assessmentDetailTranslations.reason}: </Text>
             {assessmentDomain.reason}
           </Text>
         </View>
         <View style={styles.fieldDataContainer}>
           <Text style={styles.fieldData}>
-            <Text style={styles.label}>{i18n.t('client.assessment_form.goal')}: </Text>
+            <Text style={styles.label}>{assessmentDetailTranslations.goal}: </Text>
             {assessmentDomain.goal || ''}
           </Text>
         </View>
-        <View style={styles.fieldDataContainer}>{this.renderTasks(assessmentDomain.incomplete_tasks)}</View>
+        <View style={styles.fieldDataContainer}>{this.renderTasks(assessmentDomain.incomplete_tasks, assessmentDetailTranslations.task)}</View>
 
-        <View style={styles.fieldDataContainer}>{this.renderAttachments(assessmentDomain.attachments)}</View>
+        <View style={styles.fieldDataContainer}>{this.renderAttachments(assessmentDomain.attachments, attachmentTranslations.attachments)}</View>
       </View>
     )
   }
@@ -184,15 +185,15 @@ class AssessmentDetail extends Component {
 
 
 const mapState = (state, ownProps) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
   const client = state.clients.data[ownProps.clientId]
   const assessment = _.find(client.assessments, {id: ownProps.assessmentId})
   return {
     client,
-    assessment
+    assessment,
+    translations
   }
 }
-
-
-
 
 export default connect(mapState)(AssessmentDetail)

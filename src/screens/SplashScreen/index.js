@@ -7,9 +7,9 @@ import CryptoJS                             from 'crypto-js'
 import Database                             from '../../config/Database'
 import RNExitApp                            from 'react-native-exit-app'
 import KeyboardManager                      from 'react-native-keyboard-manager'
-import { LANGUAGE_TYPES }                   from '../../redux/types'
 import { startNgoScreen, startScreen }      from '../../navigation/config'
 import { setDefaultHeader, verifyUser }     from '../../redux/actions/auth'
+import { updateLanguage }     from '../../redux/actions/language'
 import {
   View,
   Image,
@@ -42,11 +42,10 @@ class SplashScreen extends Component {
     setTimeout(() => this.authenticateUser(), 1500)
   }
 
-  setLanguage = () => {
-    const languageSetting = Database.objects('Setting').filtered('key = $0', 'language')[0]
-    if (languageSetting.value !== null) {
-      this.props.setLanguage(languageSetting.value)
-    }
+  setLanguage = async () => {
+    const languageSetting = await Database.objects('Setting').filtered('key = $0', 'language')[0]
+    if (languageSetting.value !== null)
+      this.props.updateLanguage(languageSetting.value)
   }
 
 
@@ -109,17 +108,14 @@ class SplashScreen extends Component {
 
 const mapState = state => ({
   user: state.auth.data,
+  language: state.language.language
 })
 
-const mapDispatch = dispatch => ({
-  setLanguage: language =>
-    dispatch({
-      type: LANGUAGE_TYPES.SET_LANGUAGE,
-      language
-    }),
-  verifyUser: action => dispatch(verifyUser(action)),
-  setDefaultHeader: () => dispatch(setDefaultHeader())
-})
+const mapDispatch = {
+  updateLanguage,
+  verifyUser,
+  setDefaultHeader
+}
 
 export default connect(
   mapState,

@@ -112,7 +112,37 @@ class EnrollmentForm extends Component {
           customStyles={{
             dateInput: customFormStyles.datePickerBorder
           }}
-          onDateChange={date => (label == 'Enroll Date' ? this.setState({ enrollment_date: date }) : this.updateField(label, date))}
+          onDateChange={date => this.updateField(label, date)}
+        />
+      </View>
+    )
+  }
+
+  enrollementdatePickerType(label, data) {
+    const value = data != undefined ? data : ''
+    const minDate = moment(this.state.enrollment_date, 'YYYY-MM-DD')
+      .add(1, 'days')
+      .format('YYYY-MM-DD')
+    return (
+      <View style={customFormStyles.fieldContainer}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
+        <DatePicker
+          date={value}
+          style={customFormStyles.datePicker}
+          mode="date"
+          minDate={minDate}
+          confirmBtnText="Done"
+          cancelBtnText="Cancel"
+          placeholder={i18n.t('client.select_date')}
+          showIcon={false}
+          format="YYYY-MM-DD"
+          customStyles={{
+            dateInput: customFormStyles.datePickerBorder
+          }}
+          onDateChange={date => this.setState({ enrollment_date: date })}
         />
       </View>
     )
@@ -389,12 +419,13 @@ class EnrollmentForm extends Component {
     this.setState({ error: null })
   }
   render() {
-    const { programStream } = this.props
+    const { programStream, translations } = this.props
     const { fieldProperties, enrollment_date } = this.state
+    const enrollmentDateTranslation = translations.client_enrolled_programs.form.enrollment_date
     return (
       <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: '#fff' }}>
         <View style={customFormStyles.aboutClientContainer}>
-          {this.datePickerType('Enroll Date', enrollment_date)}
+          {this.enrollementdatePickerType(enrollmentDateTranslation, enrollment_date)}
           {map(programStream.enrollment, (formField, index) => {
             const fieldType = formField.type
             const label = formField.label
@@ -419,11 +450,18 @@ class EnrollmentForm extends Component {
     )
   }
 }
+
+const mapState = (state) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return { translations }
+}
+
 const mapDispatch = {
   createEnrollmentForm
 }
 
 export default connect(
-  null,
+  mapState,
   mapDispatch
 )(EnrollmentForm)

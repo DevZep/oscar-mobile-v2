@@ -137,6 +137,36 @@ class ExitForm extends Component {
     )
   }
 
+  exitDatePickerType(label, data) {
+    const value = data != undefined ? data : ''
+    const minDate = moment(this.state.enrollment_date, 'YYYY-MM-DD')
+      .add(1, 'days')
+      .format('YYYY-MM-DD')
+    return (
+      <View style={customFormStyles.fieldContainer}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
+        <DatePicker
+          date={value}
+          style={customFormStyles.datePicker}
+          mode="date"
+          minDate={label == 'Exit Date' ? minDate : '1980-01-01'}
+          confirmBtnText="Done"
+          cancelBtnText="Cancel"
+          placeholder={i18n.t('client.select_date')}
+          showIcon={false}
+          format="YYYY-MM-DD"
+          customStyles={{
+            dateInput: customFormStyles.datePickerBorder
+          }}
+          onDateChange={date => this.setState({ exit_date: date })}
+        />
+      </View>
+    )
+  }
+
   _textType(label, data, formField) {
     const required = formField.required
     const value = data != undefined ? data : ''
@@ -419,12 +449,13 @@ class ExitForm extends Component {
   }
 
   render() {
-    const { programStream } = this.props
+    const { programStream, translations } = this.props
     const { field_properties, exit_date } = this.state
+    const leaveProgramTranslations = translations.leave_enrolled_programs
     return (
       <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: '#fff' }}>
         <View style={customFormStyles.aboutClientContainer}>
-          {this._datePickerType('Exit Date', exit_date)}
+          {this.exitDatePickerType(leaveProgramTranslations.form.exit_date, exit_date)}
           {map(programStream.exit_program, (formField, index) => {
             const fieldType = formField.type
             const label = formField.label
@@ -450,11 +481,17 @@ class ExitForm extends Component {
   }
 }
 
+const mapState = (state) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return { translations }
+}
+
 const mapDispatch = {
   createLeaveProgramForm
 }
 
 export default connect(
-  null,
+  mapState,
   mapDispatch
 )(ExitForm)

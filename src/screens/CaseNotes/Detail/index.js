@@ -1,4 +1,5 @@
 import React, { Component }         from 'react'
+import { connect }                  from 'react-redux'
 import { Navigation }               from 'react-native-navigation'
 import { pushScreen }               from '../../../navigation/config'
 import _                            from 'lodash'
@@ -54,14 +55,14 @@ class CaseNoteDetail extends Component {
     this.setState({ caseNote: updatedCaseNote, client })
   }
 
-  renderNotes = case_note => (
+  renderNotes = (case_note, noteTranslation) => (
     <View style={styles.fieldDataWrapper}>
-      <Text style={styles.label}>{i18n.t('client.case_note_form.note')} : </Text>
+      <Text style={styles.label}>{noteTranslation} : </Text>
       <Text style={styles.textData}>{case_note.note}</Text>
     </View>
   )
 
-  renderGoals = case_note => {
+  renderGoals = (case_note, goalTranslation) => {
     const { assessments } = this.props.client
 
     if (assessments.length === 0) return
@@ -79,7 +80,7 @@ class CaseNoteDetail extends Component {
       return (
         <View style={styles.fieldDataWrapper}>
           <View>
-            <Text style={styles.label}>{i18n.t('client.assessment_form.goal')} : </Text>
+            <Text style={styles.label}>{goalTranslation} : </Text>
             {
               availableAssessmentDomains.map((ad, index) => (
                 <View key={index}>
@@ -94,10 +95,10 @@ class CaseNoteDetail extends Component {
       )
   }
 
-  renderTasks = case_note => (
+  renderTasks = (case_note, completedTasksTranslation) => (
     <View style={styles.fieldDataWrapper}>
       <View>
-        <Text style={styles.label}>{i18n.t('client.case_note_form.completed_tasks')}: </Text>
+        <Text style={styles.label}>{completedTasksTranslation}: </Text>
 
         {case_note.completed_tasks.map((task, index) => {
           return (
@@ -112,9 +113,9 @@ class CaseNoteDetail extends Component {
     </View>
   )
 
-  renderAttachments = case_note => (
+  renderAttachments = (case_note, attachmentsTranslation) => (
     <View>
-      <Text style={styles.label}>{i18n.t('client.assessment_form.attachments')}: </Text>
+      <Text style={styles.label}>{attachmentsTranslation}: </Text>
       {
         case_note.attachments.map((attachment, index) => {
           const url = attachment.url || attachment.name
@@ -137,6 +138,7 @@ class CaseNoteDetail extends Component {
 
   render() {
     const { caseNote } = this.state
+    const { translations } = this.props
 
     return (
       <View style={{flex: 1}}>
@@ -166,10 +168,10 @@ class CaseNoteDetail extends Component {
                     </View>
 
                     <View style={styles.contentWrapper}>
-                      { this.renderNotes(case_note) }
-                      { this.renderGoals(case_note) }
-                      { tasks.length > 0 && this.renderTasks(case_note) }
-                      { attachments.length > 0 && this.renderAttachments(case_note) }
+                      { this.renderNotes(case_note, translations.note) }
+                      { this.renderGoals(case_note, translations.goal) }
+                      { tasks.length > 0 && this.renderTasks(case_note, translations.completed_tasks) }
+                      { attachments.length > 0 && this.renderAttachments(case_note, translations.attachments) }
                     </View>
                   </View>
                 )
@@ -183,4 +185,12 @@ class CaseNoteDetail extends Component {
   }
 }
 
-export default CaseNoteDetail
+const mapState = state => {
+  const language = state.language.language
+  const translations = state.translations.data[language].case_notes.index
+  return {
+    translations
+ }
+}
+
+export default connect(mapState)(CaseNoteDetail)

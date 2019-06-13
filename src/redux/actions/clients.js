@@ -37,7 +37,16 @@ export function updateClientProperty(clientParams, actions) {
         dispatch(handleUpdateClientParams(clientParams, clientParams.id))
           .then(response => {
             const message = 'You have update successfully.'
+            const {given_name, family_name} = clientParams
+            const fullName = [given_name, family_name].filter(Boolean).join(' ') || '(No Name)'
             dispatch(updateClient(response.data.client, message))
+            Navigation.mergeOptions(actions.clientDetailComponentId, {
+              topBar: {
+                title: {
+                  text: fullName
+                }
+              }
+            })
             Navigation.dismissOverlay('LOADING_SCREEN')
             Navigation.popTo(actions.clientDetailComponentId)
             actions.alertMessage()

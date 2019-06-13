@@ -82,14 +82,18 @@ class ProgramStreamDetail extends Component {
   }
 
   _renderEnrollmentDetail = (enrollment, deleteAble, formType, editAble, enrollment_id) => {
-    const headerTitle = `${formType == 'Tracking' ? 'Tracking Detail' : formType == 'Enroll' ? 'Enrollment Detail' : 'Leave Program Detail'}`
-    const enrollmentMessage = 'Enrollment has been successfully created.'
-    const trackingMessage = 'Tracking has been successfully created.'
-    const leaveProgramMessage = 'Leave Program has been successfully created.'
+    const { translations } = this.props
+    const trackingTranslation = translations.client_enrolled_program_trackings
+    const enrollmentTranslations = translations.client_enrolled_programs
+    const leaveProgramTranslations = translations.leave_enrolled_programs
+    const enrollmentMessage = enrollmentTranslations.create.successfully_created
+    const trackingMessage = trackingTranslation.create.successfully_created
+    const leaveProgramMessage = leaveProgramTranslations.create.successfully_created
+    const title = `${formType == 'Tracking' ? trackingTranslation.new.new_tracking : formType == 'Enroll' ? enrollmentTranslations.new.new_enrollment : leaveProgramTranslations.new.new_exit_program}`
     const message = formType == 'Tracking' ? trackingMessage : formType == 'Enroll' ? enrollmentMessage : leaveProgramMessage
     pushScreen(this.props.componentId, {
       screen: 'oscar.enrollmentDetail',
-      title: headerTitle,
+      title,
       props: {
         enrollmentId: enrollment_id,
         formId: enrollment.id,
@@ -128,7 +132,7 @@ class ProgramStreamDetail extends Component {
   }
 
   _renderTracking(trackings, enrollment, editAble, deleteAble) {
-    return map(trackings, (tracking, index) => {
+    return map(trackings, tracking => {
       return this._renderEnrollment(tracking.created_at, 'Tracking', tracking, deleteAble, 'Tracking', editAble, enrollment.id)
     })
   }
@@ -153,7 +157,8 @@ class ProgramStreamDetail extends Component {
   }
 
   render() {
-    const { programStream } = this.props
+    const { programStream, translations } = this.props
+    const reportProgramStreamTranslations = translations.client_enrollments.report
     if (programStream == undefined) {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -169,18 +174,18 @@ class ProgramStreamDetail extends Component {
           {programStream.enrollments.length > 0 && (
             <View style={[programStreamDetail.tableRow, programStreamDetail.tableHeader]}>
               <View style={programStreamDetail.headerColumn}>
-                <Text style={programStreamDetail.headerLabel}>Date</Text>
+                <Text style={programStreamDetail.headerLabel}>{reportProgramStreamTranslations.date}</Text>
               </View>
               <View style={programStreamDetail.headerColumn}>
-                <Text style={programStreamDetail.headerLabel}>Forms</Text>
+                <Text style={programStreamDetail.headerLabel}>{reportProgramStreamTranslations.forms}</Text>
               </View>
               <View style={programStreamDetail.headerColumn}>
-                <Text style={programStreamDetail.headerLabel}>Actions</Text>
+                <Text style={programStreamDetail.headerLabel}>{reportProgramStreamTranslations.actions}</Text>
               </View>
             </View>
           )}
           <ScrollView>
-            {map(programStream.enrollments, (enrollment, index) => {
+            {map(programStream.enrollments, enrollment => {
               return enrollment.leave_program != null ? this._renderExit(enrollment) : this._renderEnrolledForm(enrollment)
             })}
           </ScrollView>
@@ -192,11 +197,14 @@ class ProgramStreamDetail extends Component {
 }
 
 const mapState = (state, ownProps) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
   const client = state.clients.data[ownProps.clientId]
   const programStream =
     ownProps.clickForm == 'EnrolledProgram'
       ? find(client.program_streams, { id: ownProps.programStreamId })
       : find(client.inactive_program_streams, { id: ownProps.programStreamId })
-  return { client, programStream }
+  return { client, programStream, translations }
 }
+
 export default connect(mapState)(ProgramStreamDetail)

@@ -51,7 +51,7 @@ class UserEdit extends Component {
   }
 
   render() {
-    const { departments, provinces } = this.props
+    const { departments, provinces, languages } = this.props
     const { user } = this.state
     const genders = [
       { id: 'male', name: 'Male' },
@@ -59,35 +59,34 @@ class UserEdit extends Component {
       { id: 'other', name: 'Other' },
       { id: 'prefer not to say', name: 'Prefer not to say' }
     ]
-
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <ScrollView style={styles.mainContainer}>
           <KeyboardAvoidingView style={styles.container}>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.first_name')}</Text>
+              <Text style={styles.label}>{languages.first_name}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 value={user.first_name}
-                placeholder={i18n.t('user.first_name')}
+                placeholder={languages.first_name}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('first_name', text)}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.last_name')}</Text>
+              <Text style={styles.label}>{languages.last_name}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 value={user.last_name}
-                placeholder={i18n.t('user.last_name')}
+                placeholder={languages.last_name}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('last_name', text.value)}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>* {i18n.t('user.gender')}</Text>
+              <Text style={styles.label}>* {languages.gender}</Text>
               <SectionedMultiSelect
                 items={this.listItems(genders)}
                 uniqueKey="id"
@@ -106,7 +105,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.dob')}</Text>
+              <Text style={styles.label}>{languages.date_of_birth}</Text>
               <DatePicker
                 style={styles.datePicker}
                 date={user.date_of_birth}
@@ -126,12 +125,12 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.job_title')}</Text>
+              <Text style={styles.label}>{languages.job_title}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 value={user.job_title}
-                placeholder={i18n.t('user.job_title')}
+                placeholder={languages.job_title}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('job_title', text)}
               />
@@ -142,7 +141,7 @@ class UserEdit extends Component {
                 <SectionedMultiSelect
                   items={this.listItems(departments)}
                   uniqueKey="id"
-                  selectText={i18n.t('user.select_department')}
+                  selectText={languages.department}
                   searchPlaceholderText={i18n.t('user.search')}
                   confirmText={i18n.t('user.confirm')}
                   showDropDowns={true}
@@ -158,7 +157,7 @@ class UserEdit extends Component {
               )}
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.start_date')}</Text>
+              <Text style={styles.label}>{languages.start_date}</Text>
               <DatePicker
                 style={styles.datePicker}
                 date={user.start_date}
@@ -177,7 +176,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.province')}</Text>
+              <Text style={styles.label}>{languages.province}</Text>
               {provinces != undefined && (
                 <SectionedMultiSelect
                   items={this.listItems(provinces)}
@@ -198,7 +197,7 @@ class UserEdit extends Component {
               )}
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.mobile')}</Text>
+              <Text style={styles.label}>{languages.mobile}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
@@ -209,7 +208,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>* {i18n.t('user.email')}</Text>
+              <Text style={styles.label}>* {languages.email}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 ref={input => {
@@ -223,7 +222,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>* {i18n.t('user.current_password')}</Text>
+              <Text style={styles.label}>* {languages.current_password}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 ref={input => {
@@ -232,27 +231,27 @@ class UserEdit extends Component {
                 style={styles.input}
                 secureTextEntry={true}
                 value={user.current_password}
-                placeholder={i18n.t('user.current_password')}
+                placeholder={languages.current_password}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('current_password', text)}
               />
-              <Text style={styles.sms}>{i18n.t('user.current_password_label')}</Text>
+              <Text style={styles.sms}>{languages.current_password_hint}</Text>
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.password')}</Text>
+              <Text style={styles.label}>{languages.password}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 secureTextEntry={true}
                 value={user.password}
-                placeholder={i18n.t('user.password')}
+                placeholder={languages.password}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('password', text)}
               />
-              <Text style={styles.sms}>{i18n.t('user.password_label')}</Text>
+              <Text style={styles.sms}>{languages.password_hint}</Text>
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.confirm_password')}</Text>
+              <Text style={styles.label}>{languages.password_confirmation}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 ref={input => {
@@ -261,14 +260,15 @@ class UserEdit extends Component {
                 style={styles.input}
                 secureTextEntry={true}
                 value={user.password_confirmation}
-                placeholder={i18n.t('user.confirm_password')}
+                placeholder={languages.password_confirmation}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateUser('password_confirmation', text)}
               />
-              <Text style={styles.sms}>{i18n.t('user.confirm_password_label')}</Text>
+              <Text style={styles.sms}>{languages.password_hint}</Text>
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.overdue_summary')}</Text>
+
+              <Text style={styles.label}>{languages.overdue_summary}</Text>
               <View style={styles.row}>
                 <CheckBox
                   title="Yes"
@@ -291,7 +291,7 @@ class UserEdit extends Component {
               </View>
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.referral_notification')}</Text>
+              <Text style={styles.label}>{languages.referral_notification}</Text>
               <View style={styles.row}>
                 <CheckBox
                   title="Yes"
@@ -314,7 +314,7 @@ class UserEdit extends Component {
               </View>
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('user.calendar')}</Text>
+              <Text style={styles.label}>{languages.calendar_integration}</Text>
               <View style={styles.row}>
                 <CheckBox
                   title="Yes"

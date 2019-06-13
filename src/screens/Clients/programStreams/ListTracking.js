@@ -76,23 +76,24 @@ class ListTracking extends Component {
   }
 
   render() {
-    const { programStream } = this.props
+    const { programStream, translations } = this.props
+    const trackingTranslation = translations.datagrid.columns.trackings
     return (
       <View style={{flex: 1}}>
         <View style={listTracking.container}>
           <View style={listTracking.tableWrapper}>
             <View style={[listTracking.tableRow, listTracking.tableHeader]}>
               <View style={listTracking.headerColumn}>
-                <Text style={listTracking.headerLabel}>Name</Text>
+                <Text style={listTracking.headerLabel}>{trackingTranslation.name}</Text>
               </View>
               <View style={listTracking.headerColumn}>
-                <Text style={listTracking.headerLabel}>Frequency</Text>
+                <Text style={listTracking.headerLabel}>{trackingTranslation.frequency}</Text>
               </View>
               <View style={listTracking.headerColumn}>
-                <Text style={listTracking.headerLabel}>Report</Text>
+                <Text style={listTracking.headerLabel}>{trackingTranslation.report}</Text>
               </View>
               <View style={listTracking.headerColumn}>
-                <Text style={listTracking.headerLabel}>Action</Text>
+                <Text style={listTracking.headerLabel}>{trackingTranslation.action}</Text>
               </View>
             </View>
             <ScrollView>
@@ -130,7 +131,9 @@ class ListTracking extends Component {
 const mapState = (state, ownProps) => {
   const client = state.clients.data[ownProps.clientId]
   const programStream = find(client.program_streams, { id: ownProps.programStreamId })
-  return { client, programStream }
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return { client, programStream, translations }
 }
 
 export default connect(mapState)(ListTracking)

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Alert }            from 'react-native'
 import { connect }          from 'react-redux'
-import { LANGUAGE_TYPES }   from '../../redux/types'
 import Database             from '../../config/Database'
 import RNRestart            from 'react-native-restart'
 import i18n                 from '../../i18n'
 import FastImage            from 'react-native-fast-image'
+import { updateLanguage }   from '../../redux/actions/language'
 
 import {
   StyleSheet,
@@ -29,7 +29,7 @@ class LanguageScreen extends Component {
   }
 
   setLanguage = (language) => {
-    this.props.setLanguage(language)
+    this.props.updateLanguage(language)
 
     const languageSetting = Database.objects('Setting').filtered('key = $0', 'language')[0]
     Database.write(() => { languageSetting.value = language })
@@ -109,11 +109,8 @@ const mapState = (state) => ({
   language: state.language.language
 })
 
-const mapDispatch = (dispatch) => ({
-  setLanguage: (language) => dispatch({
-    type: LANGUAGE_TYPES.SET_LANGUAGE,
-    language
-  })
-})
+const mapDispatch = {
+  updateLanguage
+}
 
 export default connect(mapState, mapDispatch)(LanguageScreen)

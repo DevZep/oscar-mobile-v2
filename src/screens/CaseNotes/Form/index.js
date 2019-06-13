@@ -218,12 +218,13 @@ class CaseNoteForm extends Component {
     this.setState({ caseNoteDomainGroups })
   }
 
-  openTaskModal = debounce(domainGroupId => {
+  openTaskModal = debounce((domainGroupId, taskTranslations) => {
     const { client, domains, custom } = this.props
     Navigation.showModal({
       component: {
         name: 'oscar.taskForm',
         passProps: {
+          formTranslations: taskTranslations,
           domains: domains.filter(domain => domain.domain_group_id === parseInt(domainGroupId) && domain.custom_domain === custom),
           onCreateTask: (params) => this.props.createTask(params, client.id, (task) => this.handleTaskUpdate(task, 'create'))
         },
@@ -293,10 +294,14 @@ class CaseNoteForm extends Component {
     this.setState({collapsibles: {...collapsibles, [domainGroupId]: !collapsed}})
   }
 
-  renderDomainGroup = (caseNote, index) => {
+  renderDomainGroup = (caseNote, index, translations) => {
     const { collapsibles } = this.state
     const domainGroupId = caseNote.domain_group_id
     const collapsed = collapsibles[domainGroupId]
+    const caseNoteTranslations = translations.case_notes
+    const formTranslations = caseNoteTranslations.form
+    const attachmentTranslation = caseNoteTranslations.attachment_fields
+    const taskTranslations = translations.client.tasks.form
     return (
       <DomainGroupCard key={index} title={caseNote.domain_group_identities} toggleExpanded={() => this.toggleExpanded(domainGroupId, collapsed)} collapsed={collapsed}>
         <TextInput
@@ -313,7 +318,7 @@ class CaseNoteForm extends Component {
         {
           caseNote.attachments.length > 0 &&
             <View style={{ marginTop: 15 }}>
-              <Text style={styles.label}>{i18n.t('client.assessment_form.attachments')}:</Text>
+              <Text style={styles.label}>{attachmentTranslation.attachments}:</Text>
               {
                 caseNote.attachments.map((attachment, index) => {
                   const name = (attachment.name || attachment.url.split('/').pop()).substring(0, 20)
@@ -353,10 +358,10 @@ class CaseNoteForm extends Component {
         <View style={styles.buttonWrapper}>
           <Button
             raised
-            onPress={() => this.openTaskModal(caseNote.domain_group_id)}
+            onPress={() => this.openTaskModal(caseNote.domain_group_id, taskTranslations)}
             backgroundColor="#088"
             icon={{ name: 'add-circle' }}
-            title={i18n.t('button.add_task')}
+            title={formTranslations.add_task}
           />
         </View>
         <View style={{ marginTop: 10 }}>
@@ -368,9 +373,9 @@ class CaseNoteForm extends Component {
                 return
 
               return (
-                <Card key={index} title={`${i18n.t('task.domain')} ${domain.name}`} style={{ marginLeft: 0, marginRight: 0 }}>
+                <Card key={index} title={`${formTranslations.domain} ${domain.name}`} style={{ marginLeft: 0, marginRight: 0 }}>
                   <Text style={styles.label}>
-                    {i18n.t('client.case_note_form.on_going')}
+                    {formTranslations.on_going_tasks}
                   </Text>
                   {
                     tasks.map(task => (
@@ -397,7 +402,7 @@ class CaseNoteForm extends Component {
         {
           this.state.arisingTasks.length > 0 &&
             <View style={{ marginTop: 15 }}>
-              <Text style={styles.label}>{i18n.t('client.assessment_form.task_arising')}:</Text>
+              <Text style={styles.label}>{formTranslations.tasks_arising}:</Text>
               {
                 this.state.arisingTasks.map((task, index) => (
                   <View key={index} style={styles.attachmentWrapper}>
@@ -417,14 +422,16 @@ class CaseNoteForm extends Component {
   }
 
   render() {
+    const { translations } = this.props
+    const formTranslations = translations.case_notes.form
     return (
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : null}>
         <ScrollView showsVerticalScrollIndicator={false} ref={ref => this.scrollView = ref}>
-          <Card title={i18n.t('client.case_note_form.meeting_detail')}>
+          <Card title={formTranslations.meeting_detail}>
             <View style={styles.inputWrapper}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.label, {color: 'red'}]}>* </Text>
-                <Text style={styles.label}>{i18n.t('client.case_note_form.on_date')}</Text>
+                <Text style={styles.label}>{formTranslations.on_date}</Text>
               </View>
               <DatePicker
                 style={styles.datePicker}
@@ -450,7 +457,7 @@ class CaseNoteForm extends Component {
             <View style={styles.inputWrapper}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.label, {color: 'red'}]}>* </Text>
-                <Text style={styles.label}>{i18n.t('client.case_note_form.who_was_there')}</Text>
+                <Text style={styles.label}>{formTranslations.present}</Text>
               </View>
               <TextInput
                 autoCapitalize="sentences"
@@ -466,7 +473,7 @@ class CaseNoteForm extends Component {
             <View style={styles.inputWrapper}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.label, {color:'red'}]}>* </Text>
-                <Text style={styles.label}>{i18n.t('client.case_note_form.type')}</Text>
+                <Text style={styles.label}>{formTranslations.type}</Text>
               </View>
               <SectionedMultiSelect
                 items={this.interactionTypes()}
@@ -487,11 +494,12 @@ class CaseNoteForm extends Component {
                 onSelectedItemsChange={ interactionTypes => this.setState({ interactionType: interactionTypes[0] }) }
                 selectedItems={[this.state.interactionType]}
               />
-              <Text style={{fontStyle: 'italic'}}>{i18n.t('client.case_note_form.noted')}</Text>
             </View>
           </Card>
           {
-            this.state.caseNoteDomainGroups.map(this.renderDomainGroup)
+            this.state.caseNoteDomainGroups.map((caseNoteDomainGroup, index) => {
+              return this.renderDomainGroup(caseNoteDomainGroup, index, translations)
+            })
           }
         </ScrollView>
       </KeyboardAvoidingView>
@@ -535,9 +543,14 @@ const Card = props => (
   </View>
 )
 
-const mapState = state => ({
-  domains: state.domains.data
-})
+const mapState = state => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    domains: state.domains.data,
+    translations
+  }
+}
 
 const mapDispatch = {
   createTask,

@@ -53,7 +53,7 @@ export default class Task extends Component {
   }
 
   render() {
-    const { domains } = this.props
+    const { domains, formTranslations } = this.props
 
     return (
       <ScrollView style={styles.container}>
@@ -65,7 +65,7 @@ export default class Task extends Component {
             {
               !this.props.domain &&
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.label}>{i18n.t('task.domain')}</Text>
+                  <Text style={styles.label}>{formTranslations.domain}</Text>
                   <SectionedMultiSelect
                     items={ domains.map(domain => ({ id: domain.id, name: `${domain.name} ${domain.identity}` })) }
                     uniqueKey='id'
@@ -88,7 +88,7 @@ export default class Task extends Component {
                 </View>
             }
             <View style={styles.inputWrapper}>
-              <Text style={styles.label}>* {i18n.t('task.task_detail')}</Text>
+              <Text style={styles.label}>* {formTranslations.enter_task_detail}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 ref="name"
@@ -100,7 +100,7 @@ export default class Task extends Component {
               />
             </View>
             <View style={styles.inputWrapper}>
-              <Text style={styles.label}>* {i18n.t('task.complete_date')}</Text>
+              <Text style={styles.label}>* {formTranslations.completion_date}</Text>
               <DatePicker
                 style={styles.datePicker}
                 date={this.state.completion_date}
@@ -130,13 +130,13 @@ export default class Task extends Component {
               textStyle={styles.submitButtonText}
               style={styles.submitButton}
               onPress={() => this.updateTask()}>
-              {i18n.t('button.save')}
+              {formTranslations.save}
             </Button>
             <Button
               textStyle={styles.cancelButtonText}
               style={styles.cancelButton}
               onPress={ () => Navigation.dismissAllModals() }>
-              {i18n.t('button.cancel')}
+              {formTranslations.back}
             </Button>
           </View>
         </View>

@@ -36,6 +36,7 @@ export default {
   settingPath: '/settings',
   additionalFormPath: '/custom_field_properties',
   programStreamsPath: '/program_streams',
+  translationsPath: '/translations',
   editEnrollmentProgramPath: '/clients/${client_id}/client_enrollments/${program_id}',
   createEnrollmentProgramPath: '/clients/${client_id}/client_enrollments',
   editLeaveProgramPath: '/clients/${client_id}/client_enrollments/${program_id}/leave_programs/${leave_id}',

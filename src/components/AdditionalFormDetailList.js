@@ -32,14 +32,15 @@ class AdditionalFormDetailList extends Component {
   async navigationButtonPressed({ buttonId }) {
     if (buttonId === 'ADD_CUSTOM_FORM') {
       const icons = await appIcon()
-      pushScreen(this.props.componentId, {
+      const { customForm, entity, componentId, type } = this.props
+      pushScreen(componentId, {
         screen: 'oscar.createCustomForm',
-        title: this.props.customForm.form_title,
+        title: customForm.form_title,
         props: {
-          entity: this.props.entity,
-          customForm: this.props.customForm,
-          entityDetailComponentId: this.props.componentId,
-          type: this.props.type,
+          entity: entity,
+          customForm: customForm,
+          entityDetailComponentId: componentId,
+          type: type,
           clickForm: 'additionalForm',
           alertMessage: () => this.alertMessage('Custom Field Properties has been successfully created.')
         },
@@ -82,15 +83,16 @@ class AdditionalFormDetailList extends Component {
 
   editAdditionalForm = async customFieldProperty => {
     const icons = await appIcon()
-    pushScreen(this.props.componentId, {
+    const { customForm, entity, type, componentId } = this.props
+    pushScreen(componentId, {
       screen: 'oscar.editCustomForm',
-      title: 'Edit Additinal Form',
+      title: customForm.form_title,
       props: {
-        customForm: this.props.customForm,
+        customForm: customForm,
         custom_field: customFieldProperty,
-        entity: this.props.entity,
-        type: this.props.type,
-        currentComponentId: this.props.componentId,
+        entity: entity,
+        type: type,
+        currentComponentId: componentId,
         alertMessage: () => this.alertMessage('Custom Field Properties has been successfully updated.')
       },
       rightButtons: [
@@ -185,7 +187,7 @@ class AdditionalFormDetailList extends Component {
 
   render() {
     const { customForm, visible } = this.props
-    const { mainContainer, container } = additionalFormDetailList
+    const { mainContainer } = additionalFormDetailList
     if (customForm == undefined) {
       return (
         <View style={[mainContainer, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -224,7 +226,7 @@ const mapState = (state, ownProps) => {
   const entity = ownProps.type == 'client' ? state.clients.data[ownProps.entityId] : state.families.data[ownProps.entityId]
   const message = ownProps.type == 'client' ? state.clients.message : state.families.message
   const customForm = find(entity.additional_form, { id: ownProps.customFormId })
-  return { entity, customForm, visible: true, message: message }
+  return { entity, customForm, visible: true, message }
 }
 
 export default connect(mapState)(AdditionalFormDetailList)

@@ -151,6 +151,38 @@ class EditForm extends Component {
           placeholder={i18n.t('client.select_date')}
           showIcon={false}
           format="YYYY-MM-DD"
+          customStyles={{
+            dateInput: customFormStyles.datePickerBorder
+          }}
+          onDateChange={date => this.updateField(label, date)}
+        />
+      </View>
+    )
+  }
+
+  enrollmentDatePickerType(label, data, dateType) {
+    const value = data != undefined ? data : ''
+    const new_date = moment(this.props.enrollment_date, 'YYYY-MM-DD')
+      .add(1, 'days')
+      .format('YYYY-MM-DD')
+    const max_date = moment(new Date())
+      .add(1, 'years')
+      .format('YYYY-MM-DD')
+    return (
+      <View style={customFormStyles.fieldContainer}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin, {color: 'red'}]}>* </Text>
+          <Text style={[customFormStyles.label, customFormStyles.labelMargin]}>{label}</Text>
+        </View>
+        <DatePicker
+          date={value}
+          style={customFormStyles.datePicker}
+          mode="date"
+          confirmBtnText="Done"
+          cancelBtnText="Cancel"
+          placeholder={i18n.t('client.select_date')}
+          showIcon={false}
+          format="YYYY-MM-DD"
           minDate={dateType == 'Exit' ? new_date : '1990-01-01'}
           maxDate={
             this.props.enrollment.status == 'Exited' && dateType == 'Enroll'
@@ -162,7 +194,7 @@ class EditForm extends Component {
           customStyles={{
             dateInput: customFormStyles.datePickerBorder
           }}
-          onDateChange={date => (dateType == 'formDate' ? this.updateField(label, date) : this.updateFormDate(date))}
+          onDateChange={date => this.updateFormDate(date)}
         />
       </View>
     )
@@ -473,18 +505,24 @@ class EditForm extends Component {
   }
 
   render() {
-    const { field_properties } = this.state
-    const { type } = this.props
+    const { type, translations } = this.props
     const programType = type == 'Exit' ? 'exit_date' : 'enrollment_date'
+    const labelDate = type == 'Exit' ? translations.leave_enrolled_programs.form.exit_date : translations.client_enrolled_programs.form.enrollment_date
     return (
       <ScrollView ref="editEnrollmentForm" style={{ backgroundColor: '#fff' }}>
         <View style={customFormStyles.aboutClientContainer}>
-          {type.match(/Exit|Enroll/) && this.datePickerType(`${type} Date`, this.state[programType], type)}
+          {type.match(/Exit|Enroll/) && this.enrollmentDatePickerType(labelDate, this.state[programType], type)}
           {this._renderFormField()}
         </View>
       </ScrollView>
     )
   }
+}
+
+const mapState = (state) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return { translations }
 }
 
 const mapDispatch = {
@@ -494,6 +532,6 @@ const mapDispatch = {
 }
 
 export default connect(
-  null,
+  mapState,
   mapDispatch
 )(EditForm)

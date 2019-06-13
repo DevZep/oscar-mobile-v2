@@ -18,10 +18,11 @@ class Families extends Component {
   }
 
   subItems = family => {
+    const memberCountTranslation = this.props.translations.families.form.member_count
     const clientsCount = family.clients.length
     const familyType = family.family_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
 
-    return [familyType, `${clientsCount} ${i18n.t('family.member_count')}`]
+    return [familyType, `${clientsCount} ${memberCountTranslation}`]
   }
 
   onPress = async family => {
@@ -85,11 +86,16 @@ class Families extends Component {
   }
 }
 
-const mapState = state => ({
-  families: state.families.data,
-  loading: state.families.loading,
-  hasInternet: state.internet.hasInternet
-})
+const mapState = state => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    families: state.families.data,
+    loading: state.families.loading,
+    hasInternet: state.internet.hasInternet,
+    translations
+  }
+}
 
 const mapDispatch = {
   fetchFamilies,

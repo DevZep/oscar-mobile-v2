@@ -2,7 +2,6 @@ import React, { Component }         from 'react'
 import { connect }                  from 'react-redux'
 import { Navigation }               from 'react-native-navigation'
 import { pushScreen }               from '../../navigation/config'
-import i18n                         from '../../i18n'
 import moment                       from 'moment'
 import styles                       from './styles'
 import appIcons                     from '../../utils/Icon'
@@ -37,10 +36,11 @@ class CaseNotes extends Component {
 
   navigateToCaseNoteForm = async type => {
     const icons = await appIcons()
+    const translations = this.props.translations.case_notes.index
 
     pushScreen(this.props.componentId, {
       screen: 'oscar.caseNoteForm',
-      title: i18n.t('client.case_note_form.create_title'),
+      title: translations.new_case_note,
       props: {
         custom: type === 'custom',
         client: this.state.client,
@@ -118,9 +118,14 @@ class CaseNotes extends Component {
   }
 }
 
-const mapState = (state, ownProps) => ({
-  setting: state.setting.data,
-  client: state.clients.data[ownProps.clientId]
-})
+const mapState = (state, ownProps) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    setting: state.setting.data,
+    client: state.clients.data[ownProps.clientId],
+    translations
+ }
+}
 
 export default connect(mapState)(CaseNotes)

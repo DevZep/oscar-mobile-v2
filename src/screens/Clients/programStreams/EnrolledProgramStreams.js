@@ -29,9 +29,11 @@ class ProgramStreams extends Component {
 
   async _renderExitForm(programStream) {
     const icons = await appIcon()
+    const translations = this.props.translations
+    const leaveProgramTranslations = translations.leave_enrolled_programs
     pushScreen(this.props.componentId, {
       screen: 'oscar.exitForm',
-      title: 'Exit Form',
+      title: leaveProgramTranslations.new.new_exit_program,
       props: {
         programStream: programStream,
         client: this.props.client,
@@ -65,6 +67,10 @@ class ProgramStreams extends Component {
 
   render() {
     const { programStreams } = this.props
+    const { translations } = this.props
+    const clientEnrollmentTranslations = translations.client_enrollments
+    const indexTranslations = clientEnrollmentTranslations.index
+    const reportTranslations = clientEnrollmentTranslations.report
     if (programStreams == 0) {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -93,12 +99,12 @@ class ProgramStreams extends Component {
                     <Divider style={programStreamStyles.titleDivider} />
 
                     <View style={programStreamStyles.quantityWrapper}>
-                      <Text style={programStreamStyles.quantityKey}>Number of Place Available:</Text>
-                      <Text style={programStreamStyles.quantityValue}>{programStreamStyles.quantity}</Text>
+                      <Text style={programStreamStyles.quantityKey}>{indexTranslations.quantity}:</Text>
+                      <Text style={programStreamStyles.quantityValue}>{programStream.quantity}</Text>
                     </View>
 
                     <View style={programStreamStyles.domainWrapper}>
-                      <Text style={programStreamStyles.domainKey}>Domain:</Text>
+                      <Text style={programStreamStyles.domainKey}>{indexTranslations.domain}:</Text>
                       <View style={programStreamStyles.domainValue}>
                         {map(programStream.domain, (domain, dIndex) => {
                           return (
@@ -115,7 +121,7 @@ class ProgramStreams extends Component {
                 <View style={programStreamStyles.rightSide}>
                   <TouchableWithoutFeedback onPress={() => this._viewEnrollmentReport(programStream)}>
                     <View style={programStreamStyles.buttonWrapper}>
-                      <Text style={programStreamStyles.buttonTitle}>VIEW</Text>
+                      <Text style={programStreamStyles.buttonTitle}>{reportTranslations.view}</Text>
                     </View>
                   </TouchableWithoutFeedback>
                   <TouchableWithoutFeedback onPress={() => this._renderTrackingForm(programStream)}>
@@ -125,7 +131,7 @@ class ProgramStreams extends Component {
                       }
                     >
                       <Text style={programStream.tracking_required ? programStreamStyles.buttonTitleTracking : programStreamStyles.buttonTitle}>
-                        TRACKING
+                        {reportTranslations.tracking}
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>
@@ -142,7 +148,7 @@ class ProgramStreams extends Component {
                           programStreamStyles.is_offline != undefined ? programStreamStyles.buttonTitleTracking : programStreamStyles.buttonTitle
                         }
                       >
-                        EXIT
+                        {reportTranslations.exit}
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>
@@ -159,7 +165,9 @@ class ProgramStreams extends Component {
 const mapState = (state, ownProps) => {
   const client = state.clients.data[ownProps.clientId]
   const programStreams = client.program_streams
-  return { client, programStreams }
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return { client, programStreams, translations }
 }
 
 export default connect(mapState)(ProgramStreams)

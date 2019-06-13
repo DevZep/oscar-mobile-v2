@@ -74,7 +74,8 @@ class UserEdit extends Component {
   }
 
   render() {
-    const { provinces, communes, villages, districts, clients } = this.props
+    const { provinces, communes, villages, districts, clients, translations } = this.props
+    const familyFormTranslations = translations.families.form
     const { family } = this.state
     const clientOptions = assignIn({}, clients, family.clients)
     const familyType = [
@@ -97,29 +98,29 @@ class UserEdit extends Component {
         <ScrollView style={styles.mainContainer}>
           <KeyboardAvoidingView style={styles.container}>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.name')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.name}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 value={family.name}
-                placeholder={i18n.t('family.name')}
+                placeholder={familyFormTranslations.name}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateFamily('name', text)}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.code')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.code}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 value={family.code}
-                placeholder={i18n.t('family.code')}
+                placeholder={familyFormTranslations.code}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateFamily('code', text)}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.family_type')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.family_type}</Text>
               <SectionedMultiSelect
                 items={familyType}
                 uniqueKey="id"
@@ -141,7 +142,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.status')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.status}</Text>
               <View style={styles.row}>
                 <CheckBox
                   title="Active"
@@ -164,7 +165,7 @@ class UserEdit extends Component {
               </View>
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.case_history')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.case_history}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
@@ -175,10 +176,10 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.address')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.address}</Text>
               <TextInput
                 autoCapitalize="sentences"
-                placeholder={i18n.t('family.address')}
+                placeholder={familyFormTranslations.address}
                 placeholderTextColor="#b7b3b3"
                 multiline={true}
                 numberOfLines={4}
@@ -190,7 +191,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.significant_family_member_count')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.significant_family_member_count}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 placeholder="0"
@@ -203,7 +204,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.female_children_count')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.female_children_count}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 placeholder="0"
@@ -216,7 +217,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.male_children_count')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.male_children_count}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 placeholder="0"
@@ -229,7 +230,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.female_adult_count')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.female_adult_count}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 placeholder="0"
@@ -242,7 +243,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.male_adult_count')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.male_adult_count}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 placeholder="0"
@@ -255,7 +256,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.province')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.province}</Text>
               <SectionedMultiSelect
                 items={this.listItems(provinces)}
                 uniqueKey="id"
@@ -282,7 +283,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.district')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.district}</Text>
               <SectionedMultiSelect
                 items={this.listItems(districtOptions)}
                 uniqueKey="id"
@@ -306,7 +307,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.commune')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.commune}</Text>
               <SectionedMultiSelect
                 items={this.listItems(communeOptions)}
                 uniqueKey="id"
@@ -330,7 +331,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.village')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.village}</Text>
               <SectionedMultiSelect
                 items={this.listItems(villageOptions)}
                 uniqueKey="id"
@@ -352,31 +353,31 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.street')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.street}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 value={family.street}
-                placeholder={i18n.t('family.street')}
+                placeholder={familyFormTranslations.street}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateFamily('street', text)}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.house')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.house}</Text>
               <TextInput
                 autoCapitalize="sentences"
                 style={styles.input}
                 value={family.house}
-                placeholder={i18n.t('family.house')}
+                placeholder={familyFormTranslations.house}
                 placeholderTextColor="#d5d5d5"
                 onChangeText={text => this.setUpdateFamily('house', text)}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.household_income')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.household_income}</Text>
               <TextInput
-                placeholder={i18n.t('family.household_income')}
+                placeholder={familyFormTranslations.household_income}
                 placeholderTextColor="#b7b3b3"
                 returnKeyType="next"
                 keyboardType="decimal-pad"
@@ -386,7 +387,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.dependable_income')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.dependable_income}</Text>
               <View style={styles.row}>
                 <CheckBox
                   title="Yes"
@@ -409,7 +410,7 @@ class UserEdit extends Component {
               </View>
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.children')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.children}</Text>
               <SectionedMultiSelect
                 items={this.listClients(clientOptions)}
                 uniqueKey="id"
@@ -430,7 +431,7 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.contract_date')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.contract_date}</Text>
               <DatePicker
                 date={family.contract_date}
                 style={styles.datePicker}
@@ -447,10 +448,10 @@ class UserEdit extends Component {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>{i18n.t('family.caregiver_information')}</Text>
+              <Text style={styles.label}>{familyFormTranslations.caregiver_information}</Text>
               <TextInput
                 autoCapitalize="sentences"
-                placeholder={i18n.t('family.caregiver_information')}
+                placeholder={familyFormTranslations.caregiver_information}
                 placeholderTextColor="#b7b3b3"
                 multiline={true}
                 numberOfLines={4}
@@ -469,15 +470,20 @@ class UserEdit extends Component {
   }
 }
 
-const mapState = state => ({
-  provinces: state.provinces.data,
-  districts: state.districts.data,
-  communes: state.communes.data,
-  villages: state.villages.data,
-  clients: state.clients.data,
-  loading: state.auth.loading,
-  error: state.families.error
-})
+const mapState = state => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    provinces: state.provinces.data,
+    districts: state.districts.data,
+    communes: state.communes.data,
+    villages: state.villages.data,
+    clients: state.clients.data,
+    loading: state.auth.loading,
+    error: state.families.error,
+    translations
+  }
+}
 
 const mapDispatch = {
   updateFamily

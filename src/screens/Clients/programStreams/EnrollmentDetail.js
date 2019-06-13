@@ -104,25 +104,33 @@ class EnrollmentDetail extends Component {
   }
 
   async _editForm(enrollment, deleteAble) {
-    const formType = this.props.type
-    const title = `${formType == 'Tracking' ? 'Edit Tracking' : formType == 'Enroll' ? 'Edit Enrollment' : 'Edit Leave Program'}`
+    const { translations, type, programStream, client, clickForm, componentId } = this.props
+    const trackingTranslation = translations.client_enrolled_program_trackings
+    const enrollmentTranslations = translations.client_enrolled_programs
+    const leaveProgramTranslations = translations.leave_enrolled_programs
+    // const enrollmentMessage = enrollmentTranslations.update.successfully_updated
+    // const trackingMessage = trackingTranslation.update.successfully_updated
+    // const leaveProgramMessage = leaveProgramTranslations.update.successfully_updated
     const enrollmentMessage = 'Enrollment has been successfully updated.'
     const trackingMessage = 'Tracking has been successfully updated.'
     const leaveProgramMessage = 'Leave Program has been successfully updated.'
-    const message = `${formType == 'Tracking' ? trackingMessage : formType == 'Enroll' ? enrollmentMessage : leaveProgramMessage}`
+    const labelDate = type == 'Enroll' ? enrollmentTranslations.form.enrollment_date : leaveProgramTranslations.form.exit_date
+    const title = `${type == 'Tracking' ? trackingTranslation.edit.edit_tracking : type == 'Enroll' ? enrollmentTranslations.edit.enrollment : leaveProgramTranslations.edit.leave_program}`
+    const message = `${type == 'Tracking' ? trackingMessage : type == 'Enroll' ? enrollmentMessage : leaveProgramMessage}`
     const icons = await appIcon()
     pushScreen(this.props.componentId, {
       screen: 'oscar.editForm',
-      title: title,
+      title,
       props: {
         enrollment: enrollment,
-        type: this.props.type,
-        programStream: this.props.programStream,
-        clientEnrolledProgramId: this.props.enrollment.id,
+        type: type,
+        programStream: programStream,
+        clientEnrolledProgramId: enrollment.id,
         enrollment_date: this.props.enrollment.enrollment_date,
-        client: this.props.client,
-        clickForm: this.props.clickForm,
-        enrollmentDetailComponentId: this.props.componentId,
+        client: client,
+        clickForm: clickForm,
+        enrollmentDetailComponentId: componentId,
+        labelDate,
         alertMessage: () => this.alertMessage(message)
       },
       rightButtons: [
@@ -215,6 +223,8 @@ class EnrollmentDetail extends Component {
 }
 
 const mapState = (state, ownProps) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
   const client = state.clients.data[ownProps.clientId]
   const programStream =
     ownProps.clickForm == 'EnrolledProgram'
@@ -224,7 +234,7 @@ const mapState = (state, ownProps) => {
   if (ownProps.type == 'Tracking') {
     enrollment = find(enrollment.trackings, { id: ownProps.formId })
   }
-  return { client, programStream, enrollment }
+  return { client, programStream, enrollment, translations }
 }
 
 const mapDispatch = {

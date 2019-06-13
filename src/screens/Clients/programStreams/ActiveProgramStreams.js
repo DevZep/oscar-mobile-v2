@@ -160,18 +160,18 @@ class ActiveProgramStreams extends Component {
     })
   }
 
-  _renderViewReport(status, inActiveProgram) {
+  _renderViewReport(status, inActiveProgram, reportTranslations) {
     return (
       <View style={{ flex: 1 }}>
         {status == 'Exited' ? (
           <TouchableWithoutFeedback onPress={() => this._viewProgramStream(inActiveProgram[0])}>
             <View style={programStreamStyles.buttonWrapper}>
-              <Text style={programStreamStyles.buttonTitle}>VIEW</Text>
+              <Text style={programStreamStyles.buttonTitle}>{reportTranslations.view}</Text>
             </View>
           </TouchableWithoutFeedback>
         ) : (
           <View style={[programStreamStyles.buttonWrapperNotTracking, { borderTopRightRadius: 10 }]}>
-            <Text style={programStreamStyles.buttonTitle}>VIEW</Text>
+            <Text style={programStreamStyles.buttonTitle}>{reportTranslations.view}</Text>
           </View>
         )}
       </View>
@@ -188,7 +188,10 @@ class ActiveProgramStreams extends Component {
 
   render() {
     const { program_streams, isLoading, isFiltering } = this.state
-    const { client } = this.props
+    const { client, translations } = this.props
+    const clientEnrollmentTranslations = translations.client_enrollments
+    const indexTranslations = clientEnrollmentTranslations.index
+    const reportTranslations = clientEnrollmentTranslations.report
     if (isLoading) {
       return (
         <View
@@ -247,12 +250,12 @@ class ActiveProgramStreams extends Component {
                       <Divider style={programStreamStyles.titleDivider} />
 
                       <View style={programStreamStyles.quantityWrapper}>
-                        <Text style={programStreamStyles.quantityKey}>Number of Place Available:</Text>
+                        <Text style={programStreamStyles.quantityKey}>{indexTranslations.quantity}:</Text>
                         <Text style={programStreamStyles.quantityValue}>{program_stream.quantity}</Text>
                       </View>
 
                       <View style={programStreamStyles.domainWrapper}>
-                        <Text style={programStreamStyles.domainKey}>Domain:</Text>
+                        <Text style={programStreamStyles.domainKey}>{indexTranslations.domain}:</Text>
                         <View style={programStreamStyles.domainValue}>
                           {map(program_stream.domain, (domain, dIndex) => {
                             return (
@@ -267,10 +270,10 @@ class ActiveProgramStreams extends Component {
                   </View>
 
                   <View style={programStreamStyles.rightSide}>
-                    {this._renderViewReport(status, inActiveProgram)}
+                    {this._renderViewReport(status, inActiveProgram, reportTranslations)}
                     <TouchableWithoutFeedback onPress={() => this._checkProgramStream(program_stream, status)}>
                       <View style={[programStreamStyles.buttonWrapperTracking, { borderBottomWidth: 0, flex: 1 }]}>
-                        <Text style={programStreamStyles.buttonTitle}>Enroll</Text>
+                        <Text style={programStreamStyles.buttonTitle}>{reportTranslations.enrollment}</Text>
                       </View>
                     </TouchableWithoutFeedback>
                   </View>
@@ -285,9 +288,14 @@ class ActiveProgramStreams extends Component {
   }
 }
 
-const mapState = (state, ownProps) => ({
-  client: state.clients.data[ownProps.clientId],
-  programStreams: state.programStreams.data
-})
+const mapState = (state, ownProps) => {
+  const language = state.language.language
+  const translations = state.translations.data[language]
+  return {
+    client: state.clients.data[ownProps.clientId],
+    programStreams: state.programStreams.data,
+    translations
+  }
+}
 
 export default connect(mapState)(ActiveProgramStreams)

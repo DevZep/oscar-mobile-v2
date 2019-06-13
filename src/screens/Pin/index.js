@@ -5,6 +5,7 @@ import { updatePin, setDefaultHeader }  from '../../redux/actions/auth'
 import i18n                             from '../../i18n'
 import PinCode                          from '../../components/pin'
 import CryptoJS                         from 'crypto-js'
+import { fetchTranslations }            from '../../redux/actions/translations'
 import {
   View,
   Text,
@@ -15,6 +16,10 @@ class Pin extends Component {
     pinCode: this.props.pinCode,
     pinTitle: this.props.pinTitle,
     pinMode: this.props.pinMode
+  }
+
+  componentDidMount() {
+    this.props.fetchTranslations()
   }
 
   verifyCode = (code, clear, vibration) => {
@@ -71,7 +76,8 @@ const mapState = state => ({
 
 const mapDispatch = {
   updatePin,
-  setDefaultHeader
+  setDefaultHeader,
+  fetchTranslations
 }
 
 export default connect(

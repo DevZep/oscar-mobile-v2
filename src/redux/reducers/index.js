@@ -20,6 +20,7 @@ import referralSources from './referralSources'
 import referralSourceCategories from './referralSourceCategories'
 import agencies from './agencies'
 import donors from './donors'
+import translations from './translations'
 
 export default combineReducers({
   auth,
@@ -42,5 +43,6 @@ export default combineReducers({
   referralSources,
   agencies,
   donors,
+  translations,
   referralSourceCategories
 })
